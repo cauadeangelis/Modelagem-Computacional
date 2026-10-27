@@ -1,4 +1,35 @@
 // Bíblia de humor (seção 14): falas, placas, narrador. Até 70 caracteres por balão.
+import { HERO_NAME } from '../config.js';
+
+// Quem joga: nome, gênero e pet escolhidos na tela de criação.
+export const JOGADOR = { nome: HERO_NAME, genero: 'm', pet: 'raizinha' };
+
+// Letras, números, espaço, hífen e apóstrofo; até 16 caracteres.
+export function limparNome(nome) {
+  return String(nome ?? '').normalize('NFC').replace(/[^\p{L}\p{N} '-]/gu, '').replace(/\s+/g, ' ').trim().slice(0, 16).trim();
+}
+
+export function definirJogador(d) {
+  JOGADOR.nome = limparNome(d.player?.nome) || HERO_NAME;
+  JOGADOR.genero = d.player?.genero === 'f' ? 'f' : 'm';
+  JOGADOR.pet = d.pet === 'gatas' ? 'gatas' : 'raizinha';
+}
+
+// Marcadores trocados conforme o jogador: {nome}, {o} (o/a), {patrão}, {bom}, {pet}, {dela}, {comigo}
+export function tx(s) {
+  const f = JOGADOR.genero === 'f', gatas = JOGADOR.pet === 'gatas';
+  const troca = {
+    nome: JOGADOR.nome, o: f ? 'a' : 'o', patrão: f ? 'patroa' : 'patrão', bom: f ? 'boa' : 'bom',
+    pet: gatas ? 'a Lina e a Nina' : 'a Raizinha', dela: gatas ? 'delas' : 'dela', comigo: gatas ? 'com a gente' : 'comigo',
+  };
+  return String(s).replace(/\{(nome|o|patrão|bom|pet|dela|comigo)\}/g, (_, k) => troca[k]);
+}
+
+// "nina:Texto" → ['nina', 'Texto']: as gatas usam o prefixo para escolher quem fala
+export function separarFalante(s) {
+  const m = /^(lina|nina):/.exec(s);
+  return m ? [m[1], s.slice(m[0].length)] : [null, s];
+}
 
 export const FALAS = {
   divisao_zero: [
@@ -24,7 +55,7 @@ export const FALAS = {
   pivo_zero: [
     'O pivô pediu demissão. Contrate outro.',
     'Pivô zero: a linha de cima ficou de greve.',
-    'Troca de linha, patrão!',
+    'Troca de linha, {patrão}!',
   ],
   polo: [
     'Isso não é raiz, é um fantasma de sinal trocado.',
@@ -37,7 +68,7 @@ export const FALAS = {
     'Cancelamento catastrófico: tipo apagar a lousa errada.',
   ],
   fase_vencida: [
-    'Raiz capturada! Ela tentou se esconder, mas você é bom demais.',
+    'Raiz capturada! Ela tentou se esconder, mas você é {bom} demais.',
     'Erro: zero. Orgulho: infinito.',
     'Mais uma raiz pra coleção!',
   ],
@@ -62,24 +93,37 @@ export const FALAS = {
     'Você acha que raiz tem raiz?',
   ],
   raizinha_nevoa: [
-    'Eu não entro aí nem a pau, patrão.',
+    'Eu não entro aí nem a pau, {patrão}.',
     'Essa névoa tem cheiro de erro de arredondamento.',
     'Lá dentro tudo dá NaN. Bora vencer o chefão antes.',
   ],
   raizinha_vitoria: ['Uhuu! Você é demais!', 'Coraçãozinho pra você!', 'Mais uma! A Usina que se cuide.'],
   raizinha_derrota: ['Kkkk desculpa, não resisti. Bora de novo!', 'Calma, raiz é assim mesmo: arisca.', 'Respira. O próximo chute é melhor.'],
-  raizinha_bicho: ['Olha um bicho guia ali! Ele dá dicas.', 'Aquele bicho parece saber das coisas.', 'Vai lá dar um oi, patrão!'],
+  raizinha_bicho: ['Olha um bicho guia ali! Ele dá dicas.', 'Aquele bicho parece saber das coisas.', 'Vai lá dar um oi, {patrão}!'],
   raizinha_raiz: ['Uma Raiz Fugitiva! Corre que ela é rápida!', 'Pega! Pega! Pega!', 'Ela tá em zigue-zague, vai pelo meio!'],
   raizinha_moita: ['Essa moita tá tremendo... suspeito.', 'Tem alguém escondido ali!', 'Mexe naquela moita, aposto que tem raiz.'],
   raizinha_sem_estrelas: ['Faltam {n} estrelas para enfrentar o chefão.', 'O portão só abre com mais {n} estrelas.', 'Junta mais {n} estrelas nas cidades e a gente volta.'],
   raizinha_usina: ['A Usina só abre depois dos 5 chefões.', 'Cinco chefões, cinco chaves. Falta pouco!', 'Daqui sai a fumaça verde... medo.'],
   raizinha_semente: ['Uma semente! Guarda que vale dica.', 'Sementinha! Dica tem preço, né?', 'Ui, semente! Eu como? Não? Tá bom.'],
+  raizinha_tibum: ['Tibum! Água não é chão, {patrão}.'],
+  raizinha_pao: ['Hmmm, pão truncado! Nhac!'],
+  // Lina e Nina: sem a fala própria, usam a da Raizinha; "lina:"/"nina:" escolhe quem fala
+  gatas_idle: ['Miau! Tô com fome de sementes.', 'nina:Lina, para de morder meu rabo!', 'lina:Será que tem peixe na Usina?', 'Rrrrr... esse mapa é bom pra cochilar.'],
+  gatas_nevoa: ['Fsssst! Pelo arrepiado. Aí a gente não entra, {patrão}.', 'Essa névoa cheira a erro de arredondamento.', 'Lá dentro tudo dá NaN. Vence o chefão antes!'],
+  gatas_vitoria: ['Miau! Você é demais!', 'Ronronando de orgulho!', 'nina:Mais uma! A Usina que se cuide.'],
+  gatas_derrota: ['Miau... raiz é arisca que nem gato.', 'Calma, até gato erra o pulo. Bora de novo!', 'Respira. O próximo chute é melhor.'],
+  gatas_bicho: ['Olha um bicho guia! Prometo não caçar ele.', 'Aquele bicho parece saber das coisas.', 'Vai lá dar um oi, {patrão}!'],
+  gatas_raiz: ['Uma Raiz Fugitiva! Modo caça ativado!', 'Pega! Pega! Pega!', 'Ela tá em zigue-zague, vai pelo meio!'],
+  gatas_moita: ['Essa moita tá mexendo... minhas orelhas não mentem.', 'Tem alguém escondido ali!', 'Mexe naquela moita, aposto que tem raiz.'],
+  gatas_semente: ['Uma semente! Guarda que vale dica.', 'Sementinha! Dá pra brincar de bolinha?', 'nina:Não é petisco? Que pena. Guarda, então.'],
+  gatas_tibum: ['Fsss! Água não! Gato e água não combinam.'],
+  gatas_pao: ['Nhac! Gato também gosta de pão truncado.'],
   robo: ['DIVIDINDO... POR ZERO... ERRO', 'OVERFLOW... OVERFLOW... OVERFL', 'NaN NaN NaN... BATMAN?', 'TOLERÂNCIA... NÃO... ENCONTRADA'],
   sem_dinheiro: ['Sem sementes, sem dica. Nem bicho trabalha de graça!', 'Seu saldo de sementes deu underflow.', 'Chacoalha umas árvores e volta aqui.'],
   npc: [
     'Bom dia! Ou boa iteração, sei lá.',
     'Dizem que a Usina está cuspindo NaN.',
-    'Você é o(a) engenheiro(a)? Salva a gente!',
+    'Você é {o} engenheir{o}? Salva a gente!',
     'Minha ponte balança desde que a raiz fugiu.',
     'Meu pão saiu com 0,999... de tamanho.',
     'Já tentou desligar e ligar a equação de novo?',
@@ -104,7 +148,12 @@ export function fala(gatilho, vars) {
   ultimo[gatilho] = i;
   let s = lista[i];
   if (vars) for (const k in vars) s = s.replace(`{${k}}`, vars[k]);
-  return s;
+  return tx(s);
+}
+
+// Fala do pet: a versão própria dele, ou a da Raizinha quando não houver
+export function falaPet(pet, gatilho, vars) {
+  return fala(FALAS[`${pet}_${gatilho}`] ? `${pet}_${gatilho}` : `raizinha_${gatilho}`, vars);
 }
 
 // Placas de entrada das cidades (trocadilhos)
@@ -149,14 +198,26 @@ export const LOADING = [
   'Truncando a paciência.',
 ];
 
-export const RAIZINHA_TUTORIAL = {
-  conversa: [
-    'Oi, eu sou a Raizinha! A sua mandioquinha de estimação.',
-    'Cada cidade tem um bicho guia. Ele dá dicas em troca de sementes.',
-    'Dentro das fases, aperte H para chamar o bicho. A primeira dica é grátis!',
-    'Sementes caem das árvores, dos baús e das vitórias. Guarde bem!',
-  ],
-  intro: ['Chegou o(a) engenheiro(a)!', 'As raízes fugiram...', 'Mas você tem método. Vários.'],
+export const PET_TUTORIAL = {
+  raizinha: {
+    conversa: [
+      'Oi, {nome}! Eu sou a Raizinha, a sua mandioquinha de estimação.',
+      'Cada cidade tem um bicho guia. Ele dá dicas em troca de sementes.',
+      'Dentro das fases, aperte H para chamar o bicho. A primeira dica é grátis!',
+      'Sementes caem das árvores, dos baús e das vitórias. Guarde bem!',
+    ],
+    intro: ['Chegou {o} engenheir{o} {nome}!', 'As raízes fugiram...', 'Mas você tem método. Vários.'],
+  },
+  gatas: {
+    conversa: [
+      'lina:Miau! Oi, {nome}! Eu sou a Lina.',
+      'nina:E eu sou a Nina! A gente vai junto com você pela ilha toda.',
+      'lina:Cada cidade tem um bicho guia. Ele dá dicas em troca de sementes.',
+      'nina:Dentro das fases, aperte H para chamar o bicho. A primeira dica é grátis!',
+      'lina:Sementes caem das árvores, dos baús e das vitórias. Nada de brincar com elas!',
+    ],
+    intro: ['lina:Miau! Chegou {o} engenheir{o} {nome}!', 'nina:As raízes fugiram...', 'lina:Mas você tem método. Vários.'],
+  },
 };
 
 // Cinemática

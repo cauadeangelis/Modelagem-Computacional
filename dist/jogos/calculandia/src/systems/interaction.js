@@ -23,8 +23,8 @@ export class Interaction {
       const score = it.prio * 100 - Math.sqrt(d2);
       if (score > bs) { bs = score; best = it; }
     }
-    // Raizinha: conversa quando não há nada por perto
-    if (!best && G.raizinhaTalk) best = G.raizinhaTalk;
+    // pet: conversa quando não há nada por perto
+    if (!best && G.petTalk) best = G.petTalk;
     this.current = best;
     return best;
   }
@@ -33,6 +33,7 @@ export class Interaction {
     if (!it) return false;
     G.audio?.sfx('ping');
     it.action();
+    G.events.emit('interacted', it);
     return true;
   }
 }

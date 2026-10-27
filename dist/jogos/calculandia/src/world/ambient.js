@@ -206,7 +206,7 @@ export class Ambient {
     this.birdWings.instanceMatrix.needsUpdate = true;
 
     // borboletas (trajetória de Lissajous; seguem a Raizinha por 5 s)
-    const rz = G.raizinha?.pos;
+    const rz = G.pet?.pos;
     for (const b of this.butterflies) {
       let x = b.cx + Math.sin(t * b.fx + b.ph) * b.ax, z = b.cz + Math.sin(t * b.fz * 1.5 + b.ph) * b.az;
       if (rz && Math.hypot(rz.x - x, rz.z - z) < 2.2 && b.follow <= 0) b.follow = 5;

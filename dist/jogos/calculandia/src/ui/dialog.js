@@ -3,6 +3,13 @@ import * as THREE from 'three';
 import { G, lock, unlock } from '../game.js';
 import { CONFIG } from '../config.js';
 import { drawPortrait } from './portraits.js';
+import { tx, separarFalante } from '../data/dialogs.js';
+
+// marcadores do jogador trocados; "nina:Oi" vira "Nina: Oi"
+function linha(s) {
+  const [quem, texto] = separarFalante(tx(s));
+  return quem ? `${quem[0].toUpperCase()}${quem.slice(1)}: ${texto}` : texto;
+}
 
 export class Bubbles {
   constructor(el) {
@@ -81,7 +88,7 @@ export class Dialog {
     if (this.open) this.close(undefined);
     this.open = true;
     lock();
-    this.cfg = { name, portrait, lines, options, voice };
+    this.cfg = { name, portrait, lines: lines.map(linha), options, voice };
     this.idx = 0;
     this.freshFrame = true;
     this.el.classList.remove('hidden');

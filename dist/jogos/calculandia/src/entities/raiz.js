@@ -97,7 +97,7 @@ export class FugitiveRoot {
     this.dir = away;
     G.particles.emit('folhas', this.home.x, this.home.y + 0.8, this.home.z);
     G.audio?.sfx('pop');
-    G.raizinha?.say(RAIZ_TIPOS[this.tipo].piada);
+    G.pet?.say(RAIZ_TIPOS[this.tipo].piada);
     G.events.emit('rootOut', this);
   }
 

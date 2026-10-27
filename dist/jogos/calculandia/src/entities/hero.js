@@ -2,7 +2,7 @@
 import * as THREE from 'three';
 import { G } from '../game.js';
 import { CONFIG, HERO_NAME } from '../config.js';
-import { makeHumanoid, applyCosmetics, resetPose } from './rig.js';
+import { makeHumanoid, applyCosmetics, resetPose, swingPigtails } from './rig.js';
 import { animIdle, animLocomotion, animJump, animAction, jumpOffset, jumpAirborne, JUMP_TOTAL, ACTIONS } from './animations.js';
 import { walkHeight, isWalkable, isWaterAt, inMud, surfaceAt } from '../world/ground.js';
 import { regionAt, terrainHeight } from '../world/terrain.js';
@@ -12,9 +12,12 @@ import { damp, wrapAngle, clamp, easeOutBack } from '../utils/math.js';
 const BLOCKING = new Set(['celebrate', 'dizzy', 'sit', 'enter', 'talk', 'surprise', 'bonk']);
 
 export class Hero {
-  constructor(scene) {
+  constructor(scene, genero = 'm') {
     this.name = HERO_NAME;
-    this.rig = makeHumanoid(CONFIG.hero.colors);
+    this.scene = scene;
+    this.genero = genero;
+    this.cosmetics = [];
+    this.rig = makeHumanoid({ ...CONFIG.hero.colors, genero });
     scene.add(this.rig.root);
     this.pos = new THREE.Vector3();
     this.vel = new THREE.Vector3();
@@ -59,7 +62,22 @@ export class Hero {
     this.rig.root.scale.set(1, 1, 1);
   }
 
-  setCosmetics(list) { applyCosmetics(this.rig, list); }
+  setCosmetics(list) { this.cosmetics = list; applyCosmetics(this.rig, list); }
+
+  // troca o boneco (masculino/feminino) mantendo posição, cosméticos, estrelinhas e lâmpada
+  setLook(genero) {
+    if (genero === this.genero) return;
+    this.genero = genero;
+    const old = this.rig;
+    this.rig = makeHumanoid({ ...CONFIG.hero.colors, genero });
+    this.rig.root.position.copy(old.root.position);
+    this.rig.root.rotation.y = old.root.rotation.y;
+    this.rig.root.visible = old.root.visible;
+    this.rig.head.add(this.stars, this.bulb);
+    this.scene.remove(old.root);
+    this.scene.add(this.rig.root);
+    applyCosmetics(this.rig, this.cosmetics);
+  }
 
   play(name, opts = {}) {
     this.action = { name, t: 0, dur: opts.dur ?? ACTIONS[name]?.dur ?? 1, onEnd: opts.onEnd };
@@ -228,6 +246,7 @@ export class Hero {
       animIdle(rig, t, dt);
     }
     this.idleT = this.speed < 0.1 && !this.action ? this.idleT + dt : 0;
+    swingPigtails(rig, Math.min(1, this.speed / H.runSpeed), this.phase, t, this.jumpT >= 0);
 
     // região atual (banner + música)
     const r = regionAt(this.pos.x, this.pos.z);

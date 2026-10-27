@@ -1,8 +1,8 @@
-// Menu (Esc): Continuar, Raizdex, Opções e Créditos. Também a tela de título.
+// Menu (Esc): Continuar, Raizdex, Controles, Opções e Créditos. Também a tela de título.
 import { G, lock, unlock } from '../game.js';
 import { CITIES, SETTLEMENT_BY_ID } from '../data/settlements.js';
 import { ANIMALS } from '../data/animals.js';
-import { CREDITOS } from '../data/dialogs.js';
+import { CREDITOS, JOGADOR } from '../data/dialogs.js';
 import { RAIZ_TIPOS, TIPOS_ORDEM } from '../entities/raiz.js';
 import { STICKERS, STICKER_INFO, COSMETICS } from '../systems/progress.js';
 import { RELICS } from '../fases/levels.js';
@@ -18,11 +18,12 @@ export class Menu {
   toggle() { this.open ? this.close() : this.show(); }
 
   show(page = 'main') {
-    if (!this.open) { this.open = true; lock(); }
+    if (!this.open) { this.open = true; lock(); G.events.emit('menuOpened'); }
     this.el.classList.remove('hidden');
     this.page = page;
     if (page === 'main') this.main();
     if (page === 'dex') this.dex();
+    if (page === 'ctrl') this.controles();
     if (page === 'opts') this.opts();
     if (page === 'cred') this.cred();
     if (page === 'engineer') this.engineer();
@@ -40,15 +41,39 @@ export class Menu {
   }
 
   main() {
-    this.sheet(`<h2>Menu</h2><div class="menu-list">
+    this.sheet(`<h2>Menu · ${esc(JOGADOR.nome)}</h2><div class="menu-list">
       <button class="btn big" data-go="close">▶ Continuar</button>
       <button class="btn big" data-go="dex">📒 Raizdex</button>
+      <button class="btn big" data-go="ctrl">🎮 Controles</button>
       <button class="btn big" data-go="engineer">🔬 Engenheiro e Diário de Campo</button>
       <button class="btn big" data-go="opts">⚙️ Opções</button>
       <button class="btn big" data-go="cred">🎬 Créditos</button>
       <a class="btn big secondary" href="../../index.html#jogos">← Voltar ao Numera Academy</a>
-    </div>
-    <p style="font-size:15px;margin-top:14px">WASD/setas andam · Shift corre · Espaço pula · E interage · H dica · M mapa · Q/R giram a câmera · roda = zoom</p>`);
+    </div>`);
+  }
+
+  controles() {
+    const k = (...ks) => ks.map((x) => `<kbd>${x}</kbd>`).join(' ');
+    const linhas = [
+      ['Andar', `${k('W', 'A', 'S', 'D')} ou ${k('↑', '←', '↓', '→')} · clique no chão`, 'joystick · toque no chão'],
+      ['Correr', `segure ${k('Shift')}`, 'toque duplo no joystick'],
+      ['Pular', k('Espaço'), 'botão Pular'],
+      ['Interagir / passar fala', `${k('E')} ou ${k('Enter')}`, 'botão Interagir · toque na fala'],
+      ['Escolher resposta', `${k('1')} ${k('2')} ${k('3')}`, 'toque na resposta'],
+      ['Dica do objetivo', k('H'), 'botão Dica'],
+      ['Mapa', k('M'), 'botão 🗺️'],
+      ['Menu', k('Esc'), 'botão ☰'],
+      ['Girar a câmera', `${k('Q')} e ${k('R')}`, '—'],
+      ['Zoom', 'roda do mouse', 'pinça com dois dedos'],
+      ['Pular a abertura', `segure ${k('Espaço')}`, 'toque e segure'],
+    ];
+    this.sheet(`<div class="row" style="justify-content:space-between"><h2>🎮 Controles</h2><button class="btn secondary" data-go="main">← Voltar</button></div>
+      <table class="ctrl-table"><thead><tr><th>Ação</th><th>Teclado e mouse</th><th>Toque</th></tr></thead>
+      <tbody>${linhas.map(([a, t, m]) => `<tr><td>${a}</td><td>${t}</td><td>${m}</td></tr>`).join('')}</tbody></table>
+      <p>Na fase tática: <b>Auto</b> (ou ${k('Enter')}/${k('Espaço')} fora dos campos) executa uma operação, ${k('H')} chama o guia e ${k('D')} abre o modo professor.</p>
+      <div class="row"><button class="btn" id="m-dicas">💡 Mostrar as dicas de controle de novo</button></div>`);
+    const b = this.el.querySelector('#m-dicas');
+    b.onclick = () => { G.dicas.reset(); b.textContent = '✔ Pronto! Elas voltam quando você continuar.'; b.disabled = true; };
   }
 
   dex() {

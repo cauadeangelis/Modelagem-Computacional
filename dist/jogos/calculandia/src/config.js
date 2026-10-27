@@ -45,6 +45,12 @@ export const CONFIG = {
     lookDist: 8, bubbleMax: 70, bubbleTime: 3, idleTalkMin: 35, idleTalkMax: 70,
   },
 
+  // Pet "Lina e Nina": duas gatas, uma de cada lado do herói
+  gatas: [
+    { nome: 'Lina', voz: 900, lado: -1, atras: 1.35, cores: { pelo: '#9a9ca6', listra: '#5f616b', barriga: '#f4f1ea', olhos: '#8fd14f' } },
+    { nome: 'Nina', voz: 1040, lado: 1, atras: 1.6, cores: { pelo: '#e8923a', listra: '#b8621c', barriga: '#fff3e0', olhos: '#f2c14e' } },
+  ],
+
   triggers: { city: 20, door: 2.2, animal: 3.5, collectable: 1.5, campfire: 2.5, sign: 2.5, bush: 3, tree: 2.2, bell: 2.2, chest: 2 },
 
   animals: {

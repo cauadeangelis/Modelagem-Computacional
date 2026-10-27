@@ -1,5 +1,13 @@
 # Histórico de versões
 
+## Em andamento — Calculândia: personagem, pet e dicas de controle
+
+- **Criação do personagem:** antes da aventura, o jogador escolhe o boneco **masculino** ou **feminino** (com cabelo, marias-chiquinhas e cílios) e digita o nome dele, com prévias 3D em cada cartão. O nome aparece nas falas, no menu e no final; as falas também mudam conforme o gênero (engenheiro/engenheira, patrão/patroa).
+- **Escolha do pet:** a **Raizinha** continua, e agora há a opção **Lina e Nina**, duas gatas que seguem o herói uma de cada lado, sentam quando ele para, conversam entre si e têm falas, retrato e miado próprios. Elas também ajudam nas fases sem bicho guia.
+- **Dicas de controle nas primeiras interações:** um cartão embaixo do objetivo explica, uma por vez, andar (WASD ou setas, clique no chão), correr (Shift), câmera (Q/R e roda do mouse), interagir (E/Enter), conversas (E/Enter/Espaço, 1–3), pular (Espaço), pedir dica (H) e mapa/menu (M/Esc), na versão de toque quando a tela é de toque. Cada dica some quando o jogador faz o que ela pede, ou em "Entendi"/"Pular dicas".
+- **Menu → Controles:** tabela com todos os comandos de teclado e toque e um botão para rever as dicas.
+- Saves antigos passam uma vez pela tela de criação; quem já tinha terminado o tutorial não recebe as dicas de novo.
+
 ## v12 — Jogos: a Calculândia no lugar da Arena e o Quem Divergiu?, o jogo da sala
 
 A turma achou a Arena fraca como jogo. No lugar dela entrou a página **Jogos**, com a Calculândia (o jogo 3D do grupo) e um jogo novo, para a professora jogar com a turma no telão. O repositório passou a reunir o site e os dois jogos, organizados numa estrutura só.

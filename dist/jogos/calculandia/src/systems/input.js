@@ -20,6 +20,8 @@ export class Input {
     addEventListener('keydown', (e) => {
       // A fase tática tem controles de formulário e teclado próprios (incluindo Tab).
       if (G.mode === 'fase') { G.audio?.unlock(); return; }
+      // digitar o nome (e navegar pela tela de criação) não mexe no herói nem trava Espaço/Tab
+      if (e.target.closest?.('#creator') || e.target.matches?.('input[type=text], textarea')) return;
       if (e.repeat) { if (e.code === 'Space') e.preventDefault(); return; }
       const k = e.code;
       this.keys.add(k);

@@ -289,6 +289,7 @@ export class Audio {
       case 'sino': this.tone(o, 660, t, 1.4, 0.12, 'sine', { decay: true }); this.tone(o, 1320, t, 0.9, 0.05, 'sine', { decay: true }); this.tone(o, 1980, t, 0.5, 0.03, 'sine', { decay: true }); break;
       case 'badalada': for (let i = 0; i < 3; i++) { this.tone(o, 330, t + i * 0.7, 1.2, 0.1, 'sine', { decay: true }); this.tone(o, 660, t + i * 0.7, 0.8, 0.04, 'sine', { decay: true }); } break;
       case 'plof': this.noise(o, t, 0.12, 0.12, 'lowpass', 500); this.tone(o, 150, t, 0.12, 0.12, 'sine', { slide: 80, decay: true }); break;
+      case 'miau': this.tone(o, 620, t, 0.14, 0.07, 'triangle', { slide: 980 }); this.tone(o, 980, t + 0.13, 0.32, 0.06, 'triangle', { slide: 560, decay: true, vib: 7 }); break;
       case 'arroto': this.tone(o, 95, t, 0.35, 0.12, 'sawtooth', { slide: 60, lp: 500 }); break;
       case 'nevoa': this.noise(o, t, 2.5, 0.12, 'lowpass', 700, true); [60, 64, 67, 72].forEach((m, i) => this.tone(o, N(m + 12), t + 0.5 + i * 0.2, 0.6, 0.05, 'sine', { decay: true })); break;
       case 'gritinhos': for (let i = 0; i < 4; i++) this.tone(o, 900 + Math.random() * 500, t + i * 0.15, 0.25, 0.03, 'sine', { slide: 1500 + Math.random() * 600 }); break;

@@ -70,9 +70,11 @@ export function runFase({ s: settlement, nivel, animalId, freeHint = false }) {
     if (more) { if (s.hintLevel >= 3) return; if (!G.progress.spendSeeds(s.hintLevel === 1 ? 1 : 3)) throw new Error('Sementes insuficientes.'); G.progress.save(); s.hintLevel++; } else s.hintLevel = Math.max(1, s.hintLevel);
     s.hints++; s.usedL3 ||= s.hintLevel === 3;
     const text = h['dica' + s.hintLevel] + (game.level.relics.length ? ' Experimente: ' + game.level.relics.map(id => RELICS[id]).join(', ') + '.' : '');
-    $('t-hint').innerHTML = `<canvas width="96" height="96" id="t-portrait" aria-hidden="true"></canvas><span><b>${esc(ANIMALS[animalId]?.nome || 'Raizinha')}:</b> ${esc(text)}</span>`;
-    drawPortrait($('t-portrait'), animalId ? 'animal' : 'raizinha', animalId, performance.now() / 1000, 1);
-    G.audio?.voice(text, ANIMALS[animalId]?.voz.pitch || 660, ANIMALS[animalId]?.voz.onda || 'triangle'); G.audio?.sfx('dica'); render();
+    // sem bicho guia (chefões e Usina), quem ajuda é o pet escolhido
+    const pet = G.pet || { nome: 'Raizinha', portrait: { kind: 'raizinha' }, voice: { pitch: 660, wave: 'triangle' } };
+    $('t-hint').innerHTML = `<canvas width="96" height="96" id="t-portrait" aria-hidden="true"></canvas><span><b>${esc(ANIMALS[animalId]?.nome || pet.nome)}:</b> ${esc(text)}</span>`;
+    drawPortrait($('t-portrait'), animalId ? 'animal' : pet.portrait.kind, animalId, performance.now() / 1000, 1);
+    G.audio?.voice(text, ANIMALS[animalId]?.voz.pitch || pet.voice.pitch, ANIMALS[animalId]?.voz.onda || pet.voice.wave); G.audio?.sfx('dica'); render();
   }
   root.addEventListener('click', e => {
     const b = e.target.closest('button'); if (!b || closed) return; if (b.id === 'fz-back') { close(battle?.done ? battle.result() : game.result()); return; } if (finished) return;

@@ -1,4 +1,6 @@
 // A Raizinha (seção 6.2): mandioquinha de olhos enormes que segue o herói pulando.
+// É um dos pets (o outro é Lina e Nina, em gatas.js); os dois têm a mesma interface:
+// kind, nome, portrait, voice, pos, anchor, roots, place, say, fala, react_, fear, update, dispose.
 import * as THREE from 'three';
 import { G } from '../game.js';
 import { CONFIG } from '../config.js';
@@ -6,7 +8,7 @@ import { sph, cone, cyl, mat, G_SPH } from '../utils/geo.js';
 import { makeContactShadow } from './rig.js';
 import { damp, wrapAngle, clamp, lerp, easeOutQuad } from '../utils/math.js';
 import { walkHeight } from '../world/ground.js';
-import { fala } from '../data/dialogs.js';
+import { falaPet, tx } from '../data/dialogs.js';
 
 export function makeRaizinhaModel(colors = {}) {
   const c = { corpo: '#c58a54', anel: '#a06a38', folha: '#5fbf5a', ...colors };
@@ -50,6 +52,10 @@ export function makeRaizinhaModel(colors = {}) {
 
 export class Raizinha {
   constructor(scene) {
+    this.kind = 'raizinha';
+    this.nome = 'Raizinha';
+    this.portrait = { kind: 'raizinha' };
+    this.voice = { pitch: 660, wave: 'triangle' };
     this.m = makeRaizinhaModel();
     scene.add(this.m.root);
     this.pos = new THREE.Vector3();
@@ -65,8 +71,11 @@ export class Raizinha {
   }
   place(p) { this.pos.set(p.x + 1.2, walkHeight(p.x + 1.2, p.z + 1.2), p.z + 1.2); }
   get anchor() { return this.m.root; }
+  get roots() { return [this.m.root]; }
+  dispose() { this.m.root.removeFromParent(); }
 
-  say(text, time) { G.ui?.bubbles.say(this.m.root, text, { y: 1.25, time }); G.audio?.voice(text, 660, 'triangle'); }
+  say(text, time) { text = tx(text); G.ui?.bubbles.say(this.m.root, text, { y: 1.25, time }); G.audio?.voice(text, 660, 'triangle'); }
+  fala(gatilho, vars) { return falaPet(this.kind, gatilho, vars); }
 
   react_(kind) { this.react = { kind, t: 0 }; if (kind === 'heart') G.particles.emit('coracoes', this.pos.x, this.pos.y + 1, this.pos.z); }
 
@@ -120,7 +129,7 @@ export class Raizinha {
     // reações
     let tilt = 0, shake = 0, flip = 0, scale = 1;
     // inclina em direção a bichos e coletáveis a menos de 8
-    const interest = this.findInterest();
+    const interest = findInterest(this.pos);
     if (interest) {
       const d = interest.clone().sub(this.pos);
       tilt = 0.18;
@@ -156,14 +165,15 @@ export class Raizinha {
     this.talkTimer -= dt;
     if (this.talkTimer <= 0 && G.mode === 'play' && !G.locks) {
       this.talkTimer = C.idleTalkMin + Math.random() * (C.idleTalkMax - C.idleTalkMin);
-      this.say(fala('raizinha_idle'));
+      this.say(this.fala('idle'));
     }
   }
+}
 
-  findInterest() {
-    let best = null, bd = CONFIG.companion.lookDist;
-    for (const a of G.animals) { const d = a.pos.distanceTo(this.pos); if (d < bd) { bd = d; best = a.pos.clone().add(new THREE.Vector3(0, 0.8, 0)); } }
-    for (const r of G.roots) { if (!r.visibleNow) continue; const d = r.pos.distanceTo(this.pos); if (d < bd) { bd = d; best = r.pos.clone(); } }
-    return best;
-  }
+// bicho ou Raiz Fugitiva visível mais perto (até 8): o pet inclina e olha para lá
+export function findInterest(pos) {
+  let best = null, bd = CONFIG.companion.lookDist;
+  for (const a of G.animals) { const d = a.pos.distanceTo(pos); if (d < bd) { bd = d; best = a.pos.clone().add(new THREE.Vector3(0, 0.8, 0)); } }
+  for (const r of G.roots) { if (!r.visibleNow) continue; const d = r.pos.distanceTo(pos); if (d < bd) { bd = d; best = r.pos.clone(); } }
+  return best;
 }

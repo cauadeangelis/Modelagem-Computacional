@@ -15,9 +15,9 @@ export function makeContactShadow(r = 0.55) {
   return m;
 }
 
-// makeHero({ pele, macacao, colete, capacete }) — aparência parametrizável
+// makeHero({ pele, macacao, colete, capacete, genero }) — aparência parametrizável; genero 'f' ganha cabelo e cílios
 export function makeHumanoid(opts = {}) {
-  const c = { ...CONFIG.hero.colors, luva: '#e8654a', bota: '#5a3a2a', mochila: '#8a5a3a', planta: '#d9d9d9', ...opts };
+  const c = { ...CONFIG.hero.colors, luva: '#e8654a', bota: '#5a3a2a', mochila: '#8a5a3a', planta: '#d9d9d9', cabelo: '#6b3a1e', laco: '#e8454a', ...opts };
   const root = new THREE.Group();
   const body = new THREE.Group(); // recebe escalas (amassar/esticar) sem mexer na raiz
   root.add(body);
@@ -40,7 +40,25 @@ export function makeHumanoid(opts = {}) {
     head.add(e); eyes.push(e);
   }
   for (const sx of [-1, 1]) head.add(sph(0.05, '#f4a3a3', sx * 0.24, -0.08, 0.3, 6, 4));
-  const mouth = box(0.12, 0.03, 0.03, '#8a3a2a', 0, -0.13, 0.36); head.add(mouth);
+  const mouth = box(0.12, 0.03, 0.03, c.genero === 'f' ? '#b8404f' : '#8a3a2a', 0, -0.13, 0.36); head.add(mouth);
+  // cabelo até os ombros, mechas do lado do rosto, marias-chiquinhas que balançam (hero.js) e cílios
+  const pigtails = [];
+  if (c.genero === 'f') {
+    const back = sph(0.39, c.cabelo, 0, -0.04, -0.1, 12, 10); back.scale.set(1.04, 1.02, 0.92); head.add(back);
+    const nape = sph(0.3, c.cabelo, 0, -0.32, -0.2, 10, 8); nape.scale.set(1.15, 1.1, 0.7); head.add(nape);
+    for (const sx of [-1, 1]) {
+      const lock = sph(0.12, c.cabelo, sx * 0.34, -0.16, 0.06, 8, 6); lock.scale.set(0.65, 1.8, 0.8); head.add(lock);
+      // presa no lado da cabeça, logo abaixo da aba; rotation.z = sx·0,35 aponta para fora
+      const g = new THREE.Group(); g.position.set(sx * 0.4, 0.02, -0.12); g.rotation.z = sx * 0.35; head.add(g);
+      g.add(sph(0.065, c.laco, 0, 0, 0, 8, 6));
+      const p1 = sph(0.11, c.cabelo, 0, -0.14, 0, 8, 6); p1.scale.set(1, 1.4, 1); g.add(p1);
+      const p2 = sph(0.08, c.cabelo, 0, -0.32, 0, 8, 6); p2.scale.set(1, 1.4, 1); g.add(p2);
+      pigtails.push(g);
+    }
+    for (const [i, sx] of [[0, -1], [1, 1]]) {
+      const lash = box(0.06, 0.018, 0.02, '#1a1a1a', sx * 0.045, 0.06, 0.02); lash.rotation.z = sx * -0.5; eyes[i].add(lash);
+    }
+  }
   const helmet = new THREE.Group(); head.add(helmet);
   const helmetMesh = new THREE.Mesh(G_HALFSPH(0.42, 14, 6), mat(c.capacete)); helmetMesh.position.y = 0.12; helmet.add(helmetMesh);
   const brim = cyl(0.5, 0.5, 0.05, c.capacete, 0, 0.12, 0.04, 16); helmet.add(brim);
@@ -86,7 +104,7 @@ export function makeHumanoid(opts = {}) {
   const shadow = makeContactShadow();
   root.add(shadow);
 
-  const rig = { root, body, pelvis, torso, torsoMesh, head, eyes, mouth, helmet, armL, armR, legL, legR, pack, cos, shadow, colors: c };
+  const rig = { root, body, pelvis, torso, torsoMesh, head, eyes, mouth, helmet, pigtails, armL, armR, legL, legR, pack, cos, shadow, colors: c };
   root.traverse((m) => {
     // só peças grandes projetam sombra (olhos, bochechas e detalhes não): menos draw calls no passe de sombra
     if (!m.isMesh || m === shadow) return;
@@ -120,6 +138,15 @@ export function applyCosmetics(rig, list = []) {
   rig.pack.visible = !on.has('jato');
   rig.legL.userData.boot.material = mat(on.has('foguete') ? '#e8454a' : rig.colors.bota);
   rig.legR.userData.boot.material = rig.legL.userData.boot.material;
+}
+
+// marias-chiquinhas: abrem e vão para trás com a velocidade k (0–1), balançam com o passo e sobem no pulo
+export function swingPigtails(rig, k, phase, t, airborne) {
+  rig.pigtails.forEach((g, i) => {
+    const sx = i ? 1 : -1;
+    g.rotation.z = sx * (0.35 + k * 0.25 + (airborne ? 0.3 : 0)) + Math.sin(phase + i * Math.PI) * 0.15 * k + Math.sin(t * 1.6 + i) * 0.05;
+    g.rotation.x = k * 0.6 + Math.sin(phase * 2) * 0.1 * k;
+  });
 }
 
 export function resetPose(rig) {

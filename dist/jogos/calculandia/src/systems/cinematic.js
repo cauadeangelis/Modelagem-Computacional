@@ -2,7 +2,7 @@
 import * as THREE from 'three';
 import { G } from '../game.js';
 import { CONFIG } from '../config.js';
-import { CINE, RAIZINHA_TUTORIAL } from '../data/dialogs.js';
+import { CINE, PET_TUTORIAL } from '../data/dialogs.js';
 import { shoreRadius, terrainHeight, WATER_Y } from '../world/terrain.js';
 import { walkHeight } from '../world/ground.js';
 import { box, cyl, cone } from '../utils/geo.js';
@@ -46,7 +46,7 @@ export function playCinematic() {
     const boatFrom = V(land.x + 1.5, WATER_Y, land.z + 34), boatTo = V(land.x + 1.5, WATER_Y, land.z + 3.6);
     let t = 0, hold = 0, done = false, exploded = false, said = [false, false, false], jumped = false;
     const layered = [];
-    const hero = G.hero, rz = G.raizinha;
+    const hero = G.hero, rz = G.pet;
     hero.place(boatFrom.x, boatFrom.z, Math.PI);
     hero.rig.root.visible = false;
     const regions = [[-62, 50], [-75, -28], [8, -88], [76, -32], [68, 48]];
@@ -109,7 +109,7 @@ export function playCinematic() {
           rz.pos.copy(boat.position).add(V(0.4, 0.45, -0.9));
         } else if (!jumped) {
           jumped = true;
-          // o herói salta do barco e a Raizinha pula atrás
+          // o herói salta do barco e o pet pula atrás
           const from = hero.pos.clone();
           hero.ride((d, tt) => {
             const kk = Math.min(1, tt / 0.6);
@@ -128,7 +128,7 @@ export function playCinematic() {
         const k = (t - 22) / 10;
         pos.set(land.x + lerp(9, 6, k), 7, land.z - lerp(9, 7, k));
         look.set(land.x, 1.2, land.z);
-        RAIZINHA_TUTORIAL.intro.forEach((line, i) => { if (!said[i] && t > 23 + i * 3) { said[i] = true; rz.say(line, 2.9); } });
+        PET_TUTORIAL[rz.kind].intro.forEach((line, i) => { if (!said[i] && t > 23 + i * 3) { said[i] = true; rz.say(line, 2.9); } });
       } else if (t < 40) {
         const k = (t - 32) / 8;
         const f = k * (regions.length - 1);

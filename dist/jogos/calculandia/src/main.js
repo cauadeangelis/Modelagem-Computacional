@@ -2,11 +2,11 @@
 // Ordem por quadro: input → herói → colisão → NPCs e bichos → interação → câmera → partículas → UI → render.
 import * as THREE from 'three';
 import { G, lock, unlock } from './game.js';
-import { CONFIG, HERO_NAME } from './config.js';
+import { CONFIG } from './config.js';
 import { SETTLEMENTS, REGIONS, BOSS_OF_REGION, NIVEIS } from './data/settlements.js';
 import { ANIMALS } from './data/animals.js';
 import { HINTS } from './data/hints.js';
-import { fala, LOADING, RAIZINHA_TUTORIAL } from './data/dialogs.js';
+import { fala, LOADING, PET_TUTORIAL, JOGADOR, definirJogador, tx } from './data/dialogs.js';
 import { buildTerrain, regionBoost, terrainHeight, regionAt } from './world/terrain.js';
 import { buildWater } from './world/water.js';
 import { buildSky } from './world/sky.js';
@@ -20,6 +20,7 @@ import { FogGates } from './world/fog.js';
 import { walkHeight } from './world/ground.js';
 import { Hero } from './entities/hero.js';
 import { Raizinha } from './entities/companion.js';
+import { Gatas } from './entities/gatas.js';
 import { Animal } from './entities/animal.js';
 import { NPC } from './entities/npc.js';
 import { FugitiveRoot, TIPOS_ORDEM, RAIZ_TIPOS } from './entities/raiz.js';
@@ -32,12 +33,13 @@ import { Audio } from './systems/audio.js';
 import { Progress } from './systems/progress.js';
 import { loadSave, freshSave, clearSave } from './systems/save.js';
 import { playCinematic, landingPoint } from './systems/cinematic.js';
-import { Tutorial } from './systems/tutorial.js';
+import { Tutorial, Dicas } from './systems/tutorial.js';
 import { HUD, phasePreviewInfo } from './ui/hud.js';
 import { Bubbles, Dialog } from './ui/dialog.js';
 import { Minimap } from './ui/minimap.js';
 import { MapScreen } from './ui/map-screen.js';
 import { Menu, showTitle } from './ui/menu.js';
+import { showCreator } from './ui/creator.js';
 import { irisTo, fade } from './ui/transitions.js';
 import { launchLevel, batteryFor } from './bridge/level-launcher.js';
 import { mulberry32 } from './utils/math.js';
@@ -46,6 +48,7 @@ const $ = (id) => document.getElementById(id);
 const V = (x, y, z) => new THREE.Vector3(x, y, z);
 const wait = (s) => new Promise((r) => setTimeout(r, s * 1000));
 const frameYield = () => new Promise((r) => setTimeout(r, 0));
+const PETS = { raizinha: Raizinha, gatas: Gatas };
 
 async function setLoad(k, label) {
   $('load-fill').style.width = `${Math.round(k * 100)}%`;
@@ -78,6 +81,7 @@ async function boot() {
   G.interaction = new Interaction();
   G.triggers = new Triggers();
   G.progress = new Progress(saved || freshSave());
+  definirJogador(G.progress.d);
   G.particles = new Particles(scene);
   G.audio = new Audio();
   G.input = new Input(renderer.domElement);
@@ -104,8 +108,9 @@ async function boot() {
     if (i % 5 === 4) await setLoad(0.5 + (i / SETTLEMENTS.length) * 0.3);
   }
   await setLoad(0.82, 'Acordando os bichos...');
-  G.hero = new Hero(scene);
-  G.raizinha = new Raizinha(scene);
+  G.hero = new Hero(scene, JOGADOR.genero);
+  G.hero.name = JOGADOR.nome;
+  G.pet = new PETS[JOGADOR.pet](scene);
   for (const S of G.settlements) {
     if (S.def.bicho && S.pen) { S.animal = new Animal(scene, S.def.bicho, S); G.animals.push(S.animal); }
     if ((S.def.tipo === 'cidade' || S.def.tipo === 'acampamento')) {
@@ -122,12 +127,13 @@ async function boot() {
   G.ambient = new Ambient(scene, G.props);
   G.extras = new Extras(scene);
   G.tutorial = new Tutorial(scene);
+  G.dicas = new Dicas();
   await setLoad(0.92, 'Desenhando o mapa...');
   G.ui.minimap = new Minimap();
   G.ui.map = new MapScreen();
   G.ui.menu = new Menu();
   G.fases = { batteryFor };
-  G.raizinhaTalk = { label: 'Conversar com a Raizinha', action: talkRaizinha, prio: 0 };
+  G.petTalk = { label: tx('Conversar com {pet}'), action: talkPet, prio: 0 };
   setupEvents();
   applyAll();
   if (G.debug) setupDebug();
@@ -136,7 +142,7 @@ async function boot() {
   const d = G.progress.d;
   G.hero.place(d.hero.x, d.hero.z, d.hero.yaw);
   G.hero.setCosmetics(d.cosmetics.on);
-  G.raizinha.place(G.hero.pos);
+  G.pet.place(G.hero.pos);
   G.camRig.snap(G.hero.pos);
   await setLoad(1, 'Pronto!');
   $('loading').classList.add('hidden');
@@ -152,6 +158,8 @@ async function boot() {
 
 async function startPlay(isNew) {
   G.audio.unlock();
+  // saves de antes da tela de criação também passam por ela uma vez
+  if (!G.progress.d.player) await criarPersonagem();
   if (isNew && !G.progress.d.cine) {
     G.mode = 'cine';
     G.audio.setRegion('base');
@@ -165,6 +173,28 @@ async function startPlay(isNew) {
   G.ui.hud.show(true);
   refreshHudVisibility();
   G.hero.region = -1; // força a faixa da região e a música
+}
+
+async function criarPersonagem() {
+  const d = G.progress.d;
+  const r = await showCreator({ nome: '', genero: JOGADOR.genero, pet: JOGADOR.pet });
+  d.player = { nome: r.nome, genero: r.genero };
+  d.pet = r.pet;
+  aplicarJogador();
+  G.progress.save();
+}
+
+// aplica nome, boneco e pet do save no mundo já montado
+function aplicarJogador() {
+  definirJogador(G.progress.d);
+  G.hero.setLook(JOGADOR.genero);
+  G.hero.name = JOGADOR.nome;
+  if (G.pet.kind !== JOGADOR.pet) {
+    G.pet.dispose();
+    G.pet = new PETS[JOGADOR.pet](G.scene);
+    G.pet.place(G.hero.pos);
+  }
+  G.petTalk.label = tx('Conversar com {pet}');
 }
 
 function refreshHudVisibility() {
@@ -242,25 +272,24 @@ async function talkAnimal(a) {
   if (v === 'como') await G.ui.dialog.show({ name: d.nome, portrait, voice, lines: ['Dica 1 é grátis. Dica 2 custa 1 semente, e a 3 custa 3 sementes.', 'A dica 3 mostra a jogada fantasma, mas a fase rende no máximo 2 estrelas.'] });
 }
 
-async function talkRaizinha() {
-  const p = G.progress;
-  const portrait = { kind: 'raizinha' };
-  const voice = { pitch: 660, wave: 'triangle' };
+async function talkPet() {
+  const p = G.progress, pet = G.pet;
+  const quem = { name: pet.nome, portrait: pet.portrait, voice: pet.voice };
   if (p.d.tutorial === 3) {
-    await G.ui.dialog.show({ name: 'Raizinha', portrait, voice, lines: RAIZINHA_TUTORIAL.conversa });
+    await G.ui.dialog.show({ ...quem, lines: PET_TUTORIAL[pet.kind].conversa });
     G.tutorial.advance(4);
     return;
   }
   const obj = G.objective;
   const v = await G.ui.dialog.show({
-    name: 'Raizinha', portrait, voice,
-    lines: [fala('raizinha_idle'), obj ? `Nosso próximo objetivo: ${obj.text.replace(/<[^>]+>/g, '')}` : 'A ilha está salva!'],
+    ...quem,
+    lines: [pet.fala('idle'), obj ? `Nosso próximo objetivo: ${obj.text.replace(/<[^>]+>/g, '')}` : 'A ilha está salva!'],
     options: [{ label: 'Dica geral', value: 'dica' }, { label: 'Onde estamos?', value: 'onde' }, { label: 'Valeu!', value: 'ok' }],
   });
-  if (v === 'dica') await G.ui.dialog.show({ name: 'Raizinha', portrait, voice, lines: [HINTS.raizinha[`dica${1 + Math.floor(Math.random() * 3)}`]] });
+  if (v === 'dica') await G.ui.dialog.show({ ...quem, lines: [HINTS.raizinha[`dica${1 + Math.floor(Math.random() * 3)}`]] });
   if (v === 'onde') {
     const r = regionAt(G.hero.pos.x, G.hero.pos.z);
-    await G.ui.dialog.show({ name: 'Raizinha', portrait, voice, lines: [`Estamos em ${REGIONS[r].nome}. Você tem ${p.totalStars()} ⭐ e ${p.seeds} 🌰.`, `Raízes Fugitivas pegas: ${p.rootsCaught()}/40.`] });
+    await G.ui.dialog.show({ ...quem, lines: [`Estamos em ${REGIONS[r].nome}. Você tem ${p.totalStars()} ⭐ e ${p.seeds} 🌰.`, `Raízes Fugitivas pegas: ${p.rootsCaught()}/40.`] });
   }
 }
 
@@ -279,8 +308,8 @@ function setupShakeables() {
           shaken.add(i); G.progress.d.trees.push(i);
           G.progress.addSeeds(CONFIG.seeds.tree);
           G.ui.seedFly(V(t.x, t.y + 3, t.z), 1);
-          G.raizinha.say(fala(G.progress.d.tutorial <= 2 ? 'raizinha_semente' : 'arvore'));
-        } else G.raizinha.say(fala(tutorialStep ? 'raizinha_semente' : 'arvore_vazia'));
+          G.pet.say(G.progress.d.tutorial <= 2 ? G.pet.fala('semente') : fala('arvore'));
+        } else G.pet.say(tutorialStep ? G.pet.fala('semente') : fala('arvore_vazia'));
         if (tutorialStep) { G.tutorial.advance(3); refreshHudVisibility(); }
         G.progress.save();
       },
@@ -419,12 +448,12 @@ function handleResult(S, nivel, res) {
   G.ui.hud.updateStats(p);
   if (res.abandonou) return;
   const B = S.buildings[nivel];
-  const rz = G.raizinha;
+  const rz = G.pet;
   if (res.vitoria) {
     G.hero.play('celebrate');
     rz.react_('flip');
     setTimeout(() => rz.react_('heart'), 700);
-    rz.say(fala('raizinha_vitoria'));
+    rz.say(rz.fala('vitoria'));
     S.animal?.celebrate();
     applySettlement(S, true, nivel);
     if (ev.firstWin) { G.audio.sfx('bandeira'); G.ui.caption(nivel === 'B' ? '🏆 Chefão vencido!' : `🚩 Bandeira içada: ${NIVEIS[nivel].predio}`); }
@@ -471,7 +500,7 @@ function handleResult(S, nivel, res) {
     G.hero.play('dizzy');
     G.audio.sfx('derrota');
     rz.react_('laugh');
-    rz.say(fala('raizinha_derrota'));
+    rz.say(rz.fala('derrota'));
     S.animal?.sad();
     if (B) B.smokeLoss = 5;
     const P = p.phase(p.key(S.def.id, nivel));
@@ -486,14 +515,15 @@ function handleResult(S, nivel, res) {
 async function ending() {
   const portrait = { kind: 'vilao' };
   await G.ui.dialog.show({ name: 'Grande Erro', portrait, voice: { pitch: 110, wave: 'sawtooth' }, lines: ['Nããão! Meu erro relativo... zerou!', 'Eu volto... no próximo arredondamento...'] });
-  await G.ui.dialog.show({ name: 'Raizinha', portrait: { kind: 'raizinha' }, voice: { pitch: 660, wave: 'triangle' }, lines: [`Conseguimos, ${HERO_NAME}! A Usina voltou a funcionar.`, 'Erro: zero. Orgulho: infinito. Calculândia está salva!'] });
+  const pet = G.pet;
+  await G.ui.dialog.show({ name: pet.nome, portrait: pet.portrait, voice: pet.voice, lines: ['Conseguimos, {nome}! A Usina voltou a funcionar.', 'Erro: zero. Orgulho: infinito. Calculândia está salva!'] });
   for (const S of G.settlements) { S.fireworks = 8; for (const n of S.npcs) n.party = 10; }
   G.ui.hud.banner('Calculândia salva! 🎉', 'region');
 }
 
 // ======================================================================
 function setupEvents() {
-  const E = G.events, ui = G.ui, rz = G.raizinha;
+  const E = G.events, ui = G.ui;
   let fogCool = 0, bushCool = 0, gateCool = 0;
   E.on('campfire', (S) => {
     if (G.hero.busy) return;
@@ -519,7 +549,7 @@ function setupEvents() {
   });
   E.on('phaseDoor', ({ s, nivel }) => {
     if (nivel === 'B' && !G.progress.canFightBoss(s.def)) {
-      rz.say(s.def.tipo === 'final' ? fala('raizinha_usina') : fala('raizinha_sem_estrelas', { n: G.progress.starsMissing(s.def) }), 4);
+      G.pet.say(s.def.tipo === 'final' ? G.pet.fala('usina') : G.pet.fala('sem_estrelas', { n: G.progress.starsMissing(s.def) }), 4);
       return;
     }
     enterPhase(s, nivel);
@@ -528,12 +558,12 @@ function setupEvents() {
   E.on('gateNear', (S) => {
     if (G.progress.canFightBoss(S.def) || gateCool > G.time) return;
     gateCool = G.time + 8;
-    rz.say(fala('raizinha_sem_estrelas', { n: G.progress.starsMissing(S.def) }), 4);
+    G.pet.say(G.pet.fala('sem_estrelas', { n: G.progress.starsMissing(S.def) }), 4);
   });
-  E.on('usinaGateNear', () => { if (!G.progress.usinaOpen() && gateCool < G.time) { gateCool = G.time + 8; rz.say(fala('raizinha_usina'), 4); } });
-  E.on('fogTouch', () => { if (fogCool > G.time) return; fogCool = G.time + 9; rz.fear = 2.5; rz.say(fala('raizinha_nevoa'), 3.5); });
+  E.on('usinaGateNear', () => { if (!G.progress.usinaOpen() && gateCool < G.time) { gateCool = G.time + 8; G.pet.say(G.pet.fala('usina'), 4); } });
+  E.on('fogTouch', () => { if (fogCool > G.time) return; fogCool = G.time + 9; G.pet.fear = 2.5; G.pet.say(G.pet.fala('nevoa'), 3.5); });
   E.on('rootOut', () => {});
-  E.on('bushNear', () => { if (bushCool > G.time) return; bushCool = G.time + 25; rz.say(fala('raizinha_moita')); });
+  E.on('bushNear', () => { if (bushCool > G.time) return; bushCool = G.time + 25; G.pet.say(G.pet.fala('moita')); });
   E.on('rootCaught', (r) => {
     const p = G.progress;
     p.d.roots[r.id] = r.tipo;
@@ -541,8 +571,8 @@ function setupEvents() {
     ui.seedFly(r.pos.clone().add(V(0, 1, 0)), CONFIG.seeds.root);
     ui.caption(`🌱 ${RAIZ_TIPOS[r.tipo].nome} capturada! (${p.rootsCaught()}/40)`);
     G.audio.sfx('vitoria');
-    rz.react_('heart');
-    rz.say(r.tipo === 'falsa' ? 'Era uma Raiz Falsa! Sumiu, mas anotei no Raizdex.' : fala('fase_vencida'));
+    G.pet.react_('heart');
+    G.pet.say(r.tipo === 'falsa' ? 'Era uma Raiz Falsa! Sumiu, mas anotei no Raizdex.' : fala('fase_vencida'));
     let cos = null;
     if (r.tipo === 'complexa') cos = p.addSticker('S1') || cos;
     if (p.rootsCaught() >= 40) cos = p.addSticker('S2') || cos;
@@ -550,14 +580,14 @@ function setupEvents() {
     ui.hud.updateStats(p); ui.hud.pulse('roots');
     p.save();
   });
-  E.on('rootEscaped', () => { rz.react_('laugh'); rz.say('Fugiu! Ela volta pra moita daqui a pouco.'); });
-  E.on('paoRaizinha', (pos) => { G.particles.emit('migalhas', pos.x, pos.y, pos.z); rz.react_('cheeks'); rz.say('Hmmm, pão truncado! Nhac!'); });
+  E.on('rootEscaped', () => { G.pet.react_('laugh'); G.pet.say('Fugiu! Ela volta pra moita daqui a pouco.'); });
+  E.on('paoRaizinha', (pos) => { G.particles.emit('migalhas', pos.x, pos.y, pos.z); G.pet.react_('cheeks'); G.pet.say(G.pet.fala('pao')); });
   E.on('macaNaCabeca', ({ s }) => {
     G.audio.sfx('toc');
     G.hero.play('bonk');
     G.particles.emit('estrelinhas', G.hero.pos.x, G.hero.pos.y + 2.2, G.hero.pos.z);
     setTimeout(() => ui.bubbles.say(G.hero.rig.root, 'Eureka!', { y: 2.9 }), 400);
-    rz.react_('laugh');
+    G.pet.react_('laugh');
     const d = G.progress.d;
     if (!d.apples.includes(s.def.id)) { d.apples.push(s.def.id); G.progress.addSeeds(CONFIG.seeds.apple); ui.seedFly(G.hero.headPos(), 1); G.progress.save(); }
   });
@@ -596,7 +626,7 @@ function setupEvents() {
     await fade(true, 0.5);
     const a = S.entryAngle ?? 0;
     G.hero.place(S.campfire.x + Math.cos(a) * 2.2, S.campfire.z + Math.sin(a) * 2.2, a + Math.PI);
-    G.raizinha.place(G.hero.pos);
+    G.pet.place(G.hero.pos);
     G.camRig.snap(G.hero.pos);
     await fade(false, 0.5);
     unlock();
@@ -604,7 +634,7 @@ function setupEvents() {
   E.on('openMap', () => { if (G.mode === 'play' && !ui.dialog.open && !ui.menu.open) ui.map.toggle(); });
   E.on('openMenu', () => { if (G.mode === 'play' && !ui.dialog.open) { ui.map.close(); ui.menu.toggle(); } });
   E.on('mapOpened', () => { if (G.progress.d.tutorial === 5) { G.tutorial.advance(6); refreshHudVisibility(); } });
-  E.on('heroSplash', () => { rz.react_('laugh'); rz.say('Tibum! Água não é chão, patrão.'); });
+  E.on('heroSplash', () => { G.pet.react_('laugh'); G.pet.say(G.pet.fala('tibum')); });
   E.on('seeds', () => ui.hud.updateStats(G.progress));
   E.on('tutorialStep', () => refreshHudVisibility());
   E.on('options', () => {
@@ -629,7 +659,7 @@ function setupDebug() {
   btn('pular cine', () => G.input.keys.add('Space'));
   btn('+10 🌰', () => G.progress.addSeeds(10));
   btn('vencer próxima', () => { const o = G.progress.nextObjective(); const S = G.settlements.find((s) => s.def.id === o.sid); if (!S) return; const nv = S.def.id.startsWith('C') ? ['F', 'M', 'D'].find((n) => !G.progress.won(`${S.def.id}-${n}`)) || 'F' : 'B'; handleResult(S, nv, { vitoria: true, estrelas: 3 }); });
-  for (const [n, x, z] of [['Base', 0, 92], ['R0', -78, 50], ['R1', -88, -12], ['R2', -27, -78], ['R3', 67, -52], ['R4', 52, 34], ['Usina', 0, 33]]) btn(n, () => { G.hero.place(x, z); G.raizinha.place(G.hero.pos); G.camRig.snap(G.hero.pos); });
+  for (const [n, x, z] of [['Base', 0, 92], ['R0', -78, 50], ['R1', -88, -12], ['R2', -27, -78], ['R3', 67, -52], ['R4', 52, 34], ['Usina', 0, 33]]) btn(n, () => { G.hero.place(x, z); G.pet.place(G.hero.pos); G.camRig.snap(G.hero.pos); });
   // avança n quadros "na mão" (útil com a aba em segundo plano)
   G.step = (n = 1, dtMs = 33) => { for (let i = 0; i < n; i++) { last = performance.now() - dtMs; frame(performance.now(), true); } };
 }
@@ -654,13 +684,13 @@ function frame(now, manual = false) {
     if (!G.locks) {
       if (inp.hit('KeyQ')) G.camRig.rotate(-1);
       if (inp.hit('KeyR')) G.camRig.rotate(1);
-      if (inp.hit('KeyH')) { G.hero.play('think', { dur: 1.2 }); G.audio.sfx('dica'); const o = G.objective; G.raizinha.say(o ? o.text.replace(/<[^>]+>/g, '') : fala('raizinha_idle'), 4.5); }
+      if (inp.hit('KeyH')) { G.hero.play('think', { dur: 1.2 }); G.audio.sfx('dica'); const o = G.objective; G.pet.say(o ? o.text.replace(/<[^>]+>/g, '') : G.pet.fala('idle'), 4.5); }
     }
   }
 
-  // herói (com colisão) → Raizinha
+  // herói (com colisão) → pet
   G.hero.update(dt, t);
-  G.raizinha.update(dt, t);
+  G.pet.update(dt, t);
 
   // cidades: visibilidade por distância
   cullT -= dt;
@@ -716,6 +746,7 @@ function frame(now, manual = false) {
   G.ambient.update(t, dt);
   G.extras.update(t, dt);
   G.tutorial.update(dt, t);
+  G.dicas.update(dt);
 
   // partículas → UI
   G.particles.update(dt);
@@ -741,8 +772,8 @@ function frame(now, manual = false) {
   inp.endFrame();
 }
 
-// Silhueta do herói e da Raizinha quando algo fica entre eles e a câmera
-let xray = null;
+// Silhueta do herói e do pet quando algo fica entre eles e a câmera
+let xray = null, xrayRoots = [];
 function renderXray() {
   if (G.mode !== 'play') return;
   const r = G.renderer, s = G.scene;
@@ -751,7 +782,12 @@ function renderXray() {
     // empurra o fragmento ~1,2 un. para a câmera: as partes do próprio corpo não acendem a silhueta
     m.onBeforeCompile = (sh) => { sh.vertexShader = sh.vertexShader.replace('#include <project_vertex>', '#include <project_vertex>\nmvPosition.z += 1.2; gl_Position = projectionMatrix * mvPosition;'); };
     xray = m;
-    for (const root of [G.hero.rig.root, G.raizinha.m.root]) root.traverse((o) => { if (o.isMesh && o.material?.transparent !== true) o.layers.enable(1); });
+  }
+  // herói e pet podem ser trocados na tela de criação: marca as malhas novas
+  const roots = [G.hero.rig.root, ...G.pet.roots];
+  if (roots.length !== xrayRoots.length || roots.some((r, i) => r !== xrayRoots[i])) {
+    xrayRoots = roots;
+    for (const root of roots) root.traverse((o) => { if (o.isMesh && o.material?.transparent !== true) o.layers.enable(1); });
   }
   const bg = s.background;
   s.background = null; s.overrideMaterial = xray;

@@ -388,7 +388,7 @@ export class Extras {
       const sign = new THREE.Group(); sign.position.set(px, terrainHeight(px, pz), pz);
       sign.add(cyl(0.07, 0.07, 1.2, '#6b4423', 0, 0.6, 0, 5)); sign.add(box(0.9, 0.5, 0.07, '#c49a6c', 0, 1.2, 0));
       this.add(sign, () => {});
-      G.triggers.add({ x: ss.x, z: ss.z, r: ss.hl + 4, enter: () => G.raizinha.say('Pedras do rio! Pula de pedra em pedra com Espaço.') });
+      G.triggers.add({ x: ss.x, z: ss.z, r: ss.hl + 4, enter: () => G.pet.say('Pedras do rio! Pula de pedra em pedra com Espaço.') });
     }
   }
 

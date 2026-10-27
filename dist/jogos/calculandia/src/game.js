@@ -13,7 +13,7 @@ export const G = {
   // 'loading' | 'title' | 'cine' | 'play' | 'fase'
   mode: 'loading',
   locks: 0,            // > 0 bloqueia o controle do herói (diálogo, menus, passeios)
-  hero: null, raizinha: null,
+  hero: null, pet: null, // pet: Raizinha ou Lina e Nina (mesma interface)
   settlements: [], animals: [], npcs: [], roots: [],
   input: null, audio: null, particles: null, collision: null, interaction: null,
   progress: null, ui: null, world: null, ambient: null,

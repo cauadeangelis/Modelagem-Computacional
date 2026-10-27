@@ -1,0 +1,47 @@
+/* Numera Academy — teclado científico do Terminal (acompanha calculator.js). */
+/* Expoentes com aparência uniforme: a fonte web só traz ¹²³⁴, então todos os sobrescritos
+   vêm de uma mesma fonte monoespaçada do sistema (Menlo no Mac, Cascadia/Consolas no Windows). */
+@font-face{font-family:"Numera Sup";src:local("Menlo Regular"),local("Menlo-Regular"),local("Menlo"),local("DejaVu Sans Mono"),local("DejaVuSansMono"),local("Cascadia Mono"),local("CascadiaMono-Regular"),local("Noto Sans Mono"),local("NotoSansMono-Regular"),local("Consolas");unicode-range:U+00B2-00B3,U+00B9,U+02B0-02FF,U+1D2C-1DBF,U+2070-209F,U+141F}
+#source,.source-echo code,.history code,.calc-key{font-family:"Numera Sup",var(--mono)}
+.calc-shell{display:flex;flex-direction:column;gap:10px}
+.calc-bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;min-height:28px}
+.calc-check{flex:1;min-width:0;font-family:var(--mono);font-size:.8rem;color:var(--term-dim);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.calc-check.ok{color:var(--term-accent)}
+.calc-check.warn{color:#E9C46A}
+.calc-mode{display:none;font-family:var(--mono);font-size:.72rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#0F1C22;background:var(--term-accent);border-radius:var(--r-pill);padding:3px 10px}
+.calc-shell.sup-on .calc-mode{display:inline-block}
+.terminal-body:has(.calc-shell.sup-on) .terminal-entry{box-shadow:inset 0 0 0 1.5px var(--term-accent),0 0 0 4px rgba(183,244,206,.10)}
+.calc-toggle{border:0;background:transparent;color:var(--term-dim);font:600 .8rem var(--sans);padding:6px 4px;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.calc-toggle:hover{color:var(--term-ink)}
+.calc-shell.closed .calc-pad{display:none}
+
+.calc-pad{display:grid;grid-template-columns:5fr 6fr;gap:14px;padding:14px;border-radius:18px;background:rgba(255,255,255,.03);box-shadow:inset 0 0 0 1px var(--term-line)}
+.calc-funcs{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;align-content:start}
+.calc-nums{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}
+.calc-key{min-height:44px;border:0;border-radius:12px;background:rgba(255,255,255,.06);color:var(--term-ink);font:500 1.02rem "Numera Sup",var(--mono);line-height:1;cursor:pointer;box-shadow:inset 0 0 0 1px var(--term-line),0 2px 0 rgba(0,0,0,.25);transition:background .12s,transform .06s;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.calc-key:hover{background:rgba(183,244,206,.12)}
+.calc-key:active{transform:translateY(1px);box-shadow:inset 0 0 0 1px var(--term-line)}
+.calc-key:focus-visible{outline:2px solid var(--term-accent);outline-offset:2px}
+.calc-funcs .calc-key{font-size:.95rem;color:var(--term-accent);background:rgba(183,244,206,.07)}
+.calc-funcs .k-sin,.calc-funcs .k-cos,.calc-funcs .k-tan,.calc-funcs .k-ln,.calc-funcs .k-log,.calc-funcs .k-asin,.calc-funcs .k-acos,.calc-funcs .k-atan{font-family:"Numera Sup",var(--sans);font-weight:600;font-size:.92rem}
+.calc-funcs .k-e,.calc-funcs .k-pi{font-family:"Numera Sup",var(--display);font-style:italic;font-size:1.12rem}
+.calc-funcs .k-back,.calc-funcs .k-out{color:var(--term-ink);background:rgba(255,255,255,.06)}
+.calc-key[aria-pressed="true"]{background:var(--term-accent);color:#0F1C22;box-shadow:none}
+.calc-nums .k-div,.calc-nums .k-times,.calc-nums .k-minus,.calc-nums .k-plus,.calc-nums .k-eq{background:rgba(126,151,255,.16);color:#C9D3FF}
+.calc-nums .k-vx,.calc-nums .k-vy,.calc-nums .k-vz{font-style:italic;font-family:var(--display);font-size:1.15rem}
+.calc-nums .k-del,.calc-nums .k-clear{color:#F2B8A6;background:rgba(255,143,120,.10)}
+.calc-nums .k-line{font-size:1.1rem}
+.calc-nums .k-d0,.calc-nums .k-d1,.calc-nums .k-d2,.calc-nums .k-d3,.calc-nums .k-d4,.calc-nums .k-d5,.calc-nums .k-d6,.calc-nums .k-d7,.calc-nums .k-d8,.calc-nums .k-d9,.calc-nums .k-dot{background:rgba(255,255,255,.09);font-weight:600}
+
+
+@media (max-width:760px){
+  .calc-pad{grid-template-columns:1fr;padding:10px;gap:10px}
+  .calc-funcs{grid-template-columns:repeat(5,1fr);gap:6px}
+  .calc-nums{gap:6px}
+  .calc-key{min-height:42px;font-size:.98rem;border-radius:10px}
+  .calc-funcs .calc-key{font-size:.88rem}
+}
+@media (max-width:380px){
+  .calc-key{min-height:40px;font-size:.92rem}
+  .calc-check{font-size:.74rem}
+}

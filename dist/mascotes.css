@@ -1,0 +1,106 @@
+/* Numera Academy v11 — Raiz e Pivô (palco, dança, reações, moedas e confete). */
+.mz-stage{position:fixed;z-index:25;left:max(12px,calc(50% - 600px));bottom:calc(var(--mz-bar,90px) + 14px);width:236px;pointer-events:none;user-select:none}
+.mz-stage[hidden]{display:none}
+.mz-art{position:relative}
+.mz-svg{display:block;width:100%;height:auto;overflow:visible}
+.mz-svg *{transform-box:fill-box}
+.mz-shadow{fill:rgba(17,26,33,.12)}
+
+/* ---------- dança (ocioso) ---------- */
+.mz-raiz-body{transform-origin:50% 100%;animation:mz-hop 1.15s ease-in-out infinite}
+.mz-leaves{transform-origin:50% 100%;animation:mz-wiggle .58s ease-in-out infinite alternate}
+.mz-raiz-body .mz-arm-l{transform-origin:100% 0;animation:mz-wave-l 1.15s ease-in-out infinite}
+.mz-raiz-body .mz-arm-r{transform-origin:0 0;animation:mz-wave-r 1.15s ease-in-out infinite}
+.mz-pivo-body{transform-origin:50% 100%;animation:mz-groove 2.3s ease-in-out infinite}
+.mz-glove-l,.mz-glove-r{transform-origin:50% 50%;animation:mz-guard .58s ease-in-out infinite alternate}
+.mz-glove-r{animation-delay:.29s}
+.mz-box{transform-origin:50% 50%;animation:mz-float 2.6s ease-in-out infinite}
+.mz-bonk{opacity:0}
+.mz-heart{transform-origin:50% 50%;opacity:0;animation:mz-love 5.2s ease-out infinite 1.4s}
+.mz-oh,.mz-sweat,.mz-sparkles{opacity:0}
+.mz-sparkles path{transform-origin:50% 50%}
+
+@keyframes mz-hop{0%,50%,100%{transform:translateY(0) rotate(0)}25%{transform:translateY(-7px) rotate(-5deg)}75%{transform:translateY(-7px) rotate(5deg)}}
+@keyframes mz-wiggle{from{transform:rotate(-9deg)}to{transform:rotate(9deg)}}
+@keyframes mz-wave-l{0%,50%,100%{transform:rotate(0)}25%{transform:rotate(28deg)}}
+@keyframes mz-wave-r{0%,50%,100%{transform:rotate(0)}75%{transform:rotate(-28deg)}}
+/* o Pivô balança e, de vez em quando, dá um giro (um pivô de verdade) */
+@keyframes mz-groove{0%,100%{transform:translateX(0) rotate(0) scaleX(1)}18%{transform:translateX(-5px) rotate(-4deg)}36%{transform:translateX(5px) rotate(4deg)}52%{transform:translateX(0) rotate(0) scaleX(1)}60%{transform:scaleX(.15) translateY(-6px)}68%{transform:scaleX(-1) translateY(-8px)}76%{transform:scaleX(.15) translateY(-6px)}84%{transform:scaleX(1)}}
+@keyframes mz-guard{from{transform:translateY(0)}to{transform:translateY(-4px)}}
+@keyframes mz-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@keyframes mz-love{0%{opacity:0;transform:translateY(0) scale(.6)}8%{opacity:1;transform:translateY(-4px) scale(1)}30%{opacity:0;transform:translateY(-30px) scale(1.1)}100%{opacity:0}}
+
+/* ---------- balão de fala ---------- */
+.mz-bubble{position:absolute;left:50%;bottom:calc(100% - 6px);transform:translate(-50%,8px) scale(.92);background:var(--surface,#fff);color:var(--ink,#111A21);font:700 .86rem/1.3 var(--sans,system-ui);padding:9px 13px;border-radius:14px;box-shadow:0 6px 18px rgba(17,26,33,.16);white-space:nowrap;max-width:280px;opacity:0;transition:opacity .2s,transform .25s}
+.mz-bubble::after{content:'';position:absolute;left:50%;top:100%;margin-left:-7px;border:7px solid transparent;border-top-color:var(--surface,#fff)}
+.mz-bubble.show{opacity:1;transform:translate(-50%,0) scale(1)}
+
+/* ---------- acerto ---------- */
+.is-ok .mz-raiz-body{animation:mz-jump .9s cubic-bezier(.3,1.6,.5,1) 1}
+.is-ok .mz-pivo-body{animation:mz-jump .9s cubic-bezier(.3,1.6,.5,1) .08s 1}
+.is-ok .mz-arm-l,.is-combo .mz-arm-l,.is-level .mz-arm-l,.is-world .mz-arm-l{animation:none;transform:rotate(70deg)}
+.is-ok .mz-arm-r,.is-combo .mz-arm-r,.is-level .mz-arm-r,.is-world .mz-arm-r{animation:none;transform:rotate(-70deg)}
+.is-ok .mz-sparkles,.is-level .mz-sparkles,.is-world .mz-sparkles{animation:mz-sparkle .9s ease-out 1}
+@keyframes mz-jump{0%{transform:translateY(0) scale(1,1)}20%{transform:translateY(2px) scale(1.08,.9)}45%{transform:translateY(-22px) scale(.95,1.07)}70%{transform:translateY(0) scale(1.05,.95)}100%{transform:translateY(0) scale(1)}}
+@keyframes mz-sparkle{0%{opacity:0;transform:scale(.4)}30%{opacity:1;transform:scale(1.15)}100%{opacity:0;transform:scale(.9)}}
+
+/* ---------- erro ---------- */
+.is-bad .mz-raiz-body{animation:mz-droop 1.2s ease-in-out 1}
+.is-bad .mz-raiz-body .mz-smile,.is-bad .mz-pivo-body .mz-smile{opacity:0}
+.is-bad .mz-oh{opacity:1}
+.is-bad .mz-sweat{animation:mz-drip 1.2s ease-in 1}
+.is-bad .mz-pivo-body{animation:mz-shrug 1.2s ease-in-out 1}
+.is-bad .mz-glove-l{animation:mz-palm 1.2s ease-in-out 1}
+@keyframes mz-droop{0%,100%{transform:translateY(0) scale(1)}25%{transform:translateY(3px) scale(1.06,.9) rotate(-6deg)}50%{transform:translateY(3px) scale(1.06,.9) rotate(6deg)}75%{transform:translateY(2px) scale(1.04,.93) rotate(-3deg)}}
+@keyframes mz-drip{0%{opacity:0;transform:translateY(-4px)}20%{opacity:1}100%{opacity:0;transform:translateY(16px)}}
+@keyframes mz-shrug{0%,100%{transform:translateY(0)}30%,70%{transform:translateY(4px) scale(1.03,.95)}}
+@keyframes mz-palm{0%,100%{transform:translate(0,0)}30%,75%{transform:translate(34px,-20px)}}
+
+/* ---------- combo: o Pivô pula, soca a caixa e caem moedas ---------- */
+.is-combo .mz-pivo-body{animation:mz-leap 1.15s cubic-bezier(.35,.1,.3,1) 1}
+.is-combo .mz-glove-r{animation:mz-punch 1.15s ease-out 1}
+.is-combo .mz-box{animation:mz-bump 1.15s ease-out 1}
+.is-combo .mz-bonk{animation:mz-bonk 1.15s ease-out 1}
+.is-combo .mz-raiz-body{animation:mz-jump .8s cubic-bezier(.3,1.6,.5,1) .55s 2}
+@keyframes mz-leap{0%,100%{transform:translate(0,0)}15%{transform:translate(0,3px) scale(1.08,.9)}38%{transform:translate(-40px,-64px) scale(.96,1.05)}52%{transform:translate(-40px,-64px)}80%{transform:translate(0,2px) scale(1.06,.93)}}
+@keyframes mz-punch{0%,30%{transform:translate(0,0) scale(1)}42%{transform:translate(-8px,-30px) scale(1.45)}55%{transform:translate(-4px,-14px) scale(1.1)}100%{transform:translate(0,0) scale(1)}}
+@keyframes mz-bump{0%,36%,100%{transform:translateY(0) scale(1)}44%{transform:translateY(-14px) scale(1.12,.9)}58%{transform:translateY(2px) scale(.96,1.04)}}
+@keyframes mz-bonk{0%,38%{opacity:0;transform:scale(.6)}46%{opacity:1;transform:scale(1.15)}70%,100%{opacity:0;transform:scale(1.3)}}
+
+/* ---------- fase e mundo concluídos: festa ---------- */
+.is-level .mz-raiz-body,.is-world .mz-raiz-body{animation:mz-party .5s ease-in-out 5}
+.is-level .mz-pivo-body,.is-world .mz-pivo-body{animation:mz-groove .9s ease-in-out 3}
+.is-level .mz-heart,.is-world .mz-heart{animation:mz-love 1.4s ease-out 2}
+@keyframes mz-party{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-16px) rotate(10deg)}}
+
+/* ---------- moedas e confete ---------- */
+.mz-fx{position:absolute;left:0;right:0;top:0;height:0}
+.mz-coin{position:absolute;left:50%;top:24px;width:24px;height:24px;margin-left:-12px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#FFF2B8,#F7C531 45%,#D99A00);border:2px solid #B57F00;color:#7A5200;font:900 13px/20px var(--sans,system-ui);text-align:center;box-shadow:0 2px 6px rgba(0,0,0,.18);animation:mz-coin .75s cubic-bezier(.2,.7,.4,1) both}
+@keyframes mz-coin{0%{transform:translate(0,0) scale(.3);opacity:0}25%{opacity:1}60%{transform:translate(var(--dx),calc(-1 * var(--up))) scale(1)}100%{transform:translate(var(--dx),calc(-1 * var(--up) + 26px)) scale(1)}}
+.mz-plus{position:absolute;left:50%;top:-28px;transform:translateX(-50%);font:900 1.3rem/1 var(--sans,system-ui);color:#D99A00;text-shadow:0 2px 0 #fff;animation:mz-plus 1.5s ease-out both}
+@keyframes mz-plus{0%{opacity:0;transform:translate(-50%,10px) scale(.6)}20%{opacity:1;transform:translate(-50%,0) scale(1.15)}80%{opacity:1}100%{opacity:0;transform:translate(-50%,-24px)}}
+.mz-confetti{position:absolute;top:0;width:8px;height:12px;border-radius:2px;animation:mz-confetti 1.8s cubic-bezier(.2,.6,.4,1) both}
+@keyframes mz-confetti{0%{transform:translate(0,0) rotate(0);opacity:1}100%{transform:translate(var(--dx),150px) rotate(var(--rot));opacity:0}}
+
+/* contador de moedas que "engole" a moeda */
+.coin-meta{display:inline-flex;align-items:center;gap:5px;font-weight:800}
+.coin-meta .coin-ico{width:18px;height:18px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#FFF2B8,#F7C531 45%,#D99A00);border:1.5px solid #B57F00;color:#7A5200;font:900 10px/15px var(--sans,system-ui);text-align:center}
+.coin-meta.bump{animation:mz-bump-count .35s ease-out}
+@keyframes mz-bump-count{50%{transform:scale(1.25)}}
+
+/* ---------- telas menores: o casal fica pequeno, no canto de baixo, acima da barra ---------- */
+@media (max-width:1100px){
+  .mz-stage{left:auto;right:6px;width:150px}
+  .mz-bubble{font-size:.78rem;left:auto;right:0;transform:translate(0,8px) scale(.92);white-space:normal;width:max-content;max-width:200px}
+  .mz-bubble.show{transform:translate(0,0) scale(1)}
+  .mz-bubble::after{left:auto;right:40px}
+  body.has-mascots .player-body{padding-bottom:calc(var(--mz-bar,90px) + 150px)}
+}
+@media (max-width:620px){.mz-stage{width:118px}}
+
+/* ---------- sem movimento ---------- */
+@media (prefers-reduced-motion:reduce){
+  .mz-stage *,.mz-stage{animation:none!important;transition:none!important}
+  .mz-confetti,.mz-coin{display:none}
+}
+@media print{.mz-stage{display:none!important}}

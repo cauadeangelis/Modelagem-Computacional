@@ -1,0 +1,17 @@
+{
+  "name": "numera-academy",
+  "version": "12.0.0",
+  "private": true,
+  "description": "Numera Academy: jogo e laboratório de métodos numéricos (Modelagem Computacional), com a Calculândia (3D) e o Quem Divergiu? (jogo de sala). Site estático em dist/, sem build.",
+  "scripts": {
+    "servir": "node serve.js",
+    "testar": "node tests/verify.cjs && node tests/treino/conferir-com-motor.cjs && node tests/pwa/atualizar-sw.cjs --check && node --test tests/calculandia/rules.test.mjs",
+    "gerar-treino": "python3 tests/treino/gerar-treino.py dist/treino-data.js",
+    "atualizar": "node tests/atualizar.cjs",
+    "testar-navegador": "cd tests/e2e && node checar-compat.mjs && node testar-fluxos.mjs http://127.0.0.1:8000/ && node testar-offline.mjs http://127.0.0.1:8000/ && node auditar-a11y.mjs http://127.0.0.1:8000/",
+    "testar-calculandia": "node tests/calculandia/browser-smoke.cjs && node tests/calculandia/world-reach.cjs"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

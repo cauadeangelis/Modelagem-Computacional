@@ -1,0 +1,30 @@
+RESUMO {'OK': 93, 'INCOMPLETO': 6, 'FALHA': 1}  tempo médio 658 ms, máx 918 ms
+  Linear                             {'OK': 9}
+  Quadrática (raízes racionais)      {'OK': 8}
+  Quadrática (raízes irracionais)    {'OK': 4}
+  Cúbica (3 raízes reais)            {'OK': 6}
+  Cúbica (1 raiz real)               {'OK': 4}
+  Quártica / quíntica                {'INCOMPLETO': 1, 'OK': 5}
+  Potência alta                      {'OK': 4, 'INCOMPLETO': 1, 'FALHA': 1}
+  Raiz múltipla / tangente           {'OK': 4}
+  Trigonométrica                     {'INCOMPLETO': 4, 'OK': 3}
+  Exponencial / logarítmica          {'OK': 7}
+  Raiz / módulo / fração             {'OK': 6}
+  Sintaxe Unicode                    {'OK': 4}
+  Sem solução na faixa               {'OK': 6}
+  Sistema 2×2                        {'OK': 6}
+  Sistema 3×3                        {'OK': 6}
+  Sistema 4×4                        {'OK': 3}
+  Sistema 5×5                        {'OK': 2}
+  Sistema 6×6                        {'OK': 1}
+  Sistema 2×2 (matriz)               {'OK': 1}
+  Sistema 3×3 (matriz)               {'OK': 1}
+  Sistema sem solução única          {'OK': 3}
+
+# 32 INCOMPLETO 20x^4 - 61x^3 - 58x^2 + 225x - 126 = 0                       achou 3/4; faltou [1.05]
+# 42 INCOMPLETO x^20 - 3x^10 + 2 = 0                                         achou 2/4; faltou [-1.071773, 1.071773]
+# 43 FALHA      x^100 - 10000000000 = 0                                      deu erro, mas existe solução: Não foi possível concluir. Nenhuma raiz isolada foi validada na busca [-40, 40]. Isso não prova que não exista
+# 48 INCOMPLETO sin(x) = 0.8                                                 achou 18/26; faltou [-36.771817, -35.484814, -30.488631, -29.201629, 32.343222, 33.630224]
+# 50 INCOMPLETO tan(x) = 4 - x                                               achou 13/27; faltou [-39.293002, -36.153215, -33.013733, -29.874642, -26.736061, -23.598163]
+# 51 INCOMPLETO sin(x) + cos(x) = 1.3                                        achou 18/26; faltou [-37.318367, -36.50906, -31.035182, -30.225875, 31.796671, 32.605978]
+# 52 INCOMPLETO x sin(x) = 4                                                 achou 18/22; faltou [-37.805116, -34.441116, 34.441116, 37.805116]

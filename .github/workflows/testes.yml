@@ -1,0 +1,115 @@
+# Roda todos os testes a cada push e pull request. Se algo quebrar, o GitHub marca o commit com ✗.
+name: Testes
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+  workflow_call:
+permissions:
+  contents: read
+jobs:
+  motor-e-conteudo:
+    name: Motor, conteúdo, Treino e PWA
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Dependências do gabarito independente
+        run: pip install sympy==1.14.0 mpmath==1.3.0
+      - name: Verificações automáticas (motor, conteúdo, interface, Treino, prova, PWA)
+        run: node tests/verify.cjs
+      - name: Gabarito do Treino refeito pelo motor do site
+        run: node tests/treino/conferir-com-motor.cjs
+      - name: O gerador reproduz exatamente o treino-data.js publicado
+        run: |
+          python3 tests/treino/gerar-treino.py /tmp/treino-data.js
+          cmp /tmp/treino-data.js dist/treino-data.js
+      - name: Cache offline em dia
+        run: node tests/pwa/atualizar-sw.cjs --check
+      - name: Calculândia — regras das 63 fases, chefões e Usina
+        run: node --test tests/calculandia/rules.test.mjs
+      - name: Fuzz do motor (1.000 polinômios e 400 equações transcendentes)
+        working-directory: tests/terminal/fuzz
+        run: |
+          node rodar-motor.cjs ../../../dist/math-engine.js polinomios-1000.json /tmp/p.json
+          node rodar-motor.cjs ../../../dist/math-engine.js transcendentes-400.json /tmp/t.json
+          python3 conferir.py polinomios-1000.json /tmp/p.json --ci
+          python3 conferir.py transcendentes-400.json /tmp/t.json --ci
+
+  navegador:
+    name: Navegador (Chromium) — fluxos, jogos, offline, acessibilidade, terminal
+    runs-on: ubuntu-latest
+    needs: motor-e-conteudo
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Instalar Playwright e axe-core
+        working-directory: tests/e2e
+        run: |
+          npm ci
+          npx playwright install --with-deps chromium
+      - name: Servidor local
+        run: python3 -m http.server 8000 -d dist > /dev/null 2>&1 &
+      - name: Compatibilidade (ES2021, Safari 15+, Firefox 90+)
+        working-directory: tests/e2e
+        run: node checar-compat.mjs
+      - name: Fluxos completos
+        working-directory: tests/e2e
+        run: node testar-fluxos.mjs http://127.0.0.1:8000/
+      - name: Funciona offline (PWA)
+        working-directory: tests/e2e
+        run: node testar-offline.mjs http://127.0.0.1:8000/
+      - name: Acessibilidade (WCAG 2.1 AA, modo claro e escuro)
+        working-directory: tests/e2e
+        run: node auditar-a11y.mjs http://127.0.0.1:8000/
+      - name: Terminal com as 100 equações, digitadas tecla por tecla
+        working-directory: tests/terminal
+        run: |
+          npm ci
+          node testar-terminal.mjs http://127.0.0.1:8000/index.html equacoes-100.json /tmp/terminal.json type
+          python3 conferir.py equacoes-100.json /tmp/terminal.json /tmp/conferencia.json --ci
+
+  calculandia:
+    name: Calculândia no navegador (3D)
+    runs-on: ubuntu-latest
+    needs: motor-e-conteudo
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Instalar Playwright
+        working-directory: tests/e2e
+        run: |
+          npm ci
+          npx playwright install --with-deps chromium
+      - name: Todas as fases, chefões e a Usina abrem; vitória e derrota salvas; celular sem rolagem
+        run: node tests/calculandia/browser-smoke.cjs
+      - name: Todas as portas de fase alcançáveis a pé
+        run: node tests/calculandia/world-reach.cjs
+
+  webkit:
+    name: Motor do Safari (WebKit)
+    runs-on: ubuntu-24.04
+    needs: motor-e-conteudo
+    steps:
+      - uses: actions/checkout@v4
+      - name: WebKitGTK, Xvfb e Selenium
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y webkit2gtk-driver xvfb
+          pip install selenium==4.27.1
+      - name: Servidor local
+        run: python3 -m http.server 8000 -d dist > /dev/null 2>&1 &
+      - name: Fluxos no WebKit
+        run: xvfb-run -a python3 tests/e2e/testar-webkit.py http://127.0.0.1:8000/

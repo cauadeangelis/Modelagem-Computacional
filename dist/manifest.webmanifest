@@ -1,0 +1,23 @@
+{
+  "name": "Numera Academy — Métodos Numéricos",
+  "short_name": "Numera",
+  "description": "Métodos numéricos para Modelagem Computacional: trilhas, Treino de diagnóstico, modo prova e um terminal que mostra cada passo do cálculo. Funciona offline.",
+  "lang": "pt-BR",
+  "start_url": "./index.html#home",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#F5F4F1",
+  "theme_color": "#111A21",
+  "categories": ["education"],
+  "icons": [
+    { "src": "favicon.svg", "sizes": "any", "type": "image/svg+xml" },
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Treino", "url": "./index.html#treino" },
+    { "name": "Terminal", "url": "./index.html#lab" }
+  ]
+}

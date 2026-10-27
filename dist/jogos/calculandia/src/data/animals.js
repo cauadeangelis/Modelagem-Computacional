@@ -1,0 +1,158 @@
+// Bichos guias (seção 8): modelo, cores, peça de assinatura, voz e falas de apresentação.
+// "corpo" escolhe a fábrica em entities/animal.js; "extras" são peças de assinatura.
+
+export const ANIMALS = {
+  urso: {
+    nome: 'Urso Padeiro Truncão', corpo: 'quadrupede', escala: 1.45,
+    cores: { corpo: '#8b5a2b', barriga: '#c9955e', focinho: '#d9b48a' },
+    extras: ['avental', 'chapeuPadeiro'], assinatura: 'cortaPao',
+    voz: { onda: 'square', pitch: 120 },
+    intro: ['Opa! Sou o Truncão. Aqui a gente corta o pão bem reto: o que sobra, já era.', 'Arredondar é olhar o próximo dígito. Truncar é fingir que ele não existe!'],
+  },
+  axolote: {
+    nome: 'Axolote Perde-Dígito', corpo: 'axolote', escala: 1.0,
+    cores: { corpo: '#f7a8c4', barriga: '#fbd3e1', guelras: '#e8454a' },
+    extras: ['guelras'], assinatura: 'caudaDigitos',
+    voz: { onda: 'sine', pitch: 520 },
+    intro: ['Oi! Eu perco dígitos quando fico nervoso. Tipo agora. 1,0000001... sumiu.', 'Subtrair números quase iguais apaga a minha cauda. Cuidado com isso!'],
+  },
+  galinha: {
+    nome: 'Galinha Overflow', corpo: 'ave', escala: 1.1,
+    cores: { corpo: '#f2d24e', barriga: '#f7e48a', bico: '#f5a623', crista: '#e8454a' },
+    extras: ['crista', 'ninho'], assinatura: 'ovos',
+    voz: { onda: 'square', pitch: 600 },
+    intro: ['Cocoricó! Botei 32768 ovos e o ninho virou -32768. Não entendi nada.', 'Se o número não cabe no ninho, ele dá a volta. Divida antes de elevar ao quadrado!'],
+  },
+  tatu: {
+    nome: 'Tatu Bi', corpo: 'tatu', escala: 1.1,
+    cores: { corpo: '#7aa2e8', carapaca: '#3a5fae', faixa: '#2c4a8c' },
+    extras: [], assinatura: 'rolaAbre',
+    voz: { onda: 'triangle', pitch: 180 },
+    intro: ['Eu sou o Tatu Bi. Rolo como bola e abro sempre no meio, sem errar.', 'Raiz escondida? Corta o intervalo no meio e fica com a metade que troca de sinal.'],
+  },
+  camaleao: {
+    nome: 'Camaleão Falso', corpo: 'lagarto', escala: 1.05,
+    cores: { corpo: '#4caf50', corpo2: '#8e5bd1', barriga: '#c8e86b' },
+    extras: ['lingua', 'caudaEnrolada'], assinatura: 'linguaCorda',
+    voz: { onda: 'sawtooth', pitch: 300 },
+    intro: ['Psiu... não sou falso, sou de Falsópolis. Mudo de cor, mas a corda é verdadeira.', 'Eu estico a língua de um ponto ao outro: onde ela cruza o chão, tem pista da raiz.'],
+  },
+  hamster: {
+    nome: 'Hamster Fixo', corpo: 'quadrupede', escala: 0.75,
+    cores: { corpo: '#f39c4a', barriga: '#fbe1c0', focinho: '#fde9d2' },
+    extras: ['roda', 'bochechas'], assinatura: 'correRoda',
+    voz: { onda: 'square', pitch: 700 },
+    intro: ['Corro, corro e volto sempre pro mesmo lugar. Chamam isso de ponto fixo!', 'Escreve x = g(x) e itera. Se g for calminha perto da raiz, você chega lá.'],
+  },
+  gaviao: {
+    nome: 'Gavião Tangente', corpo: 'ave', escala: 1.25,
+    cores: { corpo: '#7a4e2d', barriga: '#e8d2b0', bico: '#f2c14e', crista: '#5a3a20' },
+    extras: ['asasAbertas'], assinatura: 'mergulho',
+    voz: { onda: 'sawtooth', pitch: 420 },
+    intro: ['Krriii! Eu mergulho em linha reta pela tangente e pouso direto no eixo.', 'Mas se a curva estiver deitada, a tangente me joga pra Marte. Já fui duas vezes.'],
+  },
+  cobra: {
+    nome: 'Cobra Secante', corpo: 'cobra', escala: 1.0,
+    cores: { corpo: '#3fa34d', barriga: '#c8e86b' },
+    extras: [], assinatura: 'esticaReta',
+    voz: { onda: 'sine', pitch: 260 },
+    intro: ['Sssem derivada? Sssem problema. Eu me estico em reta entre duas sondas.', 'Ssse as duas sondas derem o mesmo valor... a reta deita e eu tropeço.'],
+  },
+  polvo: {
+    nome: 'Polvo Gauss', corpo: 'polvo', escala: 1.15,
+    cores: { corpo: '#8e5bd1', barriga: '#c7a6f0' },
+    extras: [], assinatura: 'encolheBracos',
+    voz: { onda: 'sine', pitch: 200 },
+    intro: ['Oito braços, uma missão: zerar tudo abaixo da diagonal. Coluna por coluna.', 'Depois que fica triangular, é só subir de volta. Retrossubstituição, meu amor.'],
+  },
+  caranguejo: {
+    nome: 'Caranguejo Pivô', corpo: 'caranguejo', escala: 1.1,
+    cores: { corpo: '#e0453a', barriga: '#f2a08f' },
+    extras: [], assinatura: 'trocaLugar',
+    voz: { onda: 'square', pitch: 340 },
+    intro: ['Ando de lado e troco de lugar com quem for preciso. Pivô zero? Troca de linha!', 'Escolho sempre o maior valor absoluto da coluna. Dá menos dor de cabeça.'],
+  },
+  pinguins: {
+    nome: 'Pinguins L e U', corpo: 'pinguim', par: true, escala: 1.0,
+    cores: { corpo: '#2b2f3a', barriga: '#ffffff', bico: '#f5a623', laco1: '#3a7bd5', laco2: '#e8454a' },
+    extras: [], assinatura: 'escadas',
+    voz: { onda: 'triangle', pitch: 480 },
+    intro: ['Eu sou o L, ele é o U. Eu desço a escada de cima pra baixo, ele sobe de baixo pra cima.', 'Fatora uma vez só e resolve quantas vezes quiser. Economia de pinguim!'],
+  },
+  esquiloJ: {
+    nome: 'Esquilo Jacobi', corpo: 'esquilo', escala: 0.95,
+    cores: { corpo: '#9aa0a6', barriga: '#e6e8ea', cauda: '#b8bec4' },
+    extras: ['relogio'], assinatura: 'esperaTodos',
+    voz: { onda: 'triangle', pitch: 640 },
+    intro: ['Ninguém mexe até o relógio bater! Aqui todo mundo atualiza junto.', 'Cada incógnita usa só os valores da rodada anterior. Paciência, tique-taque.'],
+  },
+  esquiloS: {
+    nome: 'Esquilo Seidel', corpo: 'esquilo', escala: 0.95,
+    cores: { corpo: '#8b5a2b', barriga: '#e8c9a0', cauda: '#a8703c' },
+    extras: ['megafone'], assinatura: 'cascata',
+    voz: { onda: 'square', pitch: 560 },
+    intro: ['ATENÇÃO! Valor novo saindo do forno! Já espalha, já usa, já era!', 'Aqui a fofoca corre rápido: usou o valor novo, passa adiante na mesma rodada.'],
+  },
+  aranha: {
+    nome: 'Aranha Lagrange', corpo: 'aranha', escala: 1.0,
+    cores: { corpo: '#1e1e24', detalhe: '#f2c14e' },
+    extras: [], assinatura: 'teceFio',
+    voz: { onda: 'sawtooth', pitch: 380 },
+    intro: ['Eu teço um fio que passa por todos os nós. Exatamente por todos.', 'Mas se você me der nós demais, igualmente espaçados, eu tremo nas pontas.'],
+  },
+  minhoca: {
+    nome: 'Minhoca Spline', corpo: 'minhoca', escala: 1.0,
+    cores: { corpo: '#f49ac1', barriga: '#f9c6dc' },
+    extras: [], assinatura: 'ondula',
+    voz: { onda: 'sine', pitch: 440 },
+    intro: ['Eu ondulo suave, sem quina nenhuma. Pedaço por pedaço, sempre colados.', 'Mesma derivada, mesma curvatura em cada emenda. Elegância é tudo.'],
+  },
+  preguica: {
+    nome: 'Preguiça Quadrática', corpo: 'preguica', escala: 1.1,
+    cores: { corpo: '#8d6e52', rosto: '#d9c2a0', galho: '#6b4a2b' },
+    extras: ['galho'], assinatura: 'balanca',
+    voz: { onda: 'sine', pitch: 140 },
+    intro: ['Ooooi... eu... minimizo... o esforço. Principalmente o quadrado dele.', 'Uma reta que passe pertinho de todo mundo... sem se cansar... é isso.'],
+  },
+  castor: {
+    nome: 'Castor Trapézio', corpo: 'quadrupede', escala: 1.0,
+    cores: { corpo: '#7b4a2a', barriga: '#b98a5e', focinho: '#c9a07a' },
+    extras: ['dentes', 'caudaChata'], assinatura: 'empilha',
+    voz: { onda: 'triangle', pitch: 260 },
+    intro: ['Construo barragem só com trapézios. Área embaixo da curva? Comigo é tronco por tronco.', 'Dobra o número de troncos e o erro cai pra um quarto. Castor gosta de conta boa.'],
+  },
+  sapo: {
+    nome: 'Sapo Simpson', corpo: 'sapo', escala: 1.1,
+    cores: { corpo: '#5cb85c', barriga: '#d8f0a0', papo: '#f2e28b' },
+    extras: ['papo'], assinatura: 'puloParabola',
+    voz: { onda: 'square', pitch: 160 },
+    intro: ['Croac! Eu só pulo em parábolas. Três pontos e pronto: uma parábola perfeita.', 'Mas o número de intervalos tem que ser par, senão eu caio na lagoa.'],
+  },
+  sapinho: {
+    nome: 'Sapinho Três-Oitavos', corpo: 'sapo', escala: 0.72,
+    cores: { corpo: '#8e5bd1', barriga: '#d6c2f2', papo: '#e8d8ff', pintas: '#f2c14e' },
+    extras: ['pintas'], assinatura: 'tresPulos',
+    voz: { onda: 'square', pitch: 320 },
+    intro: ['Pulo, pulo, pulo! Sempre de três em três. Três pintas, três pulos, três oitavos!', 'Se o n não for múltiplo de três, eu fico tonto. Combina com o 1/3 que dá certo.'],
+  },
+  tartaruga: {
+    nome: 'Tartaruga Euler', corpo: 'tartaruga', escala: 1.15,
+    cores: { corpo: '#7fbf5f', casco: '#3f7f3a', borda: '#c9b46a' },
+    extras: [], assinatura: 'passosRetos',
+    voz: { onda: 'triangle', pitch: 150 },
+    intro: ['Passo curto... viagem longa. Eu sigo a tangente um passinho de cada vez.', 'Passo grande demais e eu saio da trilha. Passo menor, caminho melhor.'],
+  },
+  lebre: {
+    nome: 'Lebre RK4', corpo: 'lebre', escala: 1.0,
+    cores: { corpo: '#f5f5f5', barriga: '#ffffff', interior: '#f4a3a3' },
+    extras: [], assinatura: 'quatroSaltos',
+    voz: { onda: 'square', pitch: 760 },
+    intro: ['Quatro saltos rápidos, uma média esperta. Eu sou a Lebre RK4, prazer!', 'k1, k2, k3, k4: peso 1, 2, 2, 1. A tartaruga ainda tá no primeiro passo.'],
+  },
+};
+
+// Raizinha (companheira) — usada nas fases sem bicho guia
+export const RAIZINHA = {
+  nome: 'Raizinha', voz: { onda: 'triangle', pitch: 660 },
+  cores: { corpo: '#c58a54', anel: '#a06a38', folha: '#5fbf5a' },
+};

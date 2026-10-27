@@ -1,0 +1,1471 @@
+[
+ {
+  "id": 1,
+  "cat": "Linear",
+  "kind": "root",
+  "input": "-6x - 10 = 2",
+  "expected": [
+   -2.0
+  ],
+  "outOfRange": [],
+  "expectError": false,
+  "note": ""
+ },
+ {
+  "id": 2,
+  "cat": "Linear",
+  "kind": "root",
+  "input": "7x + 11 = 25",
+  "expected": [
+   2.0
+  ],
+  "outOfRange": [],
+  "expectError": false,
+  "note": ""
+ },
+ {
+  "id": 3,
+  "cat": "Linear",
+  "kind": "root",
+  "input": "-6x + 26 = -16",
+  "expected": [
+   7.0
+  ],
+  "outOfRange": [],
+  "expectError": false,
+  "note": ""
+ },
+ {
+  "id": 4,
+  "cat": "Linear",
+  "kind": "root",
+  "input": "8x - 4 = 20",
+  "expected": [
+   3.0
+  ],
+  "outOfRange": [],
+  "expectError": false,
+  "note": ""
+ },
+ {
+  "id": 5,
+  "cat": "Linear",
+  "kind": "root",
+  "input": "9x + 5 = 23",
+  "expected": [
+   2.0
+  ],
+  "outOfRange": [],
+  "expectError": false,
+  "note": ""
+ },
+ {
+  "id": 6,
+  "cat": "Linear",
+  "kind": "root",
+  "input": "6x + 18 = 19",
+  "expected": [
+   0.16666666666666666
+  ],
+  "outOfRange": [],
+  "expectError": false,
+  "note": ""
+ },
+ {
+  "id": 7,
+  "cat": "Linear",
+  "kind": "root",
+  "input": "9x - 2 = -15",
+  "expected": [
+   -1.4444444444444444
+  ],
+  "outOfRange": [],
+  "expectError": false,
+  "note": ""
+ },
+ {
+  "id": 8,
+  "cat": "Linear",
+  "kind": "root",
+  "input": "2,5x - 9 = -25",
+  "expected": [
+   -6.4
+  ],
+  "outOfRange": [],
+  "expectError": false,
+  "note": "decimal com vírgula"
+ },
+ {
+  "id": 9,
+  "cat": "Linear",
+  "kind": "root",
+  "input": "5(x - 2) = x + 30",
+  "expected": [
+   10.0
+  ],
+  "outOfRange": [],
+  "expectError": false,
+  "note": "multiplicação implícita com parênteses"
+ },
+ {
+  "id": 10,
+  "cat": "Quadrática (raízes racionais)",
+  "kind": "root",
+  "input": "3x^2 + 63x + 324 = 0",
+  "expected": [
+   -12.0,
+   -9.0
+  ],
+  "outOfRange": [],
+  "expectError": false,
+  "note": ""
+ },
+ {
+  "id": 11,
+  "cat": "Quadrática (raízes racionais)",
+  "kind": "root",
+  "input": "6x^2 - 18x - 10.5 = 0",
+  "expected": [
+   -0.5,
+   3.5
+  ],
+  "outOfRange": [],
+  "expectError": false,
+  "note": ""
+ },
+ {
+  "id": 12,
+  "cat": "Quadrática (raízes racionais)",
+  "kind": "root",
+  "input": "x^2 - 11x - 210 = 0",
+  "expected": [
+   -10.0,
+   21.0
+  ],
+  "outOfRange": [],
+  "expectError": false,
+  "note": ""
+ },
+ {
+  "id": 13,
+  "cat": "Quadrática (raízes racionais)",
+  "kind": "root",
+  "input": "3x^2 + 45x + 168 = 0",
+  "expected": [
+   -8.0,
+   -7.0
+  ],
+  "outOfRange": [],
+  "expectError": false,
+  "note": ""
+ },
+ {
+  "id": 14,
+  "cat": "Quadrática (raízes racionais)",
+  "kind": "root",
+  "input": "3x^2 + 42x + 72 = 0",
+  "expected": [
+   -12.0,
+   -2.0
+  ],
+  "outOfRange": [],
+  "expectError": false,
+  "note": ""
+ },
+ {
+  "id": 15,
+  "cat": "Quadrática (raízes racionais)",
+  "kind": "root",
+  "input": "4x^2 - 8x = 0",
+  "expected": [
+   0.0,
+   2.0
+  ],
+  "outOfRange": [],
+  "expectError": false,
+  "note": ""
+ },
+ {
+  "id": 16,
+  "cat": "Quadrática (raízes racionais)",
+  "kind": "root",
+  "input": "8x^2 + 116x - 504 = 0",
+  "expected": [
+   -18.0,
+   3.5
+  ],
+  "outOfRange": [],
+  "expectError": false,
+  "note": ""
+ },
+ {
+  "id": 17,
+  "cat": "Quadrática (raízes racionais)",
+  "kind": "root",
+  "input": "4x^2 + 36x = 0",
+  "expected": [
+   -9.0,
+   0.0
+  ],
+  "outOfRange": [],
+  "expectError": false,
+  "note": ""
+ },
+ {
+  "id": 18,
+  "cat": "Quadrática (raízes irracionais)",
+  "kind": "root",
+  "input": "5x^2 - 12x + 3 = 0",
+  "expected": [
+   0.283484861008832,
+   2.116515138991168
+  ],
+  "outOfRange": [],
+  "expectError": false,
+  "note": ""
+ },
+ {
+  "id": 19,
+  "cat": "Quadrática (raízes irracionais)",
+  "kind": "root",
+  "input": "2x^2 + 12x - 11 = 0",
+  "expected": [
+   -6.807886552931954,
+   0.8078865529319541
+  ],
+  "outOfRange": [],
+  "expectError": false,
+  "note": ""
+ },
+ {
+  "id": 20,
+  "cat": "Quadrática (raízes irracionais)",
+  "kind": "root",
+  "input": "x^2 + 10x + 1 = 0",
+  "expected": [
+   -9.898979485566356,
+   -0.10102051443364381
+  ],
+  "outOfRange": [],
+  "expectError": false,
+  "note": ""
+ },
+ {
+  "id": 21,
+  "cat": "Quadrática (raízes irracionais)",
+  "kind": "root",
+  "input": "x^2 + 10x + 4 = 0",
+  "expected": [
+   -9.58257569495584,
+   -0.41742430504416
+  ],
+  "outOfRange": [],
+  "expectError": false,
+  "note": ""
+ },
+ {
+  "id": 22,
+  "cat": "Cúbica (3 raízes reais)",
+  "kind": "root",
+  "input": "x^3 + 4x^2 - 29x + 24 = 0",
+  "expected": [
+   -8.0,
+   1.0,
+   3.0
+  ],
+  "outOfRange": [],
+  "expectError": false,
+  "note": ""
+ },
+ {
+  "id": 23,
+  "cat": "Cúbica (3 raízes reais)",
+  "kind": "root",
+  "input": "x^3 + 11x^2 + 3x - 135 = 0",
+  "expected": [
+   -9.0,
+   -5.0,
+   3.0
+  ],
+  "outOfRange": [],
+  "expectError": false,
+  "note": ""
+ },
+ {
+  "id": 24,
+  "cat": "Cúbica (3 raízes reais)",
+  "kind": "root",
+  "input": "x^3 - 20x^2 + 116x - 160 = 0",
+  "expected": [
+   2.0,
+   8.0,
+   10.0
+  ],
+  "outOfRange": [],
+  "expectError": false,
+  "note": ""
+ },
+ {
+  "id": 25,
+  "cat": "Cúbica (3 raízes reais)",
+  "kind": "root",
+  "input": "x^3 - 22x^2 + 147x - 270 = 0",
+  "expected": [
+   3.0,
+   9.0,
+   10.0
+  ],
+  "outOfRange": [],
+  "expectError": false,
+  "note": ""
+ },
+ {
+  "id": 26,
+  "cat": "Cúbica (3 raízes reais)",
+  "kind": "root",
+  "input": "x^3 - x^2 - 20x - 0.5 = 0",
+  "expected": [
+   -3.986040821035035,
+   -0.025032114602687314,
+   5.011072935637722
+  ],
+  "outOfRange": [],
+  "expectError": false,
+  "note": ""
+ },
+ {
+  "id": 27,
+  "cat": "Cúbica (3 raízes reais)",
+  "kind": "root",
+  "input": "x^3 - 17x^2 + 92x - 160.8 = 0",
+  "expected": [
+   4.319308105448183,
+   4.616454415314927,
+   8.064237479236889
+  ],
+  "outOfRange": [],
+  "expectError": false,
+  "note": ""
+ },
+ {
+  "id": 28,
+  "cat": "Cúbica (1 raiz real)",
+  "kind": "root",
+  "input": "x^3 - 5x^2 + 13x - 36 = 0",
+  "expected": [
+   4.0
+  ],
+  "outOfRange": [],
+  "expectError": false,
+  "note": ""
+ },
+ {
+  "id": 29,
+  "cat": "Cúbica (1 raiz real)",
+  "kind": "root",
+  "input": "x^3 - 3x^2 + 9x - 7 = 0",
+  "expected": [
+   1.0
+  ],
+  "outOfRange": [],
+  "expectError": false,
+  "note": ""
+ },
+ {
+  "id": 30,
+  "cat": "Cúbica (1 raiz real)",
+  "kind": "root",
+  "input": "x^3 + 6x - 18 = 0",
+  "expected": [
+   1.8845299803753683
+  ],
+  "outOfRange": [],
+  "expectError": false,
+  "note": ""
+ },
+ {
+  "id": 31,
+  "cat": "Cúbica (1 raiz real)",
+  "kind": "root",
+  "input": "x^3 + 4x - 3 = 0",
+  "expected": [
+   0.67359305821871
+  ],
+  "outOfRange": [],
+  "expectError": false,
+  "note": ""
+ },
+ {
+  "id": 32,
+  "cat": "Quártica / quíntica",
+  "kind": "root",
+  "input": "20x^4 - 61x^3 - 58x^2 + 225x - 126 = 0",
+  "expected": [
+   -2.0,
+   1.0,
+   1.05,
+   3.0
+  ],
+  "outOfRange": [],
+  "expectError": false,
+  "note": ""
+ },
+ {
+  "id": 33,
+  "cat": "Quártica / quíntica",
+  "kind": "root",
+  "input": "x^4 - 9x^2 + 14 = 0",
+  "expected": [
+   -2.6457513110645907,
+   -1.4142135623730951,
+   1.4142135623730951,
+   2.6457513110645907
+  ],
+  "outOfRange": [],
+  "expectError": false,
+  "note": ""
+ },
+ {
+  "id": 34,
+  "cat": "Quártica / quíntica",
+  "kind": "root",
+  "input": "2x^5 - 13x^4 - 92x^3 + 397x^2 + 258x - 216 = 0",
+  "expected": [
+   -6.0,
+   -1.0,
+   0.5,
+   4.0,
+   9.0
+  ],
+  "outOfRange": [],
+  "expectError": false,
+  "note": ""
+ },
+ {
+  "id": 35,
+  "cat": "Quártica / quíntica",
+  "kind": "root",
+  "input": "x^4 - 10x^2 + 9 = 0",
+  "expected": [
+   -3.0,
+   -1.0,
+   1.0,
+   3.0
+  ],
+  "outOfRange": [],
+  "expectError": false,
+  "note": ""
+ },
+ {
+  "id": 36,
+  "cat": "Quártica / quíntica",
+  "kind": "root",
+  "input": "x^5 - 4x^4 - 10x^3 + 26x^2 - 11x + 30 = 0",
+  "expected": [
+   -3.0,
+   2.0,
+   5.0
+  ],
+  "outOfRange": [],
+  "expectError": false,
+  "note": ""
+ },
+ {
+  "id": 37,
+  "cat": "Quártica / quíntica",
+  "kind": "root",
+  "input": "2x^5 - 10x^3 + 8x - 1 = 0",
+  "expected": [
+   -1.97819077941122,
+   -1.0786197462670433,
+   0.12758773973033524,
+   0.9092335994732319,
+   2.019989186474696
+  ],
+  "outOfRange": [],
+  "expectError": false,
+  "note": ""
+ },
+ {
+  "id": 38,
+  "cat": "Potência alta",
+  "kind": "root",
+  "input": "x^5 = 32",
+  "expected": [
+   2.0
+  ],
+  "outOfRange": [],
+  "expectError": false,
+  "note": ""
+ },
+ {
+  "id": 39,
+  "cat": "Potência alta",
+  "kind": "root",
+  "input": "x^7 - 128 = 0",
+  "expected": [
+   2.0
+  ],
+  "outOfRange": [],
+  "expectError": false,
+  "note": ""
+ },
+ {
+  "id": 40,
+  "cat": "Potência alta",
+  "kind": "root",
+  "input": "x^10 = 1024",
+  "expected": [
+   -2.0,
+   2.0
+  ],
+  "outOfRange": [],
+  "expectError": false,
+  "note": ""
+ },
+ {
+  "id": 41,
+  "cat": "Potência alta",
+  "kind": "root",
+  "input": "x^8 - 3x^4 + 2 = 0",
+  "expected": [
+   -1.189207115002721,
+   -1.0,
+   1.0,
+   1.189207115002721
+  ],
+  "outOfRange": [],
+  "expectError": false,
+  "note": ""
+ },
+ {
+  "id": 42,
+  "cat": "Potência alta",
+  "kind": "root",
+  "input": "x^20 - 3x^10 + 2 = 0",
+  "expected": [
+   -1.0717734625362931,
+   -1.0,
+   1.0,
+   1.0717734625362931
+  ],
+  "outOfRange": [],
+  "expectError": false,
+  "note": ""
+ },
+ {
+  "id": 43,
+  "cat": "Potência alta",
+  "kind": "root",
+  "input": "x^100 - 10000000000 = 0",
+  "expected": [
+   -1.2589254117941673,
+   1.2589254117941673
+  ],
+  "outOfRange": [],
+  "expectError": false,
+  "note": ""
+ },
+ {
+  "id": 44,
+  "cat": "Raiz múltipla / tangente",
+  "kind": "root",
+  "input": "(x - 2.8)^2 = 0",
+  "expected": [
+   2.8
+  ],
+  "outOfRange": [],
+  "expectError": false,
+  "note": ""
+ },
+ {
+  "id": 45,
+  "cat": "Raiz múltipla / tangente",
+  "kind": "root",
+  "input": "(x + 4)^3 = 0",
+  "expected": [
+   -4.0
+  ],
+  "outOfRange": [],
+  "expectError": false,
+  "note": ""
+ },
+ {
+  "id": 46,
+  "cat": "Raiz múltipla / tangente",
+  "kind": "root",
+  "input": "(x - 5)^4 = 0",
+  "expected": [
+   5.0
+  ],
+  "outOfRange": [],
+  "expectError": false,
+  "note": ""
+ },
+ {
+  "id": 47,
+  "cat": "Raiz múltipla / tangente",
+  "kind": "root",
+  "input": "abs(x - 16) = 0",
+  "expected": [
+   16.0
+  ],
+  "outOfRange": [],
+  "expectError": false,
+  "note": ""
+ },
+ {
+  "id": 48,
+  "cat": "Trigonométrica",
+  "kind": "root",
+  "input": "sin(x) = 0.8",
+  "expected": [
+   -36.77181662507591,
+   -35.48481440748934,
+   -30.48863131789632,
+   -29.201629100309752,
+   -24.205446010716734,
+   -22.918443793130166,
+   -17.922260703537148,
+   -16.63525848595058,
+   -11.63907539635756,
+   -10.352073178770992,
+   -5.355890089177974,
+   -4.068887871591405,
+   0.9272952180016123,
+   2.214297435588181,
+   7.2104805251811985,
+   8.497482742767767,
+   13.493665832360785,
+   14.780668049947353,
+   19.776851139540373,
+   21.06385335712694,
+   26.06003644671996,
+   27.347038664306528,
+   32.34322175389954,
+   33.63022397148611,
+   38.62640706107913,
+   39.913409278665696
+  ],
+  "outOfRange": [],
+  "expectError": false,
+  "note": ""
+ },
+ {
+  "id": 49,
+  "cat": "Trigonométrica",
+  "kind": "root",
+  "input": "cos(x) = x / 6",
+  "expected": [
+   -3.9858262065124905,
+   -1.891519896348865,
+   1.344751045375789
+  ],
+  "outOfRange": [],
+  "expectError": false,
+  "note": ""
+ },
+ {
+  "id": 50,
+  "cat": "Trigonométrica",
+  "kind": "root",
+  "input": "tan(x) = 4 - x",
+  "expected": [
+   -39.29300248428474,
+   -36.15321497529364,
+   -33.013733291296504,
+   -29.874642245151,
+   -26.736061156217463,
+   -23.59816335205346,
+   -20.46121054801645,
+   -17.32561723092253,
+   -14.192080650325192,
+   -11.06186981069503,
+   -7.937555752889569,
+   -4.825219357628784,
+   -1.7431873752507652,
+   1.2249298315382393,
+   3.557876884682301,
+   5.349954056479231,
+   8.093574546236052,
+   11.134824806929764,
+   14.234565875923735,
+   17.353506771116475,
+   20.480954049925636,
+   23.61288767036594,
+   26.747470201614718,
+   29.883745289645535,
+   33.021166843237076,
+   36.159400606989934,
+   39.29823062628971
+  ],
+  "outOfRange": [],
+  "expectError": false,
+  "note": ""
+ },
+ {
+  "id": 51,
+  "cat": "Trigonométrica",
+  "kind": "root",
+  "input": "sin(x) + cos(x) = 1.3",
+  "expected": [
+   -37.3183673167037,
+   -36.50906004265644,
+   -31.035182009524117,
+   -30.225874735476854,
+   -24.751996702344528,
+   -23.942689428297268,
+   -18.46881139516494,
+   -17.659504121117678,
+   -12.185626087985357,
+   -11.376318813938093,
+   -5.90244078080577,
+   -5.093133506758506,
+   0.38074452637381667,
+   1.1900518004210798,
+   6.663929833553403,
+   7.473237107600666,
+   12.94711514073299,
+   13.756422414780253,
+   19.230300447912576,
+   20.03960772195984,
+   25.513485755092162,
+   26.322793029139426,
+   31.79667106227175,
+   32.60597833631901,
+   38.079856369451335,
+   38.8891636434986
+  ],
+  "outOfRange": [],
+  "expectError": false,
+  "note": ""
+ },
+ {
+  "id": 52,
+  "cat": "Trigonométrica",
+  "kind": "root",
+  "input": "x sin(x) = 4",
+  "expected": [
+   -37.80511604336071,
+   -34.44111624340484,
+   -31.543079591895093,
+   -28.1316618092353,
+   -25.291563595229523,
+   -21.806673966146843,
+   -19.060980321617727,
+   -15.446011183971898,
+   -12.882098454729235,
+   -8.962126200824773,
+   -6.901412609021304,
+   6.901412609021304,
+   8.962126200824773,
+   12.882098454729235,
+   15.446011183971898,
+   19.060980321617727,
+   21.806673966146843,
+   25.291563595229523,
+   28.1316618092353,
+   31.543079591895093,
+   34.44111624340484,
+   37.80511604336071
+  ],
+  "outOfRange": [],
+  "expectError": false,
+  "note": ""
+ },
+ {
+  "id": 53,
+  "cat": "Trigonométrica",
+  "kind": "root",
+  "input": "cos(4x) = x^2",
+  "expected": [
+   -0.360175773569665,
+   0.360175773569665
+  ],
+  "outOfRange": [],
+  "expectError": false,
+  "note": ""
+ },
+ {
+  "id": 54,
+  "cat": "Trigonométrica",
+  "kind": "root",
+  "input": "sen(x) = x/10",
+  "expected": [
+   -8.423203932360492,
+   -7.068174358095817,
+   -2.852341894450092,
+   -3.6524146347604446e-58,
+   2.852341894450092,
+   7.068174358095817,
+   8.423203932360492
+  ],
+  "outOfRange": [],
+  "expectError": false,
+  "note": ""
+ },
+ {
+  "id": 55,
+  "cat": "Exponencial / logarítmica",
+  "kind": "root",
+  "input": "exp(x) = 4",
+  "expected": [
+   1.3862943611198906
+  ],
+  "outOfRange": [],
+  "expectError": false,
+  "note": ""
+ },
+ {
+  "id": 56,
+  "cat": "Exponencial / logarítmica",
+  "kind": "root",
+  "input": "ln(x) = 2.7",
+  "expected": [
+   14.879731724872837
+  ],
+  "outOfRange": [],
+  "expectError": false,
+  "note": ""
+ },
+ {
+  "id": 57,
+  "cat": "Exponencial / logarítmica",
+  "kind": "root",
+  "input": "2^x = 151",
+  "expected": [
+   7.2384047393250786
+  ],
+  "outOfRange": [],
+  "expectError": false,
+  "note": ""
+ },
+ {
+  "id": 58,
+  "cat": "Exponencial / logarítmica",
+  "kind": "root",
+  "input": "x exp(x) = 6",
+  "expected": [
+   1.4324047758983003
+  ],
+  "outOfRange": [],
+  "expectError": false,
+  "note": ""
+ },
+ {
+  "id": 59,
+  "cat": "Exponencial / logarítmica",
+  "kind": "root",
+  "input": "e^(-x) = x",
+  "expected": [
+   0.5671432904097838
+  ],
+  "outOfRange": [],
+  "expectError": false,
+  "note": ""
+ },
+ {
+  "id": 60,
+  "cat": "Exponencial / logarítmica",
+  "kind": "root",
+  "input": "ln(x) + x = 9",
+  "expected": [
+   7.047348546597603
+  ],
+  "outOfRange": [],
+  "expectError": false,
+  "note": ""
+ },
+ {
+  "id": 61,
+  "cat": "Exponencial / logarítmica",
+  "kind": "root",
+  "input": "log(x) = 1.5",
+  "expected": [
+   31.622776601683793
+  ],
+  "outOfRange": [],
+  "expectError": false,
+  "note": "log = base 10"
+ },
+ {
+  "id": 62,
+  "cat": "Raiz / módulo / fração",
+  "kind": "root",
+  "input": "sqrt(x) = 2",
+  "expected": [
+   4.0
+  ],
+  "outOfRange": [],
+  "expectError": false,
+  "note": ""
+ },
+ {
+  "id": 63,
+  "cat": "Raiz / módulo / fração",
+  "kind": "root",
+  "input": "sqrt(x + 8) = x - 1",
+  "expected": [
+   4.54138126514911
+  ],
+  "outOfRange": [],
+  "expectError": false,
+  "note": ""
+ },
+ {
+  "id": 64,
+  "cat": "Raiz / módulo / fração",
+  "kind": "root",
+  "input": "abs(x - 9) = 5",
+  "expected": [
+   4.0,
+   14.0
+  ],
+  "outOfRange": [],
+  "expectError": false,
+  "note": ""
+ },
+ {
+  "id": 65,
+  "cat": "Raiz / módulo / fração",
+  "kind": "root",
+  "input": "1/x + x = 6",
+  "expected": [
+   0.1715728752538099,
+   5.82842712474619
+  ],
+  "outOfRange": [],
+  "expectError": false,
+  "note": ""
+ },
+ {
+  "id": 66,
+  "cat": "Raiz / módulo / fração",
+  "kind": "root",
+  "input": "(x^2 - 4)/(x - 1) = 2",
+  "expected": [
+   -0.7320508075688773,
+   2.732050807568877
+  ],
+  "outOfRange": [],
+  "expectError": false,
+  "note": ""
+ },
+ {
+  "id": 67,
+  "cat": "Raiz / módulo / fração",
+  "kind": "root",
+  "input": "x^(1/3) = 3",
+  "expected": [
+   27.0
+  ],
+  "outOfRange": [],
+  "expectError": false,
+  "note": ""
+ },
+ {
+  "id": 68,
+  "cat": "Sintaxe Unicode",
+  "kind": "root",
+  "input": "x² − 5x + 6 = 0",
+  "expected": [
+   2.0,
+   3.0
+  ],
+  "outOfRange": [],
+  "expectError": false,
+  "note": "símbolos ², ³, −, ·, vírgula"
+ },
+ {
+  "id": 69,
+  "cat": "Sintaxe Unicode",
+  "kind": "root",
+  "input": "2·x³ = 54",
+  "expected": [
+   3.0
+  ],
+  "outOfRange": [],
+  "expectError": false,
+  "note": "símbolos ², ³, −, ·, vírgula"
+ },
+ {
+  "id": 70,
+  "cat": "Sintaxe Unicode",
+  "kind": "root",
+  "input": "3(x − 1) = 2x + 4",
+  "expected": [
+   7.0
+  ],
+  "outOfRange": [],
+  "expectError": false,
+  "note": "símbolos ², ³, −, ·, vírgula"
+ },
+ {
+  "id": 71,
+  "cat": "Sintaxe Unicode",
+  "kind": "root",
+  "input": "x² = 2,25",
+  "expected": [
+   -1.5,
+   1.5
+  ],
+  "outOfRange": [],
+  "expectError": false,
+  "note": "símbolos ², ³, −, ·, vírgula"
+ },
+ {
+  "id": 72,
+  "cat": "Sem solução na faixa",
+  "kind": "root",
+  "input": "x^2 + 1 = 0",
+  "expected": [],
+  "outOfRange": [],
+  "expectError": true,
+  "note": "sem raiz real"
+ },
+ {
+  "id": 73,
+  "cat": "Sem solução na faixa",
+  "kind": "root",
+  "input": "1/x = 0",
+  "expected": [],
+  "outOfRange": [],
+  "expectError": true,
+  "note": "assíntota, sem raiz"
+ },
+ {
+  "id": 74,
+  "cat": "Sem solução na faixa",
+  "kind": "root",
+  "input": "exp(x) = 0",
+  "expected": [],
+  "outOfRange": [],
+  "expectError": true,
+  "note": "sem raiz, f→0 em −∞"
+ },
+ {
+  "id": 75,
+  "cat": "Sem solução na faixa",
+  "kind": "root",
+  "input": "cos(x) = 2",
+  "expected": [],
+  "outOfRange": [],
+  "expectError": true,
+  "note": "sem raiz real"
+ },
+ {
+  "id": 76,
+  "cat": "Sem solução na faixa",
+  "kind": "root",
+  "input": "x^2 - 4x + 7 = 0",
+  "expected": [],
+  "outOfRange": [],
+  "expectError": true,
+  "note": "discriminante negativo"
+ },
+ {
+  "id": 77,
+  "cat": "Sem solução na faixa",
+  "kind": "root",
+  "input": "log(x) = 3",
+  "expected": [],
+  "outOfRange": [
+   1000.0
+  ],
+  "expectError": true,
+  "note": "raiz x = 1000 fora da faixa padrão [−40, 40]"
+ },
+ {
+  "id": 78,
+  "cat": "Sistema 2×2",
+  "kind": "system",
+  "input": "10x - 7y = -137\n-x + 2y = 28",
+  "expected": [
+   -6.0,
+   11.0
+  ],
+  "vars": [
+   "x",
+   "y"
+  ],
+  "expectError": false,
+  "note": "diagonal dominante"
+ },
+ {
+  "id": 79,
+  "cat": "Sistema 2×2",
+  "kind": "system",
+  "input": "4x - 5y = 20\n5x - 9y = 58",
+  "expected": [
+   -10.0,
+   -12.0
+  ],
+  "vars": [
+   "x",
+   "y"
+  ],
+  "expectError": false,
+  "note": ""
+ },
+ {
+  "id": 80,
+  "cat": "Sistema 2×2",
+  "kind": "system",
+  "input": "14x + 9y = -151\n8x + 10y = -130",
+  "expected": [
+   -5.0,
+   -9.0
+  ],
+  "vars": [
+   "x",
+   "y"
+  ],
+  "expectError": false,
+  "note": "diagonal dominante"
+ },
+ {
+  "id": 81,
+  "cat": "Sistema 2×2",
+  "kind": "system",
+  "input": "-8x + 8y = -32\n-x + 2y = -16",
+  "expected": [
+   -8.0,
+   -12.0
+  ],
+  "vars": [
+   "x",
+   "y"
+  ],
+  "expectError": false,
+  "note": ""
+ },
+ {
+  "id": 82,
+  "cat": "Sistema 2×2",
+  "kind": "system",
+  "input": "11x + 9y = -28\n9x + 14y = -3",
+  "expected": [
+   -5.0,
+   3.0
+  ],
+  "vars": [
+   "x",
+   "y"
+  ],
+  "expectError": false,
+  "note": "diagonal dominante"
+ },
+ {
+  "id": 83,
+  "cat": "Sistema 2×2",
+  "kind": "system",
+  "input": "9x - 5y = -47.5\n7x = -35",
+  "expected": [
+   -5.0,
+   0.5
+  ],
+  "vars": [
+   "x",
+   "y"
+  ],
+  "expectError": false,
+  "note": ""
+ },
+ {
+  "id": 84,
+  "cat": "Sistema 3×3",
+  "kind": "system",
+  "input": "16x - 5y + 9z = -234\n8y + 4z = -40\n3x - 5y + 9z = -117",
+  "expected": [
+   -9.0,
+   0.0,
+   -10.0
+  ],
+  "vars": [
+   "x",
+   "y",
+   "z"
+  ],
+  "expectError": false,
+  "note": "diagonal dominante"
+ },
+ {
+  "id": 85,
+  "cat": "Sistema 3×3",
+  "kind": "system",
+  "input": "-8x + 2y + 2z = -38\n-9x - 9y + 7z = -63\n6x + y = 10",
+  "expected": [
+   2.0,
+   -2.0,
+   -9.0
+  ],
+  "vars": [
+   "x",
+   "y",
+   "z"
+  ],
+  "expectError": false,
+  "note": ""
+ },
+ {
+  "id": 86,
+  "cat": "Sistema 3×3",
+  "kind": "system",
+  "input": "19x + 5y + 9z = 189\n-4x + 16y + 9z = -27\n7x - 3y + 14z = 190",
+  "expected": [
+   7.0,
+   -5.0,
+   9.0
+  ],
+  "vars": [
+   "x",
+   "y",
+   "z"
+  ],
+  "expectError": false,
+  "note": "diagonal dominante"
+ },
+ {
+  "id": 87,
+  "cat": "Sistema 3×3",
+  "kind": "system",
+  "input": "-7x + 8y + 3z = 106\n-8x - 3y - 4z = -84\n-8x + 8y - 8z = 16",
+  "expected": [
+   2.0,
+   12.0,
+   8.0
+  ],
+  "vars": [
+   "x",
+   "y",
+   "z"
+  ],
+  "expectError": false,
+  "note": ""
+ },
+ {
+  "id": 88,
+  "cat": "Sistema 3×3",
+  "kind": "system",
+  "input": "17x + 6y - 9z = 19\n-5x + 12y - 3z = 26\n7x - 5y + 15z = -1.5",
+  "expected": [
+   0.5,
+   2.5,
+   0.5
+  ],
+  "vars": [
+   "x",
+   "y",
+   "z"
+  ],
+  "expectError": false,
+  "note": "diagonal dominante"
+ },
+ {
+  "id": 89,
+  "cat": "Sistema 3×3",
+  "kind": "system",
+  "input": "-7x + 3y = -81\n-4x + 2y - 4z = -34\n-x + 5y + 6z = -25",
+  "expected": [
+   12.0,
+   1.0,
+   -3.0
+  ],
+  "vars": [
+   "x",
+   "y",
+   "z"
+  ],
+  "expectError": false,
+  "note": ""
+ },
+ {
+  "id": 90,
+  "cat": "Sistema 4×4",
+  "kind": "system",
+  "input": "23x + 7y + 6z + 5u = -93\n-6x + 16y + 7z - u = 52\n-6x - 3y + 19z - 9u = 59\n-7x + 5y + z + 16u = 193",
+  "expected": [
+   -7.0,
+   -1.0,
+   5.0,
+   9.0
+  ],
+  "vars": [
+   "x",
+   "y",
+   "z",
+   "u"
+  ],
+  "expectError": false,
+  "note": "diagonal dominante"
+ },
+ {
+  "id": 91,
+  "cat": "Sistema 4×4",
+  "kind": "system",
+  "input": "8x1 - 3x2 - 6x3 - x4 = 74\n8x1 + 9x2 - 3x3 + 9x4 = 53\n9x2 - x3 + 8x4 = 18\n-5x1 - 6x2 - x3 - 6x4 = -8",
+  "expected": [
+   1.0,
+   -7.0,
+   -9.0,
+   9.0
+  ],
+  "vars": [
+   "x1",
+   "x2",
+   "x3",
+   "x4"
+  ],
+  "expectError": false,
+  "note": ""
+ },
+ {
+  "id": 92,
+  "cat": "Sistema 4×4",
+  "kind": "system",
+  "input": "2x - 4y - 6z + 7u = -50\nx - y + 9z - 7u = 109\ny - 4z - u = 4\n-x - 7y - 9z + 4u = -41",
+  "expected": [
+   12.0,
+   -4.0,
+   1.0,
+   -12.0
+  ],
+  "vars": [
+   "x",
+   "y",
+   "z",
+   "u"
+  ],
+  "expectError": false,
+  "note": ""
+ },
+ {
+  "id": 93,
+  "cat": "Sistema 5×5",
+  "kind": "system",
+  "input": "22x - 9y - 6u - 6v = -198\n8x + 19y + 2z + u + 5v = 234\n-8x + 3y + 22z - 3u + 5v = 118\n4x - 6y + 2z + 16u - v = -120\n3x + 2z - 8u + 14v = 93",
+  "expected": [
+   -3.0,
+   12.0,
+   1.0,
+   -2.0,
+   6.0
+  ],
+  "vars": [
+   "x",
+   "y",
+   "z",
+   "u",
+   "v"
+  ],
+  "expectError": false,
+  "note": "diagonal dominante"
+ },
+ {
+  "id": 94,
+  "cat": "Sistema 5×5",
+  "kind": "system",
+  "input": "8x1 + x2 - 3x3 + 8x4 - 8x5 = 245\n-6x1 - 4x2 - 6x3 - 6x4 - 8x5 = 68\n-5x1 + 7x2 + 2x3 - 9x5 = -22\n4x1 + 9x2 - 5x3 + 2x4 + 4x5 = -27\n3x1 + 3x2 - 2x3 + 4x4 - 2x5 = 70",
+  "expected": [
+   12.0,
+   -8.0,
+   -7.0,
+   5.0,
+   -12.0
+  ],
+  "vars": [
+   "x1",
+   "x2",
+   "x3",
+   "x4",
+   "x5"
+  ],
+  "expectError": false,
+  "note": ""
+ },
+ {
+  "id": 95,
+  "cat": "Sistema 6×6",
+  "kind": "system",
+  "input": "24x1 + 8x2 + 3x3 - x4 - 5x5 - 2x6 = 80\n-9x1 + 31x2 - x3 + 8x4 + 6x5 + 4x6 = 322\n-x1 + x2 + 25x3 + 9x4 - 7x5 - 4x6 = 44\n8x1 - 8x2 + 7x3 + 33x4 + x5 + 7x6 = 197\nx1 - 8x2 - 9x3 - 2x4 + 31x5 - 8x6 = -69\n-2x1 + 7x2 - 5x3 + 3x4 + 2x5 + 22x6 = 261",
+  "expected": [
+   2.0,
+   8.0,
+   2.0,
+   5.0,
+   3.0,
+   9.0
+  ],
+  "vars": [
+   "x1",
+   "x2",
+   "x3",
+   "x4",
+   "x5",
+   "x6"
+  ],
+  "expectError": false,
+  "note": "diagonal dominante"
+ },
+ {
+  "id": 96,
+  "cat": "Sistema 2×2 (matriz)",
+  "kind": "system",
+  "input": "9, 0 | 72\n-3, -4 | -28",
+  "expected": [
+   8.0,
+   1.0
+  ],
+  "vars": [
+   "x1",
+   "x2"
+  ],
+  "expectError": false,
+  "note": ""
+ },
+ {
+  "id": 97,
+  "cat": "Sistema 3×3 (matriz)",
+  "kind": "system",
+  "input": "-5, 6, -9 | -36\n2, 7, 4 | 7\n-8, -4, -7 | -7",
+  "expected": [
+   -3.0,
+   -1.0,
+   5.0
+  ],
+  "vars": [
+   "x1",
+   "x2",
+   "x3"
+  ],
+  "expectError": false,
+  "note": ""
+ },
+ {
+  "id": 98,
+  "cat": "Sistema sem solução única",
+  "kind": "system",
+  "input": "x + y = 2\n2x + 2y = 4",
+  "expected": null,
+  "expectError": true,
+  "note": "infinitas soluções"
+ },
+ {
+  "id": 99,
+  "cat": "Sistema sem solução única",
+  "kind": "system",
+  "input": "x + y = 1\nx + y = 3",
+  "expected": null,
+  "expectError": true,
+  "note": "sem solução (retas paralelas)"
+ },
+ {
+  "id": 100,
+  "cat": "Sistema sem solução única",
+  "kind": "system",
+  "input": "x + y + z = 1\n2x + 2y + 2z = 5\nx - y + z = 0",
+  "expected": null,
+  "expectError": true,
+  "note": "sem solução (3×3 singular)"
+ }
+]

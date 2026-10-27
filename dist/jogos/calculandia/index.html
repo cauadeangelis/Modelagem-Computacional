@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<title>Calculândia — Caçadores de Raízes</title>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-6RkvnLhc+Dxs3DRMSy+Rs0us73msKNskVUvxIBn7gdw='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'" />
+<meta name="referrer" content="no-referrer" />
+<meta name="description" content="Calculândia — Caçadores de Raízes: aventura 3D do Numera Academy com 21 métodos numéricos jogáveis, cinco chefões e a Usina." />
+<link rel="icon" href="../../favicon.svg" type="image/svg+xml" />
+<link rel="stylesheet" href="fonts/fonts.css" />
+<link rel="stylesheet" href="style.css" />
+<!-- Three.js 0.160.0 (MIT) e a fonte Fredoka (OFL) vêm do próprio site: o jogo abre sem CDN e funciona na rede da faculdade. -->
+<script type="importmap">
+{
+  "imports": {
+    "three": "./vendor/three/three.module.min.js",
+    "three/addons/": "./vendor/three/addons/"
+  }
+}
+</script>
+</head>
+<body>
+<div id="game"></div>
+
+<div id="ui">
+  <div id="bubbles"></div>
+
+  <div id="hud" class="hidden">
+    <div id="stats" class="panel">
+      <div class="stat" title="Estrelas das cidades"><span class="ico">⭐</span><span id="stat-stars">0</span><span class="of">/189</span></div>
+      <div class="stat" id="stat-seeds-wrap" title="Sementes (moeda de dicas)"><span class="ico">🌰</span><span id="stat-seeds">3</span></div>
+      <div class="stat" id="stat-roots-wrap" title="Raízes Fugitivas"><span class="ico">🌱</span><span id="stat-roots">0</span><span class="of">/40</span></div>
+    </div>
+    <div id="objective" class="panel"></div>
+    <div id="minimap-wrap"><canvas id="minimap" width="140" height="140"></canvas></div>
+    <div id="hud-buttons">
+      <button id="btn-map" class="btn round" title="Mapa (M)" aria-label="Abrir mapa">🗺️</button>
+      <button id="btn-menu" class="btn round" title="Menu (Esc)" aria-label="Abrir menu">☰</button>
+    </div>
+    <div id="region-banner"><span></span></div>
+    <div id="city-banner"><span></span></div>
+    <button id="context-btn" class="btn hidden"></button>
+    <div id="captions" aria-live="polite"></div>
+  </div>
+
+  <div id="preview" class="panel hidden"></div>
+
+  <div id="dialog" class="panel hidden">
+    <canvas id="dialog-portrait" width="112" height="112"></canvas>
+    <div class="dialog-body">
+      <div id="dialog-name"></div>
+      <div id="dialog-text"></div>
+      <div id="dialog-options"></div>
+    </div>
+    <div id="dialog-next">▼</div>
+  </div>
+
+  <div id="touch" class="hidden">
+    <div id="joy"><div id="joy-knob"></div></div>
+    <div id="touch-buttons">
+      <button id="tb-hint" class="btn">Dica</button>
+      <button id="tb-jump" class="btn">Pular</button>
+      <button id="tb-act" class="btn big">Interagir</button>
+    </div>
+  </div>
+
+  <div id="mapscreen" class="overlay hidden"></div>
+  <div id="menu" class="overlay hidden"></div>
+  <div id="fase" class="overlay hidden"></div>
+  <div id="seedfly"></div>
+  <div id="iris"></div>
+  <div id="flash"></div>
+  <div id="fade"></div>
+  <div id="cine" class="hidden">
+    <div id="cine-title"></div>
+    <div id="cine-sub"></div>
+    <div id="cine-skip">Segure <b>Espaço</b> (ou toque e segure) para pular <span id="cine-skip-bar"></span></div>
+  </div>
+  <div id="title" class="overlay hidden"></div>
+  <div id="loading" class="overlay">
+    <div class="load-box panel">
+      <div class="load-title">Calculândia</div>
+      <div id="load-tip">Carregando...</div>
+      <div class="load-bar"><div id="load-fill"></div></div>
+    </div>
+  </div>
+  <div id="debug" class="panel hidden"></div>
+</div>
+
+<noscript>Este jogo precisa de JavaScript.</noscript>
+<script type="module" src="src/main.js"></script>
+</body>
+</html>

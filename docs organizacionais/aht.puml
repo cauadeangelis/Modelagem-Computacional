@@ -1,0 +1,164 @@
+# Fluxograma de Visão — Numera Academy v12
+
+Este fluxograma mostra o caminho do usuário (aluno ou professora) pelo site Numera Academy e pelos dois jogos, Calculândia e Quem Divergiu?. Foi montado a partir do código e da documentação do projeto (README, relatório técnico e documentação da Calculândia).
+
+## Como visualizar
+
+O diagrama está em PlantUML. Para ver a imagem:
+
+- cole o bloco de código abaixo em [plantuml.com/plantuml](https://www.plantuml.com/plantuml); ou
+- abra este arquivo no VS Code com a extensão **PlantUML** (atalho Alt+D para pré-visualizar).
+
+## Resumo do fluxo
+
+| Etapa | O que acontece |
+| --- | --- |
+| Entrada | O usuário abre o site (navegador, celular ou app instalado, inclusive offline) e o progresso é carregado do `localStorage` |
+| Escolha da área | Bifurcação para Jornada, Missões, Jogos, Treino ou Terminal |
+| Jornada | 6 mundos em ordem de dificuldade (Bisseção ★ até Gauss-Seidel ★★★★★); lição, simulação e prática em 3 níveis; concluir o Nível 1 libera o próximo mundo; Raiz e Pivô reagem aos acertos |
+| Missões | Problema aplicado em três etapas: formular, calcular e interpretar |
+| Calculândia | Explorar a ilha, entrar no prédio-fase, ler o briefing, escolher a ferramenta e iterar gastando bateria até estabilizar; vitória dá estrelas e abre o chefão; derrota abre o Diário de Campo; 5 chefões levam à Usina |
+| Quem Divergiu? | Montar a turma, palpites em segredo, voto em quem divergiu, revelação na reta com faixas de 1%, 5% e 20%, pontuação e pódio |
+| Treino e Modo prova | Diagnosticar o método, resolver e conferir (369 erros típicos) com revisão espaçada, ou prova cronometrada com nota e PDF |
+| Terminal | Resolver equações e sistemas com passos, gráfico de convergência e verificação da raiz |
+| Fechamento | Atualizar XP, moedas, conquistas e camarim, salvar e voltar à escolha da área |
+
+## Diagrama
+
+```plantuml
+@startuml fluxograma_visao
+' Numera Academy v12 — Fluxograma de visão (jornada do usuário pelo site e pelos jogos)
+' Baseado no código e na documentação de jogo3.zip (README, RELATORIO-TECNICO, docs/calculandia)
+skinparam defaultFontName Arial
+skinparam ActivityBackgroundColor #FFF7E6
+skinparam ActivityBorderColor #3A2A1A
+skinparam ActivityDiamondBackgroundColor #F2C14E
+skinparam PartitionBorderColor #3A2A1A
+skinparam ArrowColor #3A2A1A
+title Numera Academy v12 — Fluxograma de visão
+
+start
+:Aluno ou professora abre o site
+(navegador, celular ou app instalado; funciona offline);
+:Carregar progresso do localStorage
+(XP, moedas, conquistas, camarim);
+:Tela inicial com as áreas do site;
+
+repeat
+  switch (Qual área o usuário escolhe?)
+
+  case (Jornada)
+    partition "Jornada (trilhas)" {
+      :Escolher um dos 6 mundos
+      Bisseção ★ → Falsa Posição ★★ → Newton ★★★
+      → Secante ★★★ → Gauss ★★★★ → Gauss-Seidel ★★★★★;
+      if (Mundo liberado ou modo livre?) then (sim)
+        :Lição guiada (7 telas) e aulas em vídeo;
+        :Simulação passo a passo;
+        :Prática em 3 níveis (Fácil, Médio, Difícil);
+        :Raiz e Pivô reagem a acerto, erro
+        e a cada 3 acertos seguidos (moedas);
+        if (Nível 1 concluído?) then (sim)
+          :Liberar o próximo mundo;
+        else (não)
+        endif
+      else (não)
+        :Só leitura e simulação liberadas;
+      endif
+    }
+
+  case (Missões)
+    partition "Missões" {
+      :Problema aplicado;
+      :Formular → Calcular → Interpretar;
+      :Ganhar moedas por etapa nova;
+    }
+
+  case (Jogos)
+    partition "Jogos" {
+      if (Qual jogo?) then (Calculândia)
+        partition "Calculândia — Caçadores de Raízes (3D)" {
+          :Cinemática de abertura e tutorial guiado;
+          repeat
+            :Explorar a ilha com o herói e a Raizinha
+            (6 regiões, 28 assentamentos, Raízes Fugitivas);
+            :Entrar na porta de um prédio-fase;
+            :Ler briefing: dados, tolerância τ, bateria, armadilhas;
+            :Escolher ferramenta no arsenal;
+            repeat
+              :Executar operação (Auto ou arrastando
+              âncoras, mira, sondas, linhas da matriz);
+              :Motor devolve o passo: gasta bateria,
+              atualiza radar, telemetria e integridade;
+              if (Travou ou alerta?) then (sim)
+                :Dica do bicho guia (3 níveis),
+                desfazer ou trocar ferramenta;
+              else (não)
+              endif
+            repeat while (Critérios atendidos e bateria > 0?) is (ainda não)
+            -> sim ou bateria zerada;
+            if (Estabilizou?) then (vitória)
+              :Estrelas, XP e bandeira sobe na cidade;
+              if (Estrelas suficientes na região?) then (sim)
+                :Enfrentar o chefão da região;
+                :Névoa do Erro se dissolve,
+                próxima região abre;
+              else (não)
+              endif
+            else (derrota)
+              :Diário de Campo explica a falha;
+            endif
+          repeat while (5 chefões vencidos?) is (não)
+          -> sim;
+          :Usina Central (fase final);
+        }
+      else (Quem Divergiu?)
+        partition "Quem Divergiu? (telão da sala)" {
+          :Montar turma ou times, temas e rodadas;
+          repeat
+            :Projetar pergunta com resposta numérica;
+            :Palpites em segredo (caderno ou passa o aparelho);
+            :Votar em quem divergiu;
+            :Revelar na reta numérica com faixas
+            de erro relativo de 1%, 5% e 20%;
+            :Pontuar e mostrar "Como se calcula";
+          repeat while (Mais rodadas?) is (sim)
+          -> não;
+          :Pódio e títulos;
+        }
+      endif
+      :Página Jogos mostra estrelas, fases vencidas
+      e Raízes Fugitivas do save;
+    }
+
+  case (Treino)
+    partition "Treino e Modo prova" {
+      if (Modo prova?) then (sim)
+        :5, 10 ou 15 questões com cronômetro;
+        :Nota de 0 a 10 e relatório em PDF;
+      else (não)
+        :Exercício misturado (120 no total);
+        :Diagnosticar o método → resolver → conferir;
+        :Reconhecer erro típico (369 cadastrados);
+        :Agendar revisão espaçada (1, 3, 7, 14 dias);
+      endif
+    }
+
+  case (Terminal)
+    partition "Terminal" {
+      :Digitar equação ou sistema linear (2 a 6 incógnitas);
+      :Escolher método ou busca automática;
+      :Ver cada passo, gráfico de convergência
+      e verificação da raiz;
+    }
+
+  endswitch
+
+  :Atualizar progresso
+  (XP, moedas, 12 conquistas, camarim);
+  :Salvar no localStorage (backup em JSON opcional);
+repeat while (Continuar estudando?) is (sim)
+-> não;
+stop
+@enduml
+```

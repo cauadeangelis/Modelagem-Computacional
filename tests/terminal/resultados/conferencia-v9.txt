@@ -1,0 +1,23 @@
+RESUMO {'OK': 100}  tempo médio 262 ms, máx 918 ms
+  Linear                             {'OK': 9}
+  Quadrática (raízes racionais)      {'OK': 8}
+  Quadrática (raízes irracionais)    {'OK': 4}
+  Cúbica (3 raízes reais)            {'OK': 6}
+  Cúbica (1 raiz real)               {'OK': 4}
+  Quártica / quíntica                {'OK': 6}
+  Potência alta                      {'OK': 6}
+  Raiz múltipla / tangente           {'OK': 4}
+  Trigonométrica                     {'OK': 7}
+  Exponencial / logarítmica          {'OK': 7}
+  Raiz / módulo / fração             {'OK': 6}
+  Sintaxe Unicode                    {'OK': 4}
+  Sem solução na faixa               {'OK': 6}
+  Sistema 2×2                        {'OK': 6}
+  Sistema 3×3                        {'OK': 6}
+  Sistema 4×4                        {'OK': 3}
+  Sistema 5×5                        {'OK': 2}
+  Sistema 6×6                        {'OK': 1}
+  Sistema 2×2 (matriz)               {'OK': 1}
+  Sistema 3×3 (matriz)               {'OK': 1}
+  Sistema sem solução única          {'OK': 3}
+

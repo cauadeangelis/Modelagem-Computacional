@@ -1,0 +1,13 @@
+{
+  "name": "numera-testes-terminal",
+  "private": true,
+  "type": "module",
+  "description": "Testes do terminal da Numera Academy no navegador (Playwright).",
+  "scripts": {
+    "terminal": "node testar-terminal.mjs",
+    "teclado": "node testar-teclado.mjs"
+  },
+  "devDependencies": {
+    "playwright": "1.56.1"
+  }
+}

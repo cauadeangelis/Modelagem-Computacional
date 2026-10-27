@@ -1,0 +1,1404 @@
+[
+ {
+  "id": 1,
+  "cat": "Linear",
+  "input": "-6x - 10 = 2",
+  "verdict": "OK",
+  "detail": "Newton-Raphson: 1/1 raízes",
+  "ms": 133,
+  "method": "Newton-Raphson",
+  "answer": "x ≈ -2",
+  "others": [],
+  "alert": null
+ },
+ {
+  "id": 2,
+  "cat": "Linear",
+  "input": "7x + 11 = 25",
+  "verdict": "OK",
+  "detail": "Newton-Raphson: 1/1 raízes",
+  "ms": 912,
+  "method": "Newton-Raphson",
+  "answer": "x ≈ 2",
+  "others": [],
+  "alert": null
+ },
+ {
+  "id": 3,
+  "cat": "Linear",
+  "input": "-6x + 26 = -16",
+  "verdict": "OK",
+  "detail": "Newton-Raphson: 1/1 raízes",
+  "ms": 898,
+  "method": "Newton-Raphson",
+  "answer": "x ≈ 7",
+  "others": [],
+  "alert": null
+ },
+ {
+  "id": 4,
+  "cat": "Linear",
+  "input": "8x - 4 = 20",
+  "verdict": "OK",
+  "detail": "Newton-Raphson: 1/1 raízes",
+  "ms": 891,
+  "method": "Newton-Raphson",
+  "answer": "x ≈ 3",
+  "others": [],
+  "alert": null
+ },
+ {
+  "id": 5,
+  "cat": "Linear",
+  "input": "9x + 5 = 23",
+  "verdict": "OK",
+  "detail": "Newton-Raphson: 1/1 raízes",
+  "ms": 896,
+  "method": "Newton-Raphson",
+  "answer": "x ≈ 2",
+  "others": [],
+  "alert": null
+ },
+ {
+  "id": 6,
+  "cat": "Linear",
+  "input": "6x + 18 = 19",
+  "verdict": "OK",
+  "detail": "Secante: 1/1 raízes",
+  "ms": 900,
+  "method": "Secante",
+  "answer": "x ≈ 0,1666666667",
+  "others": [],
+  "alert": null
+ },
+ {
+  "id": 7,
+  "cat": "Linear",
+  "input": "9x - 2 = -15",
+  "verdict": "OK",
+  "detail": "Secante: 1/1 raízes",
+  "ms": 889,
+  "method": "Secante",
+  "answer": "x ≈ -1,444444444",
+  "others": [],
+  "alert": null
+ },
+ {
+  "id": 8,
+  "cat": "Linear",
+  "input": "2,5x - 9 = -25",
+  "verdict": "OK",
+  "detail": "Bisseção: 1/1 raízes",
+  "ms": 906,
+  "method": "Bisseção",
+  "answer": "x ≈ -6,4",
+  "others": [],
+  "alert": null
+ },
+ {
+  "id": 9,
+  "cat": "Linear",
+  "input": "5(x - 2) = x + 30",
+  "verdict": "OK",
+  "detail": "Newton-Raphson: 1/1 raízes",
+  "ms": 885,
+  "method": "Newton-Raphson",
+  "answer": "x ≈ 10",
+  "others": [],
+  "alert": null
+ },
+ {
+  "id": 10,
+  "cat": "Quadrática (raízes racionais)",
+  "input": "3x^2 + 63x + 324 = 0",
+  "verdict": "OK",
+  "detail": "Newton-Raphson: 2/2 raízes",
+  "ms": 897,
+  "method": "Newton-Raphson",
+  "answer": "x ≈ -9",
+  "others": [
+   "-9",
+   "-12"
+  ],
+  "alert": null
+ },
+ {
+  "id": 11,
+  "cat": "Quadrática (raízes racionais)",
+  "input": "6x^2 - 18x - 10.5 = 0",
+  "verdict": "OK",
+  "detail": "Newton-Raphson: 2/2 raízes",
+  "ms": 120,
+  "method": "Newton-Raphson",
+  "answer": "x ≈ -0,5",
+  "others": [
+   "-0,5",
+   "3,5"
+  ],
+  "alert": null
+ },
+ {
+  "id": 12,
+  "cat": "Quadrática (raízes racionais)",
+  "input": "x^2 - 11x - 210 = 0",
+  "verdict": "OK",
+  "detail": "Newton-Raphson: 2/2 raízes",
+  "ms": 893,
+  "method": "Newton-Raphson",
+  "answer": "x ≈ -10",
+  "others": [
+   "-10",
+   "21"
+  ],
+  "alert": null
+ },
+ {
+  "id": 13,
+  "cat": "Quadrática (raízes racionais)",
+  "input": "3x^2 + 45x + 168 = 0",
+  "verdict": "OK",
+  "detail": "Newton-Raphson: 2/2 raízes",
+  "ms": 887,
+  "method": "Newton-Raphson",
+  "answer": "x ≈ -7",
+  "others": [
+   "-7",
+   "-8"
+  ],
+  "alert": null
+ },
+ {
+  "id": 14,
+  "cat": "Quadrática (raízes racionais)",
+  "input": "3x^2 + 42x + 72 = 0",
+  "verdict": "OK",
+  "detail": "Newton-Raphson: 2/2 raízes",
+  "ms": 890,
+  "method": "Newton-Raphson",
+  "answer": "x ≈ -2",
+  "others": [
+   "-2",
+   "-12"
+  ],
+  "alert": null
+ },
+ {
+  "id": 15,
+  "cat": "Quadrática (raízes racionais)",
+  "input": "4x^2 - 8x = 0",
+  "verdict": "OK",
+  "detail": "Newton-Raphson: 2/2 raízes",
+  "ms": 889,
+  "method": "Newton-Raphson",
+  "answer": "x ≈ 0",
+  "others": [
+   "0",
+   "2"
+  ],
+  "alert": null
+ },
+ {
+  "id": 16,
+  "cat": "Quadrática (raízes racionais)",
+  "input": "8x^2 + 116x - 504 = 0",
+  "verdict": "OK",
+  "detail": "Newton-Raphson: 2/2 raízes",
+  "ms": 900,
+  "method": "Newton-Raphson",
+  "answer": "x ≈ 3,5",
+  "others": [
+   "3,5",
+   "-18"
+  ],
+  "alert": null
+ },
+ {
+  "id": 17,
+  "cat": "Quadrática (raízes racionais)",
+  "input": "4x^2 + 36x = 0",
+  "verdict": "OK",
+  "detail": "Newton-Raphson: 2/2 raízes",
+  "ms": 890,
+  "method": "Newton-Raphson",
+  "answer": "x ≈ 0",
+  "others": [
+   "0",
+   "-9"
+  ],
+  "alert": null
+ },
+ {
+  "id": 18,
+  "cat": "Quadrática (raízes irracionais)",
+  "input": "5x^2 - 12x + 3 = 0",
+  "verdict": "OK",
+  "detail": "Secante: 2/2 raízes",
+  "ms": 885,
+  "method": "Secante",
+  "answer": "x ≈ 0,283484861",
+  "others": [
+   "0,283484861",
+   "2,116515139"
+  ],
+  "alert": null
+ },
+ {
+  "id": 19,
+  "cat": "Quadrática (raízes irracionais)",
+  "input": "2x^2 + 12x - 11 = 0",
+  "verdict": "OK",
+  "detail": "Secante: 2/2 raízes",
+  "ms": 131,
+  "method": "Secante",
+  "answer": "x ≈ 0,8078865529",
+  "others": [
+   "0,8078865529",
+   "-6,807886553"
+  ],
+  "alert": null
+ },
+ {
+  "id": 20,
+  "cat": "Quadrática (raízes irracionais)",
+  "input": "x^2 + 10x + 1 = 0",
+  "verdict": "OK",
+  "detail": "Secante: 2/2 raízes",
+  "ms": 902,
+  "method": "Secante",
+  "answer": "x ≈ -0,1010205144",
+  "others": [
+   "-0,1010205144",
+   "-9,898979486"
+  ],
+  "alert": null
+ },
+ {
+  "id": 21,
+  "cat": "Quadrática (raízes irracionais)",
+  "input": "x^2 + 10x + 4 = 0",
+  "verdict": "OK",
+  "detail": "Secante: 2/2 raízes",
+  "ms": 894,
+  "method": "Secante",
+  "answer": "x ≈ -0,417424305",
+  "others": [
+   "-0,417424305",
+   "-9,582575695"
+  ],
+  "alert": null
+ },
+ {
+  "id": 22,
+  "cat": "Cúbica (3 raízes reais)",
+  "input": "x^3 + 4x^2 - 29x + 24 = 0",
+  "verdict": "OK",
+  "detail": "Newton-Raphson: 3/3 raízes",
+  "ms": 133,
+  "method": "Newton-Raphson",
+  "answer": "x ≈ 1",
+  "others": [
+   "1",
+   "3",
+   "-8"
+  ],
+  "alert": null
+ },
+ {
+  "id": 23,
+  "cat": "Cúbica (3 raízes reais)",
+  "input": "x^3 + 11x^2 + 3x - 135 = 0",
+  "verdict": "OK",
+  "detail": "Newton-Raphson: 3/3 raízes",
+  "ms": 891,
+  "method": "Newton-Raphson",
+  "answer": "x ≈ 3",
+  "others": [
+   "3",
+   "-5",
+   "-9"
+  ],
+  "alert": null
+ },
+ {
+  "id": 24,
+  "cat": "Cúbica (3 raízes reais)",
+  "input": "x^3 - 20x^2 + 116x - 160 = 0",
+  "verdict": "OK",
+  "detail": "Newton-Raphson: 3/3 raízes",
+  "ms": 121,
+  "method": "Newton-Raphson",
+  "answer": "x ≈ 2",
+  "others": [
+   "2",
+   "8",
+   "10"
+  ],
+  "alert": null
+ },
+ {
+  "id": 25,
+  "cat": "Cúbica (3 raízes reais)",
+  "input": "x^3 - 22x^2 + 147x - 270 = 0",
+  "verdict": "OK",
+  "detail": "Newton-Raphson: 3/3 raízes",
+  "ms": 893,
+  "method": "Newton-Raphson",
+  "answer": "x ≈ 3",
+  "others": [
+   "3",
+   "9",
+   "10"
+  ],
+  "alert": null
+ },
+ {
+  "id": 26,
+  "cat": "Cúbica (3 raízes reais)",
+  "input": "x^3 - x^2 - 20x - 0.5 = 0",
+  "verdict": "OK",
+  "detail": "Secante: 3/3 raízes",
+  "ms": 885,
+  "method": "Secante",
+  "answer": "x ≈ -0,0250321146",
+  "others": [
+   "-0,0250321146",
+   "-3,986040821",
+   "5,011072936"
+  ],
+  "alert": null
+ },
+ {
+  "id": 27,
+  "cat": "Cúbica (3 raízes reais)",
+  "input": "x^3 - 17x^2 + 92x - 160.8 = 0",
+  "verdict": "OK",
+  "detail": "Secante: 3/3 raízes",
+  "ms": 130,
+  "method": "Secante",
+  "answer": "x ≈ 4,319308105",
+  "others": [
+   "4,319308105",
+   "4,616454415",
+   "8,064237479"
+  ],
+  "alert": null
+ },
+ {
+  "id": 28,
+  "cat": "Cúbica (1 raiz real)",
+  "input": "x^3 - 5x^2 + 13x - 36 = 0",
+  "verdict": "OK",
+  "detail": "Newton-Raphson: 1/1 raízes",
+  "ms": 129,
+  "method": "Newton-Raphson",
+  "answer": "x ≈ 4",
+  "others": [],
+  "alert": null
+ },
+ {
+  "id": 29,
+  "cat": "Cúbica (1 raiz real)",
+  "input": "x^3 - 3x^2 + 9x - 7 = 0",
+  "verdict": "OK",
+  "detail": "Newton-Raphson: 1/1 raízes",
+  "ms": 897,
+  "method": "Newton-Raphson",
+  "answer": "x ≈ 1",
+  "others": [],
+  "alert": null
+ },
+ {
+  "id": 30,
+  "cat": "Cúbica (1 raiz real)",
+  "input": "x^3 + 6x - 18 = 0",
+  "verdict": "OK",
+  "detail": "Secante: 1/1 raízes",
+  "ms": 896,
+  "method": "Secante",
+  "answer": "x ≈ 1,88452998",
+  "others": [],
+  "alert": null
+ },
+ {
+  "id": 31,
+  "cat": "Cúbica (1 raiz real)",
+  "input": "x^3 + 4x - 3 = 0",
+  "verdict": "OK",
+  "detail": "Secante: 1/1 raízes",
+  "ms": 912,
+  "method": "Secante",
+  "answer": "x ≈ 0,6735930582",
+  "others": [],
+  "alert": null
+ },
+ {
+  "id": 32,
+  "cat": "Quártica / quíntica",
+  "input": "20x^4 - 61x^3 - 58x^2 + 225x - 126 = 0",
+  "verdict": "INCOMPLETO",
+  "detail": "achou 3/4; faltou [1.05]",
+  "ms": 134,
+  "method": "Newton-Raphson",
+  "answer": "x ≈ 1",
+  "others": [
+   "1",
+   "-2",
+   "3"
+  ],
+  "alert": null
+ },
+ {
+  "id": 33,
+  "cat": "Quártica / quíntica",
+  "input": "x^4 - 9x^2 + 14 = 0",
+  "verdict": "OK",
+  "detail": "Secante: 4/4 raízes",
+  "ms": 130,
+  "method": "Secante",
+  "answer": "x ≈ 1,414213562",
+  "others": [
+   "1,414213562",
+   "-1,414213562",
+   "2,645751311",
+   "-2,645751311"
+  ],
+  "alert": null
+ },
+ {
+  "id": 34,
+  "cat": "Quártica / quíntica",
+  "input": "2x^5 - 13x^4 - 92x^3 + 397x^2 + 258x - 216 = 0",
+  "verdict": "OK",
+  "detail": "Newton-Raphson: 5/5 raízes",
+  "ms": 134,
+  "method": "Newton-Raphson",
+  "answer": "x ≈ 0,5",
+  "others": [
+   "0,5",
+   "-1",
+   "4",
+   "-6",
+   "9"
+  ],
+  "alert": null
+ },
+ {
+  "id": 35,
+  "cat": "Quártica / quíntica",
+  "input": "x^4 - 10x^2 + 9 = 0",
+  "verdict": "OK",
+  "detail": "Newton-Raphson: 4/4 raízes",
+  "ms": 131,
+  "method": "Newton-Raphson",
+  "answer": "x ≈ 1",
+  "others": [
+   "1",
+   "-1",
+   "3",
+   "-3"
+  ],
+  "alert": null
+ },
+ {
+  "id": 36,
+  "cat": "Quártica / quíntica",
+  "input": "x^5 - 4x^4 - 10x^3 + 26x^2 - 11x + 30 = 0",
+  "verdict": "OK",
+  "detail": "Newton-Raphson: 3/3 raízes",
+  "ms": 117,
+  "method": "Newton-Raphson",
+  "answer": "x ≈ 2",
+  "others": [
+   "2",
+   "-3",
+   "5"
+  ],
+  "alert": null
+ },
+ {
+  "id": 37,
+  "cat": "Quártica / quíntica",
+  "input": "2x^5 - 10x^3 + 8x - 1 = 0",
+  "verdict": "OK",
+  "detail": "Secante: 5/5 raízes",
+  "ms": 141,
+  "method": "Secante",
+  "answer": "x ≈ 0,1275877397",
+  "others": [
+   "0,1275877397",
+   "0,9092335995",
+   "-1,078619746",
+   "-1,978190779",
+   "2,019989186"
+  ],
+  "alert": null
+ },
+ {
+  "id": 38,
+  "cat": "Potência alta",
+  "input": "x^5 = 32",
+  "verdict": "OK",
+  "detail": "Newton-Raphson: 1/1 raízes",
+  "ms": 898,
+  "method": "Newton-Raphson",
+  "answer": "x ≈ 2",
+  "others": [],
+  "alert": null
+ },
+ {
+  "id": 39,
+  "cat": "Potência alta",
+  "input": "x^7 - 128 = 0",
+  "verdict": "OK",
+  "detail": "Newton-Raphson: 1/1 raízes",
+  "ms": 901,
+  "method": "Newton-Raphson",
+  "answer": "x ≈ 2",
+  "others": [],
+  "alert": null
+ },
+ {
+  "id": 40,
+  "cat": "Potência alta",
+  "input": "x^10 = 1024",
+  "verdict": "OK",
+  "detail": "Newton-Raphson: 2/2 raízes",
+  "ms": 886,
+  "method": "Newton-Raphson",
+  "answer": "x ≈ 2",
+  "others": [
+   "2",
+   "-2"
+  ],
+  "alert": null
+ },
+ {
+  "id": 41,
+  "cat": "Potência alta",
+  "input": "x^8 - 3x^4 + 2 = 0",
+  "verdict": "OK",
+  "detail": "Newton-Raphson: 4/4 raízes",
+  "ms": 891,
+  "method": "Newton-Raphson",
+  "answer": "x ≈ 1",
+  "others": [
+   "1",
+   "-1",
+   "1,189207115",
+   "-1,189207115"
+  ],
+  "alert": null
+ },
+ {
+  "id": 42,
+  "cat": "Potência alta",
+  "input": "x^20 - 3x^10 + 2 = 0",
+  "verdict": "INCOMPLETO",
+  "detail": "achou 2/4; faltou [-1.071773, 1.071773]",
+  "ms": 133,
+  "method": "Newton-Raphson",
+  "answer": "x ≈ 1",
+  "others": [
+   "1",
+   "-1"
+  ],
+  "alert": null
+ },
+ {
+  "id": 43,
+  "cat": "Potência alta",
+  "input": "x^100 - 10000000000 = 0",
+  "verdict": "FALHA",
+  "detail": "deu erro, mas existe solução: Não foi possível concluir. Nenhuma raiz isolada foi validada na busca [-40, 40]. Isso não prova que não exista",
+  "ms": 884,
+  "method": null,
+  "answer": null,
+  "others": [],
+  "alert": "Não foi possível concluir. Nenhuma raiz isolada foi validada na busca [-40, 40]. Isso não prova que não existam raízes. Ajuste a faixa ou use um método manual."
+ },
+ {
+  "id": 44,
+  "cat": "Raiz múltipla / tangente",
+  "input": "(x - 2.8)^2 = 0",
+  "verdict": "OK",
+  "detail": "Newton-Raphson: 1/1 raízes",
+  "ms": 891,
+  "method": "Newton-Raphson",
+  "answer": "x ≈ 2,80000061",
+  "others": [],
+  "alert": null
+ },
+ {
+  "id": 45,
+  "cat": "Raiz múltipla / tangente",
+  "input": "(x + 4)^3 = 0",
+  "verdict": "OK",
+  "detail": "Newton-Raphson: 1/1 raízes",
+  "ms": 897,
+  "method": "Newton-Raphson",
+  "answer": "x ≈ -4",
+  "others": [],
+  "alert": null
+ },
+ {
+  "id": 46,
+  "cat": "Raiz múltipla / tangente",
+  "input": "(x - 5)^4 = 0",
+  "verdict": "OK",
+  "detail": "Newton-Raphson: 1/1 raízes",
+  "ms": 891,
+  "method": "Newton-Raphson",
+  "answer": "x ≈ 5",
+  "others": [],
+  "alert": null
+ },
+ {
+  "id": 47,
+  "cat": "Raiz múltipla / tangente",
+  "input": "abs(x - 16) = 0",
+  "verdict": "OK",
+  "detail": "Newton-Raphson: 1/1 raízes",
+  "ms": 886,
+  "method": "Newton-Raphson",
+  "answer": "x ≈ 16",
+  "others": [],
+  "alert": null
+ },
+ {
+  "id": 48,
+  "cat": "Trigonométrica",
+  "input": "sin(x) = 0.8",
+  "verdict": "INCOMPLETO",
+  "detail": "achou 18/26; faltou [-36.771817, -35.484814, -30.488631, -29.201629, 32.343222, 33.630224]",
+  "ms": 902,
+  "method": "Secante",
+  "answer": "x ≈ 0,927295218",
+  "others": [
+   "0,927295218",
+   "2,214297436",
+   "-4,068887872",
+   "-5,355890089",
+   "7,210480525",
+   "8,497482743",
+   "-10,35207318",
+   "-11,6390754",
+   "13,49366583",
+   "14,78066805",
+   "-16,63525849",
+   "-17,9222607",
+   "19,77685114",
+   "21,06385336",
+   "-22,91844379",
+   "-24,20544601",
+   "26,06003645",
+   "27,34703866"
+  ],
+  "alert": null
+ },
+ {
+  "id": 49,
+  "cat": "Trigonométrica",
+  "input": "cos(x) = x / 6",
+  "verdict": "OK",
+  "detail": "Secante: 3/3 raízes",
+  "ms": 888,
+  "method": "Secante",
+  "answer": "x ≈ 1,344751045",
+  "others": [
+   "1,344751045",
+   "-1,891519896",
+   "-3,985826207"
+  ],
+  "alert": null
+ },
+ {
+  "id": 50,
+  "cat": "Trigonométrica",
+  "input": "tan(x) = 4 - x",
+  "verdict": "INCOMPLETO",
+  "detail": "achou 13/27; faltou [-39.293002, -36.153215, -33.013733, -29.874642, -26.736061, -23.598163]",
+  "ms": 896,
+  "method": "Secante",
+  "answer": "x ≈ 1,224929832",
+  "others": [
+   "1,224929832",
+   "-1,743187375",
+   "3,557876885",
+   "-4,825219358",
+   "5,349954056",
+   "-7,937555753",
+   "8,093574546",
+   "-11,06186981",
+   "11,13482481",
+   "-14,19208065",
+   "14,23456588",
+   "-17,32561723",
+   "17,35350677"
+  ],
+  "alert": null
+ },
+ {
+  "id": 51,
+  "cat": "Trigonométrica",
+  "input": "sin(x) + cos(x) = 1.3",
+  "verdict": "INCOMPLETO",
+  "detail": "achou 18/26; faltou [-37.318367, -36.50906, -31.035182, -30.225875, 31.796671, 32.605978]",
+  "ms": 888,
+  "method": "Secante",
+  "answer": "x ≈ 0,3807445264",
+  "others": [
+   "0,3807445264",
+   "1,1900518",
+   "-5,093133507",
+   "-5,902440781",
+   "6,663929834",
+   "7,473237108",
+   "-11,37631881",
+   "-12,18562609",
+   "12,94711514",
+   "13,75642241",
+   "-17,65950412",
+   "-18,4688114",
+   "19,23030045",
+   "20,03960772",
+   "-23,94268943",
+   "-24,7519967",
+   "25,51348576",
+   "26,32279303"
+  ],
+  "alert": null
+ },
+ {
+  "id": 52,
+  "cat": "Trigonométrica",
+  "input": "x sin(x) = 4",
+  "verdict": "INCOMPLETO",
+  "detail": "achou 18/22; faltou [-37.805116, -34.441116, 34.441116, 37.805116]",
+  "ms": 904,
+  "method": "Secante",
+  "answer": "x ≈ 6,901412609",
+  "others": [
+   "6,901412609",
+   "-6,901412609",
+   "8,962126201",
+   "-8,962126201",
+   "12,88209845",
+   "-12,88209845",
+   "15,44601118",
+   "-15,44601118",
+   "19,06098032",
+   "-19,06098032",
+   "21,80667397",
+   "-21,80667397",
+   "25,2915636",
+   "-25,2915636",
+   "28,13166181",
+   "-28,13166181",
+   "31,54307959",
+   "-31,54307959"
+  ],
+  "alert": null
+ },
+ {
+  "id": 53,
+  "cat": "Trigonométrica",
+  "input": "cos(4x) = x^2",
+  "verdict": "OK",
+  "detail": "Secante: 2/2 raízes",
+  "ms": 893,
+  "method": "Secante",
+  "answer": "x ≈ 0,3601757736",
+  "others": [
+   "0,3601757736",
+   "-0,3601757736"
+  ],
+  "alert": null
+ },
+ {
+  "id": 54,
+  "cat": "Trigonométrica",
+  "input": "sen(x) = x/10",
+  "verdict": "OK",
+  "detail": "Newton-Raphson: 7/7 raízes",
+  "ms": 886,
+  "method": "Newton-Raphson",
+  "answer": "x ≈ 0",
+  "others": [
+   "0",
+   "-2,852341894",
+   "2,852341894",
+   "-7,068174358",
+   "7,068174358",
+   "8,423203932",
+   "-8,423203932"
+  ],
+  "alert": null
+ },
+ {
+  "id": 55,
+  "cat": "Exponencial / logarítmica",
+  "input": "exp(x) = 4",
+  "verdict": "OK",
+  "detail": "Secante: 1/1 raízes",
+  "ms": 887,
+  "method": "Secante",
+  "answer": "x ≈ 1,386294361",
+  "others": [],
+  "alert": null
+ },
+ {
+  "id": 56,
+  "cat": "Exponencial / logarítmica",
+  "input": "ln(x) = 2.7",
+  "verdict": "OK",
+  "detail": "Secante: 1/1 raízes",
+  "ms": 884,
+  "method": "Secante",
+  "answer": "x ≈ 14,87973172",
+  "others": [],
+  "alert": null
+ },
+ {
+  "id": 57,
+  "cat": "Exponencial / logarítmica",
+  "input": "2^x = 151",
+  "verdict": "OK",
+  "detail": "Secante: 1/1 raízes",
+  "ms": 905,
+  "method": "Secante",
+  "answer": "x ≈ 7,238404739",
+  "others": [],
+  "alert": null
+ },
+ {
+  "id": 58,
+  "cat": "Exponencial / logarítmica",
+  "input": "x exp(x) = 6",
+  "verdict": "OK",
+  "detail": "Secante: 1/1 raízes",
+  "ms": 893,
+  "method": "Secante",
+  "answer": "x ≈ 1,432404776",
+  "others": [],
+  "alert": null
+ },
+ {
+  "id": 59,
+  "cat": "Exponencial / logarítmica",
+  "input": "e^(-x) = x",
+  "verdict": "OK",
+  "detail": "Secante: 1/1 raízes",
+  "ms": 886,
+  "method": "Secante",
+  "answer": "x ≈ 0,5671432904",
+  "others": [],
+  "alert": null
+ },
+ {
+  "id": 60,
+  "cat": "Exponencial / logarítmica",
+  "input": "ln(x) + x = 9",
+  "verdict": "OK",
+  "detail": "Secante: 1/1 raízes",
+  "ms": 893,
+  "method": "Secante",
+  "answer": "x ≈ 7,047348547",
+  "others": [],
+  "alert": null
+ },
+ {
+  "id": 61,
+  "cat": "Exponencial / logarítmica",
+  "input": "log(x) = 1.5",
+  "verdict": "OK",
+  "detail": "Secante: 1/1 raízes",
+  "ms": 896,
+  "method": "Secante",
+  "answer": "x ≈ 31,6227766",
+  "others": [],
+  "alert": null
+ },
+ {
+  "id": 62,
+  "cat": "Raiz / módulo / fração",
+  "input": "sqrt(x) = 2",
+  "verdict": "OK",
+  "detail": "Newton-Raphson: 1/1 raízes",
+  "ms": 897,
+  "method": "Newton-Raphson",
+  "answer": "x ≈ 4",
+  "others": [],
+  "alert": null
+ },
+ {
+  "id": 63,
+  "cat": "Raiz / módulo / fração",
+  "input": "sqrt(x + 8) = x - 1",
+  "verdict": "OK",
+  "detail": "Secante: 1/1 raízes",
+  "ms": 888,
+  "method": "Secante",
+  "answer": "x ≈ 4,541381265",
+  "others": [],
+  "alert": null
+ },
+ {
+  "id": 64,
+  "cat": "Raiz / módulo / fração",
+  "input": "abs(x - 9) = 5",
+  "verdict": "OK",
+  "detail": "Newton-Raphson: 2/2 raízes",
+  "ms": 898,
+  "method": "Newton-Raphson",
+  "answer": "x ≈ 4",
+  "others": [
+   "4",
+   "14"
+  ],
+  "alert": null
+ },
+ {
+  "id": 65,
+  "cat": "Raiz / módulo / fração",
+  "input": "1/x + x = 6",
+  "verdict": "OK",
+  "detail": "Secante: 2/2 raízes",
+  "ms": 903,
+  "method": "Secante",
+  "answer": "x ≈ 0,1715728753",
+  "others": [
+   "0,1715728753",
+   "5,828427125"
+  ],
+  "alert": null
+ },
+ {
+  "id": 66,
+  "cat": "Raiz / módulo / fração",
+  "input": "(x^2 - 4)/(x - 1) = 2",
+  "verdict": "OK",
+  "detail": "Secante: 2/2 raízes",
+  "ms": 893,
+  "method": "Secante",
+  "answer": "x ≈ -0,7320508076",
+  "others": [
+   "-0,7320508076",
+   "2,732050808"
+  ],
+  "alert": null
+ },
+ {
+  "id": 67,
+  "cat": "Raiz / módulo / fração",
+  "input": "x^(1/3) = 3",
+  "verdict": "OK",
+  "detail": "Newton-Raphson: 1/1 raízes",
+  "ms": 900,
+  "method": "Newton-Raphson",
+  "answer": "x ≈ 27",
+  "others": [],
+  "alert": null
+ },
+ {
+  "id": 68,
+  "cat": "Sintaxe Unicode",
+  "input": "x² − 5x + 6 = 0",
+  "verdict": "OK",
+  "detail": "Newton-Raphson: 2/2 raízes",
+  "ms": 891,
+  "method": "Newton-Raphson",
+  "answer": "x ≈ 2",
+  "others": [
+   "2",
+   "3"
+  ],
+  "alert": null
+ },
+ {
+  "id": 69,
+  "cat": "Sintaxe Unicode",
+  "input": "2·x³ = 54",
+  "verdict": "OK",
+  "detail": "Newton-Raphson: 1/1 raízes",
+  "ms": 890,
+  "method": "Newton-Raphson",
+  "answer": "x ≈ 3",
+  "others": [],
+  "alert": null
+ },
+ {
+  "id": 70,
+  "cat": "Sintaxe Unicode",
+  "input": "3(x − 1) = 2x + 4",
+  "verdict": "OK",
+  "detail": "Newton-Raphson: 1/1 raízes",
+  "ms": 886,
+  "method": "Newton-Raphson",
+  "answer": "x ≈ 7",
+  "others": [],
+  "alert": null
+ },
+ {
+  "id": 71,
+  "cat": "Sintaxe Unicode",
+  "input": "x² = 2,25",
+  "verdict": "OK",
+  "detail": "Newton-Raphson: 2/2 raízes",
+  "ms": 884,
+  "method": "Newton-Raphson",
+  "answer": "x ≈ 1,5",
+  "others": [
+   "1,5",
+   "-1,5"
+  ],
+  "alert": null
+ },
+ {
+  "id": 72,
+  "cat": "Sem solução na faixa",
+  "input": "x^2 + 1 = 0",
+  "verdict": "OK",
+  "detail": "rejeitou corretamente: Não foi possível concluir. Nenhuma raiz isolada foi validada na busca [-40, 40]. Isso não ",
+  "ms": 886,
+  "method": null,
+  "answer": null,
+  "others": [],
+  "alert": "Não foi possível concluir. Nenhuma raiz isolada foi validada na busca [-40, 40]. Isso não prova que não existam raízes. Ajuste a faixa ou use um método manual."
+ },
+ {
+  "id": 73,
+  "cat": "Sem solução na faixa",
+  "input": "1/x = 0",
+  "verdict": "OK",
+  "detail": "rejeitou corretamente: Não foi possível concluir. Nenhuma raiz isolada foi validada na busca [-40, 40]. Isso não ",
+  "ms": 884,
+  "method": null,
+  "answer": null,
+  "others": [],
+  "alert": "Não foi possível concluir. Nenhuma raiz isolada foi validada na busca [-40, 40]. Isso não prova que não existam raízes. Ajuste a faixa ou use um método manual."
+ },
+ {
+  "id": 74,
+  "cat": "Sem solução na faixa",
+  "input": "exp(x) = 0",
+  "verdict": "OK",
+  "detail": "rejeitou corretamente: Não foi possível concluir. Nenhuma raiz isolada foi validada na busca [-40, 40]. Isso não ",
+  "ms": 887,
+  "method": null,
+  "answer": null,
+  "others": [],
+  "alert": "Não foi possível concluir. Nenhuma raiz isolada foi validada na busca [-40, 40]. Isso não prova que não existam raízes. Ajuste a faixa ou use um método manual."
+ },
+ {
+  "id": 75,
+  "cat": "Sem solução na faixa",
+  "input": "cos(x) = 2",
+  "verdict": "OK",
+  "detail": "rejeitou corretamente: Não foi possível concluir. Nenhuma raiz isolada foi validada na busca [-40, 40]. Isso não ",
+  "ms": 900,
+  "method": null,
+  "answer": null,
+  "others": [],
+  "alert": "Não foi possível concluir. Nenhuma raiz isolada foi validada na busca [-40, 40]. Isso não prova que não existam raízes. Ajuste a faixa ou use um método manual."
+ },
+ {
+  "id": 76,
+  "cat": "Sem solução na faixa",
+  "input": "x^2 - 4x + 7 = 0",
+  "verdict": "OK",
+  "detail": "rejeitou corretamente: Não foi possível concluir. Nenhuma raiz isolada foi validada na busca [-40, 40]. Isso não ",
+  "ms": 891,
+  "method": null,
+  "answer": null,
+  "others": [],
+  "alert": "Não foi possível concluir. Nenhuma raiz isolada foi validada na busca [-40, 40]. Isso não prova que não existam raízes. Ajuste a faixa ou use um método manual."
+ },
+ {
+  "id": 77,
+  "cat": "Sem solução na faixa",
+  "input": "log(x) = 3",
+  "verdict": "OK",
+  "detail": "rejeitou corretamente: Não foi possível concluir. Nenhuma raiz isolada foi validada na busca [-40, 40]. Isso não ",
+  "ms": 918,
+  "method": null,
+  "answer": null,
+  "others": [],
+  "alert": "Não foi possível concluir. Nenhuma raiz isolada foi validada na busca [-40, 40]. Isso não prova que não existam raízes. Ajuste a faixa ou use um método manual."
+ },
+ {
+  "id": 78,
+  "cat": "Sistema 2×2",
+  "input": "10x - 7y = -137\n-x + 2y = 28",
+  "verdict": "OK",
+  "detail": "Eliminação de Gauss → x=-6.0, y=11.0",
+  "ms": 134,
+  "method": "Eliminação de Gauss",
+  "answer": "x = -6\ny = 11",
+  "others": [],
+  "alert": null
+ },
+ {
+  "id": 79,
+  "cat": "Sistema 2×2",
+  "input": "4x - 5y = 20\n5x - 9y = 58",
+  "verdict": "OK",
+  "detail": "Eliminação de Gauss → x=-10.0, y=-12.0",
+  "ms": 48,
+  "method": "Eliminação de Gauss",
+  "answer": "x = -10\ny = -12",
+  "others": [],
+  "alert": null
+ },
+ {
+  "id": 80,
+  "cat": "Sistema 2×2",
+  "input": "14x + 9y = -151\n8x + 10y = -130",
+  "verdict": "OK",
+  "detail": "Eliminação de Gauss → x=-5.0, y=-9.0",
+  "ms": 125,
+  "method": "Eliminação de Gauss",
+  "answer": "x = -5\ny = -9",
+  "others": [],
+  "alert": null
+ },
+ {
+  "id": 81,
+  "cat": "Sistema 2×2",
+  "input": "-8x + 8y = -32\n-x + 2y = -16",
+  "verdict": "OK",
+  "detail": "Eliminação de Gauss → x=-8.0, y=-12.0",
+  "ms": 127,
+  "method": "Eliminação de Gauss",
+  "answer": "x = -8\ny = -12",
+  "others": [],
+  "alert": null
+ },
+ {
+  "id": 82,
+  "cat": "Sistema 2×2",
+  "input": "11x + 9y = -28\n9x + 14y = -3",
+  "verdict": "OK",
+  "detail": "Eliminação de Gauss → x=-5.0, y=3.0",
+  "ms": 889,
+  "method": "Eliminação de Gauss",
+  "answer": "x = -5\ny = 3",
+  "others": [],
+  "alert": null
+ },
+ {
+  "id": 83,
+  "cat": "Sistema 2×2",
+  "input": "9x - 5y = -47.5\n7x = -35",
+  "verdict": "OK",
+  "detail": "Eliminação de Gauss → x=-5.0, y=0.5",
+  "ms": 893,
+  "method": "Eliminação de Gauss",
+  "answer": "x = -5\ny = 0,5",
+  "others": [],
+  "alert": null
+ },
+ {
+  "id": 84,
+  "cat": "Sistema 3×3",
+  "input": "16x - 5y + 9z = -234\n8y + 4z = -40\n3x - 5y + 9z = -117",
+  "verdict": "OK",
+  "detail": "Eliminação de Gauss → x=-9.0, y=0.0, z=-10.0",
+  "ms": 121,
+  "method": "Eliminação de Gauss",
+  "answer": "x = -9\ny = 0\nz = -10",
+  "others": [],
+  "alert": null
+ },
+ {
+  "id": 85,
+  "cat": "Sistema 3×3",
+  "input": "-8x + 2y + 2z = -38\n-9x - 9y + 7z = -63\n6x + y = 10",
+  "verdict": "OK",
+  "detail": "Eliminação de Gauss → x=2.0, y=-2.0, z=-9.0",
+  "ms": 126,
+  "method": "Eliminação de Gauss",
+  "answer": "x = 2\ny = -2\nz = -9",
+  "others": [],
+  "alert": null
+ },
+ {
+  "id": 86,
+  "cat": "Sistema 3×3",
+  "input": "19x + 5y + 9z = 189\n-4x + 16y + 9z = -27\n7x - 3y + 14z = 190",
+  "verdict": "OK",
+  "detail": "Eliminação de Gauss → x=7.0, y=-5.0, z=9.0",
+  "ms": 119,
+  "method": "Eliminação de Gauss",
+  "answer": "x = 7\ny = -5\nz = 9",
+  "others": [],
+  "alert": null
+ },
+ {
+  "id": 87,
+  "cat": "Sistema 3×3",
+  "input": "-7x + 8y + 3z = 106\n-8x - 3y - 4z = -84\n-8x + 8y - 8z = 16",
+  "verdict": "OK",
+  "detail": "Eliminação de Gauss → x=2.0, y=12.0, z=8.0",
+  "ms": 123,
+  "method": "Eliminação de Gauss",
+  "answer": "x = 2\ny = 12\nz = 8",
+  "others": [],
+  "alert": null
+ },
+ {
+  "id": 88,
+  "cat": "Sistema 3×3",
+  "input": "17x + 6y - 9z = 19\n-5x + 12y - 3z = 26\n7x - 5y + 15z = -1.5",
+  "verdict": "OK",
+  "detail": "Eliminação de Gauss → x=0.5, y=2.5, z=0.5",
+  "ms": 122,
+  "method": "Eliminação de Gauss",
+  "answer": "x = 0,5\ny = 2,5\nz = 0,5",
+  "others": [],
+  "alert": null
+ },
+ {
+  "id": 89,
+  "cat": "Sistema 3×3",
+  "input": "-7x + 3y = -81\n-4x + 2y - 4z = -34\n-x + 5y + 6z = -25",
+  "verdict": "OK",
+  "detail": "Eliminação de Gauss → x=12.0, y=1.0, z=-3.0",
+  "ms": 883,
+  "method": "Eliminação de Gauss",
+  "answer": "x = 12\ny = 1\nz = -3",
+  "others": [],
+  "alert": null
+ },
+ {
+  "id": 90,
+  "cat": "Sistema 4×4",
+  "input": "23x + 7y + 6z + 5u = -93\n-6x + 16y + 7z - u = 52\n-6x - 3y + 19z - 9u = 59\n-7x + 5y + z + 16u = 193",
+  "verdict": "OK",
+  "detail": "Eliminação de Gauss → x=-7.0, y=-1.0, z=5.0, u=9.0",
+  "ms": 38,
+  "method": "Eliminação de Gauss",
+  "answer": "x = -7\ny = -1\nz = 5\nu = 9",
+  "others": [],
+  "alert": null
+ },
+ {
+  "id": 91,
+  "cat": "Sistema 4×4",
+  "input": "8x1 - 3x2 - 6x3 - x4 = 74\n8x1 + 9x2 - 3x3 + 9x4 = 53\n9x2 - x3 + 8x4 = 18\n-5x1 - 6x2 - x3 - 6x4 = -8",
+  "verdict": "OK",
+  "detail": "Eliminação de Gauss → x1=1.0, x2=-7.0, x3=-9.0, x4=9.0",
+  "ms": 66,
+  "method": "Eliminação de Gauss",
+  "answer": "x1 = 1\nx2 = -7\nx3 = -9\nx4 = 9",
+  "others": [],
+  "alert": null
+ },
+ {
+  "id": 92,
+  "cat": "Sistema 4×4",
+  "input": "2x - 4y - 6z + 7u = -50\nx - y + 9z - 7u = 109\ny - 4z - u = 4\n-x - 7y - 9z + 4u = -41",
+  "verdict": "OK",
+  "detail": "Eliminação de Gauss → x=12.0, y=-4.0, z=1.0, u=-12.0",
+  "ms": 78,
+  "method": "Eliminação de Gauss",
+  "answer": "x = 12\ny = -4\nz = 1\nu = -12",
+  "others": [],
+  "alert": null
+ },
+ {
+  "id": 93,
+  "cat": "Sistema 5×5",
+  "input": "22x - 9y - 6u - 6v = -198\n8x + 19y + 2z + u + 5v = 234\n-8x + 3y + 22z - 3u + 5v = 118\n4x - 6y + 2z + 16u - v = -120\n3x + 2z - 8u + 14v = 93",
+  "verdict": "OK",
+  "detail": "Eliminação de Gauss → x=-3.0, y=12.0, z=1.0, u=-2.0, v=6.0",
+  "ms": 47,
+  "method": "Eliminação de Gauss",
+  "answer": "x = -3\ny = 12\nz = 1\nu = -2\nv = 6",
+  "others": [],
+  "alert": null
+ },
+ {
+  "id": 94,
+  "cat": "Sistema 5×5",
+  "input": "8x1 + x2 - 3x3 + 8x4 - 8x5 = 245\n-6x1 - 4x2 - 6x3 - 6x4 - 8x5 = 68\n-5x1 + 7x2 + 2x3 - 9x5 = -22\n4x1 + 9x2 - 5x3 + 2x4 + 4x5 = -27\n3x1 + 3x2 - 2x3 + 4x4 - 2x5 = 70",
+  "verdict": "OK",
+  "detail": "Eliminação de Gauss → x1=12.0, x2=-8.0, x3=-7.0, x4=5.0, x5=-12.0",
+  "ms": 53,
+  "method": "Eliminação de Gauss",
+  "answer": "x1 = 12\nx2 = -8\nx3 = -7\nx4 = 5\nx5 = -12",
+  "others": [],
+  "alert": null
+ },
+ {
+  "id": 95,
+  "cat": "Sistema 6×6",
+  "input": "24x1 + 8x2 + 3x3 - x4 - 5x5 - 2x6 = 80\n-9x1 + 31x2 - x3 + 8x4 + 6x5 + 4x6 = 322\n-x1 + x2 + 25x3 + 9x4 - 7x5 - 4x6 = 44\n8x1 - 8x2 + 7x3 + 33x4 + x5 + 7x6 = 197\nx1 - 8x2 - 9x3 - 2x4 + 31x5 - 8x6 = -69\n-2x1 + 7x2 - 5x3 + 3x4 + 2x5 + 22x6 = 261",
+  "verdict": "OK",
+  "detail": "Eliminação de Gauss → x1=2.0, x2=8.0, x3=2.0, x4=5.0, x5=3.0, x6=9.0",
+  "ms": 42,
+  "method": "Eliminação de Gauss",
+  "answer": "x1 = 2\nx2 = 8\nx3 = 2\nx4 = 5\nx5 = 3\nx6 = 9",
+  "others": [],
+  "alert": null
+ },
+ {
+  "id": 96,
+  "cat": "Sistema 2×2 (matriz)",
+  "input": "9, 0 | 72\n-3, -4 | -28",
+  "verdict": "OK",
+  "detail": "Eliminação de Gauss → x1=8.0, x2=1.0",
+  "ms": 883,
+  "method": "Eliminação de Gauss",
+  "answer": "x1 = 8\nx2 = 1",
+  "others": [],
+  "alert": null
+ },
+ {
+  "id": 97,
+  "cat": "Sistema 3×3 (matriz)",
+  "input": "-5, 6, -9 | -36\n2, 7, 4 | 7\n-8, -4, -7 | -7",
+  "verdict": "OK",
+  "detail": "Eliminação de Gauss → x1=-3.0, x2=-1.0, x3=5.0",
+  "ms": 128,
+  "method": "Eliminação de Gauss",
+  "answer": "x1 = -3\nx2 = -1\nx3 = 5",
+  "others": [],
+  "alert": null
+ },
+ {
+  "id": 98,
+  "cat": "Sistema sem solução única",
+  "input": "x + y = 2\n2x + 2y = 4",
+  "verdict": "OK",
+  "detail": "rejeitou corretamente: Não foi possível concluir. Sistema sem solução única pelo teste de posto numérico (dependê",
+  "ms": 894,
+  "method": null,
+  "answer": null,
+  "others": [],
+  "alert": "Não foi possível concluir. Sistema sem solução única pelo teste de posto numérico (dependência ou mau condicionamento). Verifique as equações."
+ },
+ {
+  "id": 99,
+  "cat": "Sistema sem solução única",
+  "input": "x + y = 1\nx + y = 3",
+  "verdict": "OK",
+  "detail": "rejeitou corretamente: Não foi possível concluir. Sistema incompatível pelo teste de posto numérico: não há soluç",
+  "ms": 887,
+  "method": null,
+  "answer": null,
+  "others": [],
+  "alert": "Não foi possível concluir. Sistema incompatível pelo teste de posto numérico: não há solução identificada."
+ },
+ {
+  "id": 100,
+  "cat": "Sistema sem solução única",
+  "input": "x + y + z = 1\n2x + 2y + 2z = 5\nx - y + z = 0",
+  "verdict": "OK",
+  "detail": "rejeitou corretamente: Não foi possível concluir. Sistema incompatível pelo teste de posto numérico: não há soluç",
+  "ms": 887,
+  "method": null,
+  "answer": null,
+  "others": [],
+  "alert": "Não foi possível concluir. Sistema incompatível pelo teste de posto numérico: não há solução identificada."
+ }
+]

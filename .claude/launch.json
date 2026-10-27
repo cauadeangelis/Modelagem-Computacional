@@ -1,0 +1,13 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "numera",
+      "runtimeExecutable": "node",
+      "runtimeArgs": [
+        "serve.js"
+      ],
+      "port": 8000
+    }
+  ]
+}

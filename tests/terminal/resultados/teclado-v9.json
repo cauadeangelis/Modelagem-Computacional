@@ -1,0 +1,154 @@
+[
+ {
+  "name": "x²⁰ só com teclas",
+  "text": "x²⁰ - 3x¹⁰ + 2 = 0",
+  "status": "✓ Equação pronta para resolver",
+  "answer": "x ≈ 1",
+  "others": 4,
+  "ok": true
+ },
+ {
+  "name": "x² e x³ prontos",
+  "text": "x² - 5x + 6 = 0",
+  "status": "✓ Equação pronta para resolver",
+  "answer": "x ≈ 2",
+  "others": 2,
+  "ok": true
+ },
+ {
+  "name": "xⁿ sem base insere x",
+  "text": "x³ - x - 2 = 0",
+  "status": "✓ Equação pronta para resolver",
+  "answer": "x ≈ 1,521379707",
+  "others": 0,
+  "ok": true
+ },
+ {
+  "name": "eˣ com expoente negativo",
+  "text": "e⁻ˣ = x",
+  "status": "✓ Equação pronta para resolver",
+  "answer": "x ≈ 0,5671432904",
+  "others": 0,
+  "ok": true
+ },
+ {
+  "name": "10ˣ",
+  "text": "10ˣ = 50",
+  "status": "✓ Equação pronta para resolver",
+  "answer": "x ≈ 1,698970004",
+  "others": 0,
+  "ok": true
+ },
+ {
+  "name": "raiz quadrada",
+  "text": "√(x + 8) = x - 1",
+  "status": "✓ Equação pronta para resolver",
+  "answer": "x ≈ 4,541381265",
+  "others": 0,
+  "ok": true
+ },
+ {
+  "name": "seno após x (insere ·)",
+  "text": "x·sin(x) = 4",
+  "status": "✓ Equação pronta para resolver",
+  "answer": "x ≈ 6,901412609",
+  "others": 22,
+  "ok": true
+ },
+ {
+  "name": "π e decimal",
+  "text": "x·π = 1,5",
+  "status": "✓ Equação pronta para resolver",
+  "answer": "x ≈ 0,4774648293",
+  "others": 0,
+  "ok": true
+ },
+ {
+  "name": "expoente fracionário",
+  "text": "x¹ᐟ³ = 3",
+  "status": "✓ Equação pronta para resolver",
+  "answer": "x ≈ 27",
+  "others": 0,
+  "ok": true
+ },
+ {
+  "name": "expoente com soma",
+  "text": "2ˣ⁺¹ = 32",
+  "status": "✓ Equação pronta para resolver",
+  "answer": "x ≈ 4",
+  "others": 0,
+  "ok": true
+ },
+ {
+  "name": "inverso",
+  "text": "x⁻¹ + x = 3",
+  "status": "✓ Equação pronta para resolver",
+  "answer": "x ≈ 0,3819660113",
+  "others": 2,
+  "ok": true
+ },
+ {
+  "name": "ln e log",
+  "text": "ln(x) + log(x) = 2",
+  "status": "✓ Equação pronta para resolver",
+  "answer": "x ≈ 4,032609911",
+  "others": 0,
+  "ok": true
+ },
+ {
+  "name": "módulo",
+  "text": "abs(x - 9) = 5",
+  "status": "✓ Equação pronta para resolver",
+  "answer": "x ≈ 4",
+  "others": 2,
+  "ok": true
+ },
+ {
+  "name": "apagar dentro do expoente",
+  "text": "x²⁰ - 1 = 0",
+  "status": "✓ Equação pronta para resolver",
+  "answer": "x ≈ 1",
+  "others": 2,
+  "ok": true
+ },
+ {
+  "name": "sistema com ↵",
+  "text": "2x + y = 5\nx + 3y = 6",
+  "status": "✓ Sistema 2×2 pronto (x, y)",
+  "answer": "x = 1,8\ny = 1,4",
+  "others": 0,
+  "ok": true
+ },
+ {
+  "name": "teclado físico com ^",
+  "text": "x³ - x - 2 = 0",
+  "status": "✓ Equação pronta para resolver",
+  "answer": "x ≈ 1,521379707",
+  "others": 0,
+  "ok": true
+ },
+ {
+  "name": "teclado físico e^(sin(x)) (fallback)",
+  "text": "e^sin(x) = 2",
+  "status": "✓ Equação pronta para resolver",
+  "answer": "x ≈ 0,7658461948",
+  "others": 25,
+  "ok": true
+ },
+ {
+  "name": "arco seno e e",
+  "text": "asin(x) = e÷4",
+  "status": "✓ Equação pronta para resolver",
+  "answer": "x ≈ 0,6284589652",
+  "others": 0,
+  "ok": true
+ },
+ {
+  "name": "torre de potência",
+  "text": "2ˣ^2 = 16",
+  "status": "✓ Equação pronta para resolver",
+  "answer": "x ≈ 2",
+  "others": 2,
+  "ok": true
+ }
+]

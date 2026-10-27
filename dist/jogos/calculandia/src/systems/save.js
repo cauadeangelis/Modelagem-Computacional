@@ -19,7 +19,9 @@ export function freshSave() {
     cine: false,
     player: null, // { nome, genero: 'm' | 'f' }: null até a tela de criação
     pet: 'raizinha', // 'raizinha' | 'gatas'
-    dicas: [], // dicas de controle já vistas
+    historicos: {}, // mestres: { met, recompensa } por id
+    ajuda: {}, // nível de dica já pago por fase (não cobra de novo)
+    comandos: [], // passos do tutorial de comandos já feitos ('todas' = terminado ou pulado)
     stickers: {},
     cosmetics: { on: [] },
     options: null,
@@ -33,9 +35,9 @@ export function loadSave() {
     const raw = localStorage.getItem(CONFIG.saveKey);
     if (!raw) return null;
     const d = JSON.parse(raw);
-    // saves de antes das dicas de controle: quem já terminou o tutorial não as vê de novo
-    const dicas = Array.isArray(d.dicas) ? d.dicas : d.tutorial >= 6 ? ['todas'] : [];
-    return { ...freshSave(), ...d, dicas, rpg: { ...freshSave().rpg, ...d.rpg } };
+    // saves de antes do tutorial de comandos: quem já terminou o tutorial guiado não o refaz
+    const comandos = Array.isArray(d.comandos) ? d.comandos : d.tutorial >= 6 ? ['todas'] : [];
+    return { ...freshSave(), ...d, comandos, historicos: d.historicos || {}, ajuda: d.ajuda || {}, rpg: { ...freshSave().rpg, ...d.rpg } };
   } catch (e) {
     return null;
   }

@@ -10,6 +10,7 @@ function eye(g, x, y, r, look = 0, blink = false) {
 }
 
 import { CONFIG } from '../config.js';
+import { HISTORICO_BY_ID } from '../data/historicos.js';
 
 // cabeça de gato (Lina e Nina) centrada em (x, 0)
 function catHead(g, x, c, t, mouth, blink, look) {
@@ -57,6 +58,19 @@ export function drawPortrait(canvas, kind, id, t = 0, mouth = 0) {
     for (const y of [-6, 12, 28]) { const w = 30 - (y + 28) * 0.4; g.beginPath(); g.moveTo(-w, y); g.lineTo(w, y); g.stroke(); }
     eye(g, -12, -16, 11, look, blink); eye(g, 12, -16, 11, look, blink);
     g.fillStyle = '#7a3a2a'; g.beginPath(); g.ellipse(0, 2, 6, 2 + mouth * 4, 0, 0, Math.PI * 2); g.fill();
+  } else if (kind === 'historico') {
+    // mestres: rosto, cabelo/peruca e chapéu nas cores do boneco
+    const v = HISTORICO_BY_ID[id]?.visual || {};
+    g.fillStyle = v.macacao || '#555'; g.beginPath(); g.ellipse(0, 54, 40, 22, 0, 0, Math.PI * 2); g.fill(); g.stroke();
+    g.fillStyle = v.colete || '#fff'; g.beginPath(); g.moveTo(-12, 34); g.lineTo(12, 34); g.lineTo(0, 50); g.closePath(); g.fill();
+    g.fillStyle = v.cabelo || '#3a2a1a';
+    if (v.estilo === 'peruca') { for (const sx of [-1, 1]) for (const y of [0, 18]) { g.beginPath(); g.arc(sx * 36, y, 12, 0, Math.PI * 2); g.fill(); g.stroke(); } }
+    if (v.estilo === 'coque') { g.beginPath(); g.arc(0, -40, 14, 0, Math.PI * 2); g.fill(); g.stroke(); }
+    g.fillStyle = v.pele || '#f2c9a0'; g.beginPath(); g.arc(0, 4, 34, 0, Math.PI * 2); g.fill(); g.stroke();
+    g.fillStyle = v.cabelo || '#3a2a1a'; g.beginPath(); g.arc(0, -4, 35, Math.PI * 1.05, Math.PI * 1.95); g.fill();
+    if (v.chapeu) { g.fillStyle = v.chapeu; g.fillRect(-28, -38, 56, 14); g.strokeRect(-28, -38, 56, 14); }
+    eye(g, -12, 6, 6, look, blink); eye(g, 12, 6, 6, look, blink);
+    g.fillStyle = '#7a3a2a'; g.beginPath(); g.ellipse(0, 22, 6, 1.5 + mouth * 3, 0, 0, Math.PI * 2); g.fill();
   } else if (kind === 'gatas') {
     const [lina, nina] = CONFIG.gatas;
     catHead(g, -26, lina.cores, t, mouth, blink, look);

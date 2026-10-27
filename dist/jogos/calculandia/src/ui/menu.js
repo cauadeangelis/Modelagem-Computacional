@@ -3,6 +3,8 @@ import { G, lock, unlock } from '../game.js';
 import { CITIES, SETTLEMENT_BY_ID } from '../data/settlements.js';
 import { ANIMALS } from '../data/animals.js';
 import { CREDITOS, JOGADOR } from '../data/dialogs.js';
+import { paginaMestres } from '../systems/mestres.js';
+import { drawPortrait } from './portraits.js';
 import { RAIZ_TIPOS, TIPOS_ORDEM } from '../entities/raiz.js';
 import { STICKERS, STICKER_INFO, COSMETICS } from '../systems/progress.js';
 import { RELICS } from '../fases/levels.js';
@@ -24,6 +26,7 @@ export class Menu {
     if (page === 'main') this.main();
     if (page === 'dex') this.dex();
     if (page === 'ctrl') this.controles();
+    if (page === 'mestres') this.mestres();
     if (page === 'opts') this.opts();
     if (page === 'cred') this.cred();
     if (page === 'engineer') this.engineer();
@@ -44,12 +47,21 @@ export class Menu {
     this.sheet(`<h2>Menu · ${esc(JOGADOR.nome)}</h2><div class="menu-list">
       <button class="btn big" data-go="close">▶ Continuar</button>
       <button class="btn big" data-go="dex">📒 Raizdex</button>
+      <button class="btn big" data-go="mestres">📜 Mestres</button>
+      <button class="btn big" id="m-inv">🎒 Inventário <kbd>I</kbd></button>
       <button class="btn big" data-go="ctrl">🎮 Controles</button>
       <button class="btn big" data-go="engineer">🔬 Engenheiro e Diário de Campo</button>
       <button class="btn big" data-go="opts">⚙️ Opções</button>
       <button class="btn big" data-go="cred">🎬 Créditos</button>
       <a class="btn big secondary" href="../../index.html#jogos">← Voltar ao Numera Academy</a>
     </div>`);
+    this.el.querySelector('#m-inv').onclick = () => { this.close(); G.events.emit('openInventory'); };
+  }
+
+  mestres() {
+    this.sheet(`<div class="row" style="justify-content:space-between"><h2>📜 Mestres</h2><button class="btn secondary" data-go="main">← Voltar</button></div>
+      <p>Apresentações e missões dos personagens históricos que você já encontrou. Para conversar de novo, vá até eles e aperte E.</p>${paginaMestres(esc)}`);
+    this.el.querySelectorAll('[data-mestre]').forEach((c) => drawPortrait(c, 'historico', c.dataset.mestre, 0, 0));
   }
 
   controles() {
@@ -62,6 +74,7 @@ export class Menu {
       ['Escolher resposta', `${k('1')} ${k('2')} ${k('3')}`, 'toque na resposta'],
       ['Dica do objetivo', k('H'), 'botão Dica'],
       ['Mapa', k('M'), 'botão 🗺️'],
+      ['Inventário', k('I'), 'Menu → Inventário'],
       ['Menu', k('Esc'), 'botão ☰'],
       ['Girar a câmera', `${k('Q')} e ${k('R')}`, '—'],
       ['Zoom', 'roda do mouse', 'pinça com dois dedos'],
@@ -71,9 +84,9 @@ export class Menu {
       <table class="ctrl-table"><thead><tr><th>Ação</th><th>Teclado e mouse</th><th>Toque</th></tr></thead>
       <tbody>${linhas.map(([a, t, m]) => `<tr><td>${a}</td><td>${t}</td><td>${m}</td></tr>`).join('')}</tbody></table>
       <p>Na fase tática: <b>Auto</b> (ou ${k('Enter')}/${k('Espaço')} fora dos campos) executa uma operação, ${k('H')} chama o guia e ${k('D')} abre o modo professor.</p>
-      <div class="row"><button class="btn" id="m-dicas">💡 Mostrar as dicas de controle de novo</button></div>`);
-    const b = this.el.querySelector('#m-dicas');
-    b.onclick = () => { G.dicas.reset(); b.textContent = '✔ Pronto! Elas voltam quando você continuar.'; b.disabled = true; };
+      <div class="row"><button class="btn" id="m-tuto">🎓 Refazer o tutorial de comandos</button></div>`);
+    const b = this.el.querySelector('#m-tuto');
+    b.onclick = () => { G.comandos.reset(); b.textContent = '✔ Pronto! Ele começa quando você fechar o menu.'; b.disabled = true; };
   }
 
   dex() {

@@ -1,7 +1,7 @@
 // Tela de mapa (tecla M): pergaminho em SVG com a ilha, caminhos, cidades e viagem rápida (seção 12).
 import { G, lock, unlock } from '../game.js';
 import { CONFIG } from '../config.js';
-import { REGIONS, SETTLEMENTS } from '../data/settlements.js';
+import { REGIONS, SETTLEMENTS, NIVEIS, DUVIDAS } from '../data/settlements.js';
 import { baseMap, fogMap } from './minimap.js';
 
 const HALF = CONFIG.world.half;
@@ -15,6 +15,14 @@ const SHORT = {
   'Farol do Tsunami': 'Farol', 'Usina Central': 'Usina',
 };
 const shortName = (n) => SHORT[n] || n;
+// prédios no mapa com a mesma cor e forma das placas: cheio = vencido, vazado = a fazer
+function formaSVG(lvl, x, y, won) {
+  const r = 1.9, cor = lvl === 'Q' ? DUVIDAS.parede : NIVEIS[lvl].cor, fill = won || lvl === 'Q' ? cor : '#ffffff', st = `fill="${fill}" stroke="${lvl === 'Q' ? '#7a5a00' : cor}" stroke-width="0.9"`;
+  if (lvl === 'F') return `<circle cx="${x}" cy="${y}" r="${r}" ${st}/>`;
+  if (lvl === 'M') return `<rect x="${x - r * 0.9}" y="${y - r * 0.9}" width="${r * 1.8}" height="${r * 1.8}" ${st}/>`;
+  if (lvl === 'D') return `<path d="M${x} ${y - r * 1.1} L${x + r} ${y + r * 0.8} L${x - r} ${y + r * 0.8} Z" ${st}/>`;
+  return `<circle cx="${x}" cy="${y}" r="${r}" ${st}/><text x="${x}" y="${y + 1.1}" font-size="3" text-anchor="middle" font-weight="700" fill="#3a2a1a">?</text>`;
+}
 // rótulo vai para baixo do círculo quando um vizinho anterior na lista está quase na mesma altura
 const labelBelow = (s) => {
   const i = SETTLEMENTS.indexOf(s);
@@ -51,11 +59,14 @@ export class MapScreen {
       let sub = '';
       if (s.id.startsWith('C')) sub = `★${p.cityStars(s.id)}/9`;
       if (boss) sub = p.won(s.id) ? '✓' : '☠';
-      const info = `${s.nome}${s.id.startsWith('C') ? ` — ${p.cityStars(s.id)}/9 ⭐` : boss ? (p.won(s.id) ? ' — vencido' : ' — chefão') : ''}`;
+      const st = G.settlements.find((q) => q.def.id === s.id);
+      const niveis = s.id.startsWith('C') ? ' · ' + ['F', 'M', 'D'].map((l) => `${NIVEIS[l].simbolo} ${NIVEIS[l].dificuldade}${p.won(`${s.id}-${l}`) ? ' ✔' : ''}`).join(' · ') + (s.duvidas ? ' · ? Casa de Dúvidas' : '') : '';
+      const info = `${s.nome}${s.id.startsWith('C') ? ` — ${p.cityStars(s.id)}/9 ⭐` : boss ? (p.won(s.id) ? ' — vencido' : ' — chefão') : ''}${niveis}`;
       if (unlocked || s.regiao === 0) {
         items += `<g class="map-city" data-info="${info}">
           <circle cx="${x}" cy="${y}" r="${boss ? 4.2 : 3.4}" fill="${boss ? '#3a2a1a' : col}" stroke="#3a2a1a" stroke-width="1"/>
           <circle cx="${x}" cy="${y}" r="${Math.max(6, 22 / px)}" fill="transparent"/>
+          ${st ? Object.entries(st.buildings).filter(([l, B]) => B.door && l !== 'B').map(([l, B]) => formaSVG(l, S(B.x), S(B.z), l !== 'Q' && p.won(`${s.id}-${l}`))).join('') : ''}
           ${p.cityComplete?.(s.id) && s.id.startsWith('C') ? `<text x="${x}" y="${y + 1.4}" font-size="4" text-anchor="middle" fill="#fff">✓</text>` : ''}
           ${showLabels ? `<text x="${x}" y="${labelBelow(s) ? y + 5 + fu * 0.8 : y - 5}" font-size="${fu.toFixed(2)}" text-anchor="middle" font-weight="700" fill="#3a2a1a" stroke="#f3e2b8" stroke-width="${(fu * 0.28).toFixed(2)}" paint-order="stroke">${shortName(s.nome)} ${sub}</text>` : ''}
         </g>`;
@@ -73,7 +84,7 @@ export class MapScreen {
     const obj = G.objective;
     const objMark = obj && obj.x != null ? `<text x="${S(obj.x)}" y="${S(obj.z) + 2}" font-size="7" text-anchor="middle" fill="#f2c14e" stroke="#3a2a1a" stroke-width=".8">★</text>` : '';
     this.el.innerHTML = `<div class="sheet">
-      <div class="map-head"><h2>🗺️ Mapa de Calculândia</h2><span class="map-legend">🔥 = viagem rápida · ★ = objetivo</span><button class="btn secondary" id="map-close"><kbd>M</kbd>Fechar</button></div>
+      <div class="map-head"><h2>🗺️ Mapa de Calculândia</h2><span class="map-legend">🔥 viagem rápida · ★ objetivo · <b style="color:#2e8b3a">●</b> fácil · <b style="color:#1f5fbf">■</b> médio · <b style="color:#c0352b">▲</b> difícil · <b style="color:#a87200">?</b> dúvidas · cheio = concluída</span><button class="btn secondary" id="map-close"><kbd>M</kbd>Fechar</button></div>
       <div class="map-wrap"><svg viewBox="0 0 280 280" xmlns="http://www.w3.org/2000/svg">
         <rect width="280" height="280" fill="#7fc4dd"/>
         <image href="${baseMap().toDataURL()}" width="280" height="280" style="image-rendering:auto"/>

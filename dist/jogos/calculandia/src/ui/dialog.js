@@ -112,7 +112,7 @@ export class Dialog {
     this.nextEl.style.visibility = last && this.cfg.options ? 'hidden' : 'visible';
     if (!last || !this.cfg.options) return;
     this.optEl.innerHTML = '';
-    this.cfg.options.slice(0, 3).forEach((o, i) => {
+    this.cfg.options.slice(0, 4).forEach((o, i) => {
       const b = document.createElement('button');
       b.className = 'btn' + (o.disabled ? '' : '');
       b.disabled = !!o.disabled;
@@ -161,7 +161,7 @@ export class Dialog {
     const inp = G.input;
     if (this.freshFrame) { this.freshFrame = false; return; } // a tecla que abriu o diálogo não avança a fala
     if (inp.hit('KeyE') || inp.hit('Enter') || inp.hit('Space')) this.advance();
-    for (let i = 0; i < 3; i++) if (inp.hit('Digit' + (i + 1))) this.choose(i);
+    for (let i = 0; i < 4; i++) if (inp.hit('Digit' + (i + 1))) this.choose(i);
     if (inp.hit('Escape') && !this.cfg.options) this.close(undefined);
   }
 }

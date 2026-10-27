@@ -25,6 +25,7 @@
 
 <div id="ui">
   <div id="bubbles"></div>
+  <div id="nametags"></div>
 
   <div id="hud" class="hidden">
     <div id="stats" class="panel">
@@ -32,10 +33,8 @@
       <div class="stat" id="stat-seeds-wrap" title="Sementes (moeda de dicas)"><span class="ico">🌰</span><span id="stat-seeds">3</span></div>
       <div class="stat" id="stat-roots-wrap" title="Raízes Fugitivas"><span class="ico">🌱</span><span id="stat-roots">0</span><span class="of">/40</span></div>
     </div>
-    <div id="leftcol">
-      <div id="objective" class="panel"></div>
-      <div id="tip" class="panel hidden" role="status" aria-live="polite"></div>
-    </div>
+    <div id="objective" class="panel"></div>
+    <div id="tuto" class="panel hidden" role="status" aria-live="polite"></div>
     <div id="minimap-wrap"><canvas id="minimap" width="140" height="140"></canvas></div>
     <div id="hud-buttons">
       <button id="btn-map" class="btn round" title="Mapa (M)" aria-label="Abrir mapa">🗺️</button>
@@ -70,6 +69,7 @@
 
   <div id="mapscreen" class="overlay hidden"></div>
   <div id="menu" class="overlay hidden"></div>
+  <div id="ajuda" class="overlay hidden"></div>
   <div id="fase" class="overlay hidden"></div>
   <div id="seedfly"></div>
   <div id="iris"></div>

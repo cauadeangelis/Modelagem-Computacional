@@ -1,7 +1,7 @@
 import { sassenfeld, interpolate } from '../engine/numeric.js';
 export const number = v => Array.isArray(v) ? '(' + v.map(number).join('; ') + ')' : v == null ? '—' : !Number.isFinite(v) ? (Number.isNaN(v) ? 'indefinido' : '∞') : Math.abs(v) > 0 && (Math.abs(v) < .0001 || Math.abs(v) > 1e6) ? v.toExponential(3) : Number(v.toPrecision(7)).toLocaleString('pt-BR', { maximumFractionDigits: 7 });
 export function drawBoard(canvas, session, preview = false) {
-  const l = session.level, s = session.s, dpr = Math.min(devicePixelRatio || 1, 3), W = Math.max(280, canvas.clientWidth), H = Math.max(250, Math.min(470, W * .65));
+  const l = session.level, s = session.s, dpr = Math.min(devicePixelRatio || 1, 3), W = Math.max(280, canvas.clientWidth), maxH = Number(canvas.dataset.maxh) || 470, H = Math.max(Math.min(250, maxH), Math.min(maxH, W * .65));
   canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr); canvas.style.height = H + 'px';
   const c = canvas.getContext('2d'); c.scale(dpr, dpr); c.fillStyle = '#fffdf6'; c.fillRect(0, 0, W, H); c.font = '14px system-ui';
   const handles = [];

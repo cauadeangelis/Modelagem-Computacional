@@ -1,7 +1,7 @@
 // Tutorial guiado (seção 15.2): fogueira → pulo → árvore → pet → Casa de Calibração → mapa.
-// Junto dele, as dicas de controle (classe Dicas) explicam teclas e botões nas primeiras interações.
+// Antes dele, o tutorial de comandos (TutorialComandos) ensina teclas e botões, um passo por vez.
 import * as THREE from 'three';
-import { G } from '../game.js';
+import { G, uiEl } from '../game.js';
 import { CONFIG } from '../config.js';
 import { CREEK } from '../data/settlements.js';
 import { tx } from '../data/dialogs.js';
@@ -60,7 +60,7 @@ export class Tutorial {
     return { text: tx(STEPS[this.step].text), x: t?.x, z: t?.z };
   }
   update(dt, t) {
-    if (!this.active || G.mode !== 'play') { this.arrows.visible = false; return; }
+    if (!this.active || G.mode !== 'play' || G.comandos.ativo) { this.arrows.visible = false; return; }
     if (this.announced !== this.step && !G.locks) { this.announced = this.step; G.pet.say(STEPS[this.step].fala, 4); }
     const h = G.hero.pos;
     if (this.step === 1 && h.x < creekX(h.z) - 1.2) this.advance(2);
@@ -83,101 +83,178 @@ export class Tutorial {
 }
 
 // ======================================================================
-// Dicas de controle: um cartão por vez embaixo do objetivo. Cada dica some quando o jogador
-// faz o que ela ensina (ou aperta "Entendi"); as urgentes aparecem na hora em que fazem sentido.
-const k = (...ks) => ks.map((x) => `<kbd>${x}</kbd>`).join(' ');
-export const DICAS = [
-  { id: 'andar', titulo: '🚶 Andar',
-    teclado: `${k('W', 'A', 'S', 'D')} ou as setas ${k('↑', '←', '↓', '→')} andam. Clicar no chão também leva você até lá.`,
-    toque: 'Arraste o <b>joystick</b> no canto de baixo para andar. Tocar no chão também leva você até lá.' },
-  { id: 'correr', titulo: '🏃 Correr',
-    teclado: `Segure ${k('Shift')} enquanto anda para correr.`,
-    toque: 'Toque duas vezes no joystick e segure para correr.' },
-  { id: 'camera', titulo: '🎥 Câmera',
-    teclado: `${k('Q')} e ${k('R')} giram a câmera. A <b>roda do mouse</b> aproxima e afasta.`,
-    toque: 'Faça <b>pinça</b> com dois dedos na tela para aproximar ou afastar a câmera.' },
-  { id: 'interagir', titulo: '✋ Interagir', urgente: true, quando: () => !!G.interaction.current && G.interaction.current !== G.petTalk,
-    teclado: `Apareceu um botão embaixo, no meio da tela? Aperte ${k('E')} ou ${k('Enter')} para usar.`,
-    toque: 'Apareceu um botão embaixo, no meio da tela? Toque nele (ou em <b>Interagir</b>).' },
-  { id: 'dialogo', titulo: '💬 Conversas', urgente: true, quando: () => G.ui.dialog.open,
-    teclado: `${k('E')}, ${k('Enter')} ou ${k('Espaço')} passam as falas. Nas perguntas, ${k('1')} ${k('2')} ${k('3')} escolhem a resposta.`,
-    toque: 'Toque na caixa de conversa para passar as falas e nos botões para responder.' },
-  { id: 'pular', titulo: '🦘 Pular', urgente: true, quando: () => G.progress.d.tutorial >= 1,
-    teclado: `${k('Espaço')} pula riachos, pedras e buracos. Correndo, o pulo vai mais longe.`,
-    toque: 'O botão <b>Pular</b> pula riachos, pedras e buracos.' },
-  { id: 'dica', titulo: '💡 Pedir dica', quando: () => G.progress.d.tutorial >= 4,
-    teclado: `Perdeu o rumo? ${k('H')} faz {pet} lembrar o objetivo. As setas amarelas no chão também apontam o caminho.`,
-    toque: 'Perdeu o rumo? O botão <b>Dica</b> faz {pet} lembrar o objetivo.' },
-  { id: 'menu', titulo: '☰ Mapa e menu', quando: () => G.progress.d.tutorial >= 6,
-    teclado: `${k('M')} abre o mapa e ${k('Esc')} abre o menu, com opções, Raizdex e a lista de controles.`,
-    toque: 'Os botões 🗺️ e ☰ no canto direito abrem o mapa e o menu (com a lista de controles).' },
+// Tutorial de comandos: na primeira vez no mundo, um passo a passo ensina cada comando.
+// Um passo por vez; ele só avança quando o jogador faz o que o passo pede.
+// Dá para pular o passo ou o tutorial inteiro. Enquanto ele roda, o tutorial guiado espera.
+const tecla = (code, label = code.replace(/^(Key|Digit)/, '')) => `<kbd data-code="${code}">${label}</kbd>`;
+const cruz = (cima, esq, baixo, dir) => `<span class="tk-cross"><span>${cima}</span><span>${esq}${baixo}${dir}</span></span>`;
+const icone = (t) => `<span class="tk-icon">${t}</span>`;
+export const COMANDOS = [
+  { id: 'andar', titulo: '🚶 Andar', meta: 5,
+    teclas: `${cruz(tecla('KeyW'), tecla('KeyA'), tecla('KeyS'), tecla('KeyD'))}<span class="tk-ou">ou</span>${cruz(tecla('ArrowUp', '↑'), tecla('ArrowLeft', '←'), tecla('ArrowDown', '↓'), tecla('ArrowRight', '→'))}`,
+    teclado: 'Use <b>W A S D</b> ou as <b>setas</b> para andar. Clicar no chão também leva você até lá. <b>Ande um pouco pela praia.</b>',
+    toque: icone('🕹️ joystick'), toqueTexto: 'Arraste o <b>joystick</b> (canto de baixo, à esquerda) para andar. Tocar no chão também leva você até lá. <b>Ande um pouco pela praia.</b>',
+    fala: 'Primeiro, vamos andar! Bora dar uma voltinha.' },
+  { id: 'correr', titulo: '🏃 Correr', meta: 1,
+    teclas: `${tecla('ShiftLeft', 'Shift')}<span class="tk-ou">+</span>${tecla('KeyW')}`,
+    teclado: 'Segure <b>Shift</b> enquanto anda para correr. <b>Corra um pouquinho.</b>',
+    toque: icone('🕹️ 👆👆'), toqueTexto: 'Toque <b>duas vezes</b> no joystick e segure para correr. <b>Corra um pouquinho.</b>',
+    fala: 'Agora corre! Quero ver essa velocidade.' },
+  { id: 'pular', titulo: '🦘 Pular',
+    teclas: tecla('Space', 'Espaço'),
+    teclado: 'Aperte <b>Espaço</b> para pular riachos, pedras e buracos. <b>Dê um pulo.</b>',
+    toque: icone('Pular'), toqueTexto: 'Toque no botão <b>Pular</b> para pular riachos, pedras e buracos. <b>Dê um pulo.</b>',
+    fala: 'Pula! Lá na frente tem riacho.' },
+  { id: 'girar', titulo: '🔄 Girar a câmera', soTeclado: true,
+    teclas: `${tecla('KeyQ')}<span class="tk-ou">ou</span>${tecla('KeyR')}`,
+    teclado: '<b>Q</b> e <b>R</b> giram a câmera para ver o que está atrás das casas e árvores. <b>Gire a câmera.</b>',
+    fala: 'Gira a câmera! Às vezes uma casa esconde o caminho.' },
+  { id: 'zoom', titulo: '🔍 Aproximar e afastar',
+    teclas: icone('🖱️ roda do mouse'),
+    teclado: 'Role a <b>roda do mouse</b> para aproximar ou afastar a câmera. <b>Experimente.</b>',
+    toque: icone('🤏 pinça'), toqueTexto: 'Faça <b>pinça</b> com dois dedos na tela para aproximar ou afastar. <b>Experimente.</b>',
+    fala: 'Chega mais perto... ou vê a ilha de longe!' },
+  { id: 'interagir', titulo: '✋ Interagir',
+    teclas: `${tecla('KeyE')}<span class="tk-ou">ou</span>${tecla('Enter')}`,
+    teclado: '<b>E</b> (ou <b>Enter</b>) usa o que estiver perto: fogueiras, árvores, placas, bichos e portas. O botão de baixo mostra o que vai acontecer. <b>Aperte E para falar com {pet}.</b>',
+    toque: icone('Interagir'), toqueTexto: 'O botão <b>Interagir</b> (ou o botão que aparece embaixo) usa o que estiver perto. <b>Toque nele para falar com {pet}.</b>',
+    fala: 'Agora vem falar {comigo}! Aperta E.' },
+  { id: 'responder', titulo: '💬 Conversas',
+    teclas: `${tecla('KeyE')}${tecla('Enter')}${tecla('Space', 'Espaço')}<span class="tk-ou">e</span>${tecla('Digit1')}${tecla('Digit2')}${tecla('Digit3')}`,
+    teclado: '<b>E</b>, <b>Enter</b> ou <b>Espaço</b> passam a fala. Nas perguntas, <b>1</b>, <b>2</b> ou <b>3</b> escolhem a resposta (ou clique nela). <b>Responda {pet}.</b>',
+    toque: icone('👆 toque'), toqueTexto: 'Toque na caixa de conversa para passar a fala e no botão da resposta para responder. <b>Responda {pet}.</b>',
+    fala: 'Fala comigo, vai! Aperta E perto de mim.' },
+  { id: 'dica', titulo: '💡 Pedir dica',
+    teclas: tecla('KeyH'),
+    teclado: 'Perdeu o rumo? <b>H</b> faz {pet} lembrar o objetivo. Dentro das fases, H chama o bicho guia. <b>Aperte H.</b>',
+    toque: icone('Dica'), toqueTexto: 'Perdeu o rumo? O botão <b>Dica</b> faz {pet} lembrar o objetivo. <b>Toque em Dica.</b>',
+    fala: 'Se ficar perdid{o}, pede dica pra mim!' },
+  { id: 'mapa', titulo: '🗺️ Mapa',
+    teclas: tecla('KeyM'),
+    teclado: '<b>M</b> abre o mapa da ilha (e fecha também). <b>Abra o mapa.</b>',
+    toque: icone('🗺️'), toqueTexto: 'O botão <b>🗺️</b>, no canto de cima, abre o mapa da ilha. <b>Abra o mapa.</b>',
+    fala: 'Olha o mapa da ilha inteira!' },
+  { id: 'menu', titulo: '☰ Menu',
+    teclas: tecla('Escape', 'Esc'),
+    teclado: '<b>Esc</b> abre o menu: opções, Raizdex e a lista de <b>Controles</b>, para rever tudo isso. <b>Abra o menu.</b>',
+    toque: icone('☰'), toqueTexto: 'O botão <b>☰</b>, no canto de cima, abre o menu: opções, Raizdex e a lista de <b>Controles</b>. <b>Abra o menu.</b>',
+    fala: 'Último: o menu! Lá tem a lista de comandos.' },
 ];
 
-export class Dicas {
+export class TutorialComandos {
   constructor() {
-    this.el = document.getElementById('tip');
-    this.atual = null;
-    this.walk = 0; this.run = 0;
-    this.pausa = 1.5; // respiro antes da primeira e entre uma dica e outra
-    this.okT = 0;
-    this.viuDialogo = false;
+    this.el = uiEl('tuto', 'panel hidden', 'hud');
+    this.passo = null;
+    this.prog = 0;
+    this.pausa = 1.5; // respiro antes do primeiro passo (depois da abertura)
+    this.okT = 0; // "Boa!" do passo concluído
+    this.fimT = 0; // cartão final
+    this.opcoes = false; // viu uma conversa com respostas
     this.el.addEventListener('click', (e) => {
       const b = e.target.closest('button');
       if (!b) return;
-      if (b.dataset.tip === 'ok' && this.atual) this.feito(this.atual.id);
-      if (b.dataset.tip === 'todas') { this.lista.push('todas'); G.progress.save(); this.mostrar(null); }
+      b.blur(); // Espaço/Enter seguintes vão para o jogo, não para o botão
+      if (b.dataset.tuto === 'passo') this.concluir('Passo pulado.');
+      if (b.dataset.tuto === 'pular') {
+        if (!b.dataset.sure) { b.dataset.sure = '1'; b.textContent = 'Pular mesmo? Clique de novo'; return; }
+        this.final('Tutorial pulado.', 'Os comandos ficam em <b>Menu → Controles</b> quando precisar.');
+      }
     });
-    G.events.on('interacted', () => this.feito('interagir'));
-    G.events.on('menuOpened', () => this.feito('menu'));
+    G.events.on('interacted', () => this.fez('interagir'));
+    G.events.on('mapOpened', () => this.fez('mapa'));
+    G.events.on('menuOpened', () => this.fez('menu'));
   }
-  get lista() { return G.progress.d.dicas; }
-  visto(id) { return this.lista.includes(id) || this.lista.includes('todas'); }
-  reset() { this.lista.length = 0; this.walk = this.run = 0; this.pausa = 1; G.progress.save(); }
+  get feitos() { return G.progress.d.comandos; }
+  get passos() { return COMANDOS.filter((c) => !(c.soTeclado && G.input.touch)); }
+  get ativo() { return !this.feitos.includes('todas'); }
+  // enquanto roda, o objetivo do HUD fica escondido; este texto é o que o pet lembra (H)
+  objective() { return this.ativo ? { text: 'Terminar o tutorial de comandos (o cartão no alto da tela).' } : null; }
 
-  // a dica que está na tela vira "Boa!" por um instante; as outras só ficam marcadas
-  feito(id) {
-    if (this.visto(id)) return;
-    this.lista.push(id);
+  reset() {
+    this.feitos.length = 0;
+    this.passo = null; this.pausa = 0.6; this.okT = this.fimT = 0;
     G.progress.save();
-    if (this.atual?.id === id) {
-      this.el.classList.add('done');
-      this.el.querySelector('.tip-body').textContent = '✔ Boa! Você pegou o jeito.';
-      this.okT = 1;
-    }
   }
 
-  mostrar(x) {
-    this.atual = x;
-    this.el.classList.toggle('hidden', !x);
-    this.el.classList.remove('done');
-    if (!x) return;
-    this.el.innerHTML = `<div class="tip-head"><span>${x.titulo}</span><span class="tip-n">${DICAS.indexOf(x) + 1}/${DICAS.length}</span></div>
-      <div class="tip-body">${tx(G.input.touch ? x.toque : x.teclado)}</div>
-      <div class="tip-foot"><button class="btn" data-tip="ok">Entendi</button><button class="btn secondary" data-tip="todas">Pular dicas</button></div>`;
+  fez(id) { if (this.passo?.id === id) this.concluir(); }
+
+  concluir(msg = '✔ Boa! Passo concluído.') {
+    const p = this.passo;
+    if (!p || this.okT > 0 || this.fimT > 0) return;
+    this.feitos.push(p.id);
+    G.progress.save();
+    G.audio?.sfx('acerto');
+    this.el.classList.add('done');
+    this.el.querySelector('.tuto-status').textContent = msg;
+    const bar = this.el.querySelector('.tuto-bar i');
+    if (bar) bar.style.width = '100%';
+    this.okT = 1;
+  }
+
+  proximo() {
+    const lista = this.passos;
+    const p = lista.find((x) => !this.feitos.includes(x.id));
+    if (!p) { this.final('🎉 Tutorial concluído!', 'Agora siga as <b>setas amarelas</b> até a fogueira. Os comandos ficam em <b>Menu → Controles</b>.'); return; }
+    this.passo = p;
+    this.prog = 0;
+    this.opcoes = false;
+    const n = lista.indexOf(p), toque = G.input.touch;
+    this.el.classList.remove('done', 'fim', 'hidden');
+    // teclas à esquerda, explicação à direita (em tela pequena, uma embaixo da outra)
+    this.el.innerHTML = `<div class="tuto-head"><span>🎓 Tutorial<span class="tuto-long"> de comandos</span></span>
+        <span class="tuto-dots" aria-hidden="true">${lista.map((_, i) => `<i class="${i < n ? 'ok' : i === n ? 'now' : ''}"></i>`).join('')}</span>
+        <span>Passo ${n + 1} de ${lista.length}</span></div>
+      <div class="tuto-body">
+        <div class="tuto-keys" aria-hidden="true">${toque ? p.toque : p.teclas}</div>
+        <div class="tuto-info"><h3>${p.titulo}</h3><p class="tuto-text">${tx(toque ? p.toqueTexto : p.teclado)}</p>${p.meta ? '<div class="tuto-bar"><i></i></div>' : ''}</div>
+      </div>
+      <div class="tuto-foot"><span class="tuto-status">Faça isso para continuar.</span>
+        <button class="btn secondary" data-tuto="passo">Pular este passo</button><button class="btn secondary" data-tuto="pular">Pular tutorial</button></div>`;
+    this.keys = [...this.el.querySelectorAll('kbd[data-code]')];
+    this.bar = this.el.querySelector('.tuto-bar i');
+    G.pet.say(p.fala, 4);
+  }
+
+  final(titulo, texto) {
+    this.passo = null;
+    this.fimT = 4;
+    this.el.classList.remove('hidden');
+    this.el.classList.add('done', 'fim');
+    this.el.innerHTML = `<div class="tuto-head"><span>🎓 Tutorial de comandos</span></div><h3>${titulo}</h3><p class="tuto-text">${texto}</p>
+      <div class="tuto-foot"><button class="btn" data-tuto="fechar">Bora!</button></div>`;
+    this.el.querySelector('[data-tuto="fechar"]').onclick = () => { this.fimT = 0.01; };
   }
 
   update(dt) {
     const ui = G.ui, inp = G.input, h = G.hero;
-    if (G.mode !== 'play' || ui.menu.open || ui.map.open) { this.el.classList.add('hidden'); return; }
-    if (this.atual) this.el.classList.remove('hidden');
-    // o que o jogador já fez, mesmo sem a dica na tela
-    if (!G.locks) {
-      if (h.speed > 0.5) this.walk += h.speed * dt;
-      if (this.walk > 4) this.feito('andar');
-      if (inp.run && h.speed > CONFIG.hero.walkSpeed + 0.3) this.run += dt;
-      if (this.run > 0.6) this.feito('correr');
-      if (inp.hit('KeyQ') || inp.hit('KeyR') || inp.wheel) this.feito('camera');
-      if (h.jumpT >= 0) this.feito('pular');
-      if (inp.hit('KeyH')) this.feito('dica');
+    if (!this.ativo || G.mode !== 'play' || ui.menu.open || ui.map.open) { this.el.classList.add('hidden'); return; }
+    this.el.classList.remove('hidden');
+    if (this.fimT > 0) {
+      this.fimT -= dt;
+      if (this.fimT <= 0) { this.feitos.push('todas'); G.progress.save(); this.el.classList.add('hidden'); }
+      return;
     }
-    // a dica de conversa conta como feita quando a conversa em que ela apareceu termina
-    if (ui.dialog.open) this.viuDialogo ||= this.atual?.id === 'dialogo';
-    else if (this.viuDialogo) { this.viuDialogo = false; this.feito('dialogo'); }
+    if (this.okT > 0) { this.okT -= dt; if (this.okT <= 0) this.proximo(); return; }
+    if (!this.passo) { this.pausa -= dt; if (this.pausa <= 0) this.proximo(); return; }
 
-    if (this.okT > 0) { this.okT -= dt; if (this.okT <= 0) { this.mostrar(null); this.pausa = 1.2; } return; }
-    if (this.pausa > 0) { this.pausa -= dt; return; }
-    const livre = (x) => !this.visto(x.id) && (!x.quando || x.quando());
-    const prox = DICAS.find((x) => x.urgente && livre(x)) || (ui.dialog.open ? null : DICAS.find((x) => !x.urgente && livre(x))) || null;
-    if (prox !== this.atual) this.mostrar(prox);
+    // as teclas do cartão acendem quando são apertadas
+    for (const k of this.keys) k.classList.toggle('on', inp.down(k.dataset.code) || (k.dataset.code === 'ShiftLeft' && inp.down('ShiftRight')));
+
+    // a conversa com respostas conta para "Conversas" quando termina
+    if (ui.dialog.open) this.opcoes ||= !!ui.dialog.cfg?.options;
+    else if (this.opcoes) { this.opcoes = false; this.fez('responder'); }
+
+    if (G.locks) return;
+    const id = this.passo.id;
+    if (id === 'andar' && h.speed > 0.5) this.prog += h.speed * dt;
+    if (id === 'correr' && inp.run && h.speed > CONFIG.hero.walkSpeed + 0.3) this.prog += dt;
+    if (id === 'pular' && h.jumpT >= 0) this.concluir();
+    if (id === 'girar' && (inp.hit('KeyQ') || inp.hit('KeyR'))) this.concluir();
+    if (id === 'zoom' && inp.wheel) this.concluir();
+    if (id === 'dica' && inp.hit('KeyH')) this.concluir();
+    if (this.passo.meta) {
+      this.bar.style.width = `${Math.min(100, (this.prog / this.passo.meta) * 100)}%`;
+      if (this.prog >= this.passo.meta) this.concluir();
+    }
   }
 }

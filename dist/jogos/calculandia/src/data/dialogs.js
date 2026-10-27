@@ -220,6 +220,13 @@ export const PET_TUTORIAL = {
   },
 };
 
+// Conversa do passo "Conversas" do tutorial de comandos (a última fala tem respostas)
+export const COMANDOS_CONVERSA = [
+  'Isso! E (ou Enter) interage com tudo: fogueiras, árvores, placas, bichos e portas.',
+  'Nas conversas, E, Enter ou Espaço passam para a próxima fala.',
+  'Quando aparecer uma pergunta, responda com 1, 2 ou 3 (ou clique). Tudo certo?',
+];
+
 // Cinemática
 export const CINE = {
   vilao: 'Hehehe. Agora ninguém acha a solução!',

@@ -33,6 +33,21 @@ export class Session {
     if (l.kind === 'linear' && l.solutions) return s.solved.length === l.solutions.length;
     return s.k > 0 && (l.maxNodes == null || s.xs.length <= l.maxNodes) && (l.maxEvaluations == null || s.evaluations <= l.maxEvaluations);
   }
+  // O que ainda falta para "Concluir" ficar disponível, em linguagem simples (vazio = pode concluir)
+  pendencias() {
+    const s = this.s, l = this.level, out = [], f = x => Number(x).toPrecision(3);
+    if (this.status !== 'play') return out;
+    if (s.battery <= 0) out.push('Sem energia.');
+    if (l.kind === 'float' && l.scenario === 'readings') { if (s.readIndex < l.readings.length) out.push(`Processe todas as leituras (${s.readIndex}/${l.readings.length}).`); }
+    else if (l.kind === 'ode') { if (s.t < l.end - 1e-10) out.push(`Avance até t = ${l.end} (agora t = ${f(s.t)}).`); }
+    else if (l.kind === 'linear' && l.solutions) { if (s.solved.length < l.solutions.length) out.push(`Resolva todos os vetores b (${s.solved.length}/${l.solutions.length}).`); }
+    else if (s.k === 0) out.push('Execute pelo menos uma operação.');
+    if (l.maxNodes != null && s.xs && s.xs.length > l.maxNodes) out.push(`Use no máximo ${l.maxNodes} nós (agora ${s.xs.length}).`);
+    if (l.maxEvaluations != null && s.evaluations > l.maxEvaluations) out.push(`Use no máximo ${l.maxEvaluations} avaliações de f (já foram ${s.evaluations}).`);
+    if (l.scenario === 'overflow' && s.bits !== 16) out.push('Calcule na máquina de 16 bits da missão.');
+    else if (!(s.error <= l.tau)) out.push(Number.isFinite(s.error) ? `Reduza o erro: ${f(s.error)} ainda é maior que a tolerância ${f(l.tau)}.` : this.traces.length ? 'O erro precisa ser recalculado (parâmetros mudaram ou o último resultado foi inválido).' : 'O erro ainda não foi calculado.');
+    return out;
+  }
   snapshot() { this.history.push({ state: copy(this.s), traces: this.traces.length }); if (this.history.length > 250) this.history.shift(); }
   preview() {
     const simulation = Object.assign(Object.create(Session.prototype), this, { s: copy(this.s), traces: copy(this.traces), history: [], options: { ...this.options } });
@@ -133,7 +148,8 @@ export class Session {
     const scale = Array.isArray(s.x) ? norm(s.x) : Math.abs(s.x ?? s.value ?? 0);
     s.relativeError = delta == null ? null : delta / Math.max(scale, 1e-15);
     const trace = { k: s.k, x: copy(s.x ?? s.value), fx: s.fx ?? s.residual, err: s.error, relativeError: s.relativeError, cost: r.cost, battery: s.battery, integrity: s.integrity, rho: s.rho, p: s.order, flags: s.flags.slice(), formula: r.formula, iteration: r.iteration !== false };
-    this.traces.push(trace); this.reason = r.formula; return trace;
+    // numa derrota, o motivo (fail) fica visível; o cálculo continua no traço
+    this.traces.push(trace); if (this.status === 'play') this.reason = r.formula; else this.reason += ' Último cálculo: ' + r.formula; return trace;
   }
   rootStep() {
     const s = this.s, l = this.level, old = s.x; let x, cost, flags = [], formula;
@@ -166,7 +182,7 @@ export class Session {
     const twoBack = this.traces.at(-2)?.x;
     if (finite(twoBack) && Math.abs(x - twoBack) < 1e-9 && Math.abs(x - old) > 1e-6) flags.push('ciclo');
     s.x = x; s.fx = l.f(x); s.residual = Math.abs(s.fx);
-    s.error = l.criterion === 'width' && ['bissecao', 'falsaPosicao'].includes(s.tool) ? s.widthError : l.criterion === 'widthResidual' && ['bissecao', 'falsaPosicao'].includes(s.tool) ? Math.max(s.widthError, s.residual) : l.criterion === 'residual' ? s.residual : l.criterion === 'delta' ? Math.abs(x - old) : Math.abs(x - l.target);
+    s.error = l.criterion === 'width' && ['bissecao', 'falsaPosicao'].includes(s.tool) ? s.widthError : l.criterion === 'widthResidual' && ['bissecao', 'falsaPosicao'].includes(s.tool) ? Math.max(s.widthError, s.residual) : l.criterion === 'residual' ? s.residual : l.criterion === 'delta' ? (s.k === 0 ? Infinity : Math.abs(x - old)) : Math.abs(x - l.target);
     if (!finite(x) || !finite(s.fx)) { s.error = Infinity; flags.push('naoFinito'); }
     // A missão com várias raízes não aceita uma raiz diferente da solicitada.
     if (l.fog && s.error <= l.tau && Math.abs(x - l.target) > .01) this.fail('Você encontrou outra ressonância. A missão pede a menor raiz positiva.');

@@ -2,7 +2,7 @@
 import * as THREE from 'three';
 import { G } from '../game.js';
 import { CONFIG } from '../config.js';
-import { REGIONS } from '../data/settlements.js';
+import { REGIONS, NIVEIS, DUVIDAS } from '../data/settlements.js';
 import { terrainHeight, groundColor, regionAt, WATER_Y } from '../world/terrain.js';
 import { roadCurves } from '../world/roads.js';
 
@@ -114,6 +114,12 @@ export class Minimap {
       g.strokeStyle = '#3a2a1a'; g.lineWidth = 2;
       g.beginPath(); g.arc(X, Y, 6, 0, Math.PI * 2); g.fill(); g.stroke();
       if (S.complete) { g.fillStyle = '#fff'; g.font = 'bold 10px system-ui'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText('✓', X, Y + 0.5); }
+      // prédios: mesma cor e forma das placas (cheio = vencido)
+      for (const [lvl, B] of Object.entries(S.buildings)) {
+        if (!B.door) continue;
+        const [bx, by] = toScreen(B.x, B.z);
+        formaNivel(g, lvl, bx, by, 4.5, lvl !== 'Q' && G.progress.won(`${S.def.id}-${lvl}`));
+      }
     }
     // Raízes Fugitivas próximas (< 15): pontos verdes piscando
     if (Math.floor(t * 3) % 2 === 0) {
@@ -146,4 +152,20 @@ export class Minimap {
     g.beginPath(); g.moveTo(9, 0); g.lineTo(-6, -6); g.lineTo(-3, 0); g.lineTo(-6, 6); g.closePath(); g.fill(); g.stroke();
     g.restore();
   }
+}
+
+// ● fácil (verde) · ■ médio (azul) · ▲ difícil (vermelho) · ? Casa de Dúvidas (amarelo)
+export function formaNivel(g, lvl, x, y, r, won) {
+  const cor = lvl === 'Q' ? DUVIDAS.parede : NIVEIS[lvl]?.cor;
+  if (!cor) return;
+  g.save();
+  g.lineWidth = 2; g.strokeStyle = lvl === 'Q' ? '#7a5a00' : cor; g.fillStyle = won || lvl === 'Q' ? cor : '#ffffff';
+  g.beginPath();
+  if (lvl === 'F') g.arc(x, y, r, 0, Math.PI * 2);
+  else if (lvl === 'M') g.rect(x - r * 0.9, y - r * 0.9, r * 1.8, r * 1.8);
+  else if (lvl === 'D') { g.moveTo(x, y - r * 1.1); g.lineTo(x + r, y + r * 0.8); g.lineTo(x - r, y + r * 0.8); g.closePath(); }
+  else g.arc(x, y, r, 0, Math.PI * 2);
+  g.fill(); g.stroke();
+  if (lvl === 'Q') { g.fillStyle = '#3a2a1a'; g.font = `bold ${Math.round(r * 1.8)}px system-ui`; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText('?', x, y + 0.5); }
+  g.restore();
 }

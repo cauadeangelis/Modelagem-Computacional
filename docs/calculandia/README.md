@@ -49,9 +49,12 @@ Detalhes, critérios e ajustes de balanceamento: [IMPLEMENTACAO_REGRAS.md](IMPLE
 - Ilha de 240×240 com 6 regiões + Usina, rios, pontes, praias, vegetação instanciada e Névoa do Erro nos portões.
 - 28 assentamentos (21 cidades/acampamentos, 5 arenas de chefão, Usina), cada um com marco animado, 3 prédios-fase, placa, fogueira, sino e moradores.
 - Tela de criação: herói masculino ou feminino, nome digitado pelo jogador e pet (Raizinha ou as gatas Lina e Nina), com prévias 3D (`src/ui/creator.js`). As falas trocam `{nome}`, `{o}`, `{patrão}` e `{pet}` conforme a escolha (`src/data/dialogs.js`).
+- Mestres históricos (`src/data/historicos.js`, `src/systems/mestres.js`): recepção na Base e um mestre por região, com missão, etiqueta de nome e Menu → Mestres.
+- Cores e símbolos de dificuldade em `NIVEIS` (`src/data/settlements.js`); Casas de Dúvidas em cinco cidades (`duvidas: true`), com conteúdo em `src/data/conhecimento.js`.
+- Inventário (`src/ui/inventario.js`, tecla I) com ferramentas, cartas e relíquias; ícones em `src/ui/icones.js`. Contextos práticos das missões em `src/data/contextos.js`.
 - Herói com todas as animações da seção 6.3, pet que segue o herói (`src/entities/companion.js` e `src/entities/gatas.js`), 22 bichos guias com 3 níveis de dica.
 - 21 métodos numéricos jogáveis em 3 dificuldades + 5 chefões + final (`src/fases/`).
 - 40 Raízes Fugitivas (6 tipos), Raizdex com cosméticos, baús, árvores, flores, pássaros, borboletas, peixes, nuvens, lama e interações por região.
-- Cinemática de abertura (pule segurando Espaço), tutorial guiado, dicas de controle nas primeiras interações (uma por vez, somem quando o jogador faz o que pedem; Menu → Controles mostra tudo), mapa com viagem rápida, minimapa, salvamento em `localStorage`.
+- Cinemática de abertura (pule segurando Espaço), tutorial guiado, tutorial de comandos passo a passo na primeira vez no mundo (um comando por vez, só avança quando o jogador faz; dá para pular; Menu → Controles mostra tudo e refaz o tutorial), mapa com viagem rápida, minimapa, salvamento em `localStorage`.
 
 Decisões e pendências: veja [DECISOES.md](DECISOES.md).

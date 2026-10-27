@@ -71,7 +71,7 @@ export class HUD {
     this.preview.innerHTML = `<div class="pv-title">${info.title}</div>
       <div class="pv-diff diff-${info.nivel}">${info.diff}</div>
       <div class="pv-row"><span title="Estrelas atuais">${st}</span><span title="Bateria disponível">🔋 ${info.battery}</span></div>
-      ${info.locked ? `<div class="pv-diff">🔒 ${info.locked}</div>` : ''}`;
+      ${info.won ? '<div class="pv-diff pv-won">✔ Fase concluída (pode repetir)</div>' : ''}${info.locked ? `<div class="pv-diff">🔒 ${info.locked}</div>` : ''}`;
     this.preview.classList.remove('hidden');
   }
 
@@ -119,8 +119,9 @@ export function phasePreviewInfo(S, nivel) {
   const info = {
     nivel: boss ? 'D' : nivel,
     title: boss ? S.def.metodoNome : `${NIVEIS[nivel].predio} — ${S.def.metodoNome}`,
-    diff: boss ? 'Chefão' : `${NIVEIS[nivel].nome} · ${NIVEIS[nivel].dificuldade}`,
+    diff: boss ? '☠ Chefão' : `${NIVEIS[nivel].simbolo} ${NIVEIS[nivel].dificuldade} · ${NIVEIS[nivel].nome}`,
     stars: p.starsOf(key),
+    won: p.won(key),
     battery: G.fases?.batteryFor(S.def.metodo, boss ? 'B' : nivel) ?? (boss ? B.boss : B[nivel]),
   };
   if (boss && !p.canFightBoss(S.def)) info.locked = S.def.tipo === 'final' ? 'Vença os 5 chefões' : `Faltam ${p.starsMissing(S.def)} estrelas`;

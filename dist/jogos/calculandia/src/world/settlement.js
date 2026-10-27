@@ -2,7 +2,7 @@
 import * as THREE from 'three';
 import { G } from '../game.js';
 import { CONFIG } from '../config.js';
-import { REGIONS, PATHS, NIVEIS, SETTLEMENTS } from '../data/settlements.js';
+import { REGIONS, PATHS, NIVEIS, DUVIDAS, SETTLEMENTS } from '../data/settlements.js';
 import { distToRoad } from './roads.js';
 import { PLACAS, PLACAS_EXTRA, fala } from '../data/dialogs.js';
 import { terrainHeight, settlementBaseH } from './terrain.js';
@@ -37,6 +37,25 @@ function bestAngle(cands, occ) {
   }
   return best;
 }
+
+// Placa sobre a porta: dificuldade em texto e símbolo (e ✔ quando a fase foi vencida)
+const placaMats = new Map();
+export function placaMat(level, won = false) {
+  const k = level + won;
+  if (placaMats.has(k)) return placaMats.get(k);
+  const info = level === 'Q' ? { cor: DUVIDAS.cor, txt: '? DÚVIDAS' } : { cor: NIVEIS[level].cor, txt: `${NIVEIS[level].simbolo} ${NIVEIS[level].dificuldade.toUpperCase()}${won ? ' ✔' : ''}` };
+  const c = document.createElement('canvas'); c.width = 256; c.height = 72;
+  const g = c.getContext('2d');
+  g.fillStyle = '#3a2a1a'; g.fillRect(0, 0, 256, 72);
+  g.fillStyle = info.cor; g.fillRect(5, 5, 246, 62);
+  g.fillStyle = '#ffffff'; g.font = '700 34px Fredoka, system-ui, sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle';
+  g.fillText(info.txt, 128, 38);
+  const tex = new THREE.CanvasTexture(c); tex.colorSpace = THREE.SRGBColorSpace;
+  const m = new THREE.MeshBasicMaterial({ map: tex });
+  placaMats.set(k, m);
+  return m;
+}
+const G_PLACA = new THREE.PlaneGeometry(1.5, 0.42);
 
 function phaseBuilding(level, wallColor, roofColor) {
   const floors = { F: 1, M: 2, D: 3 }[level];
@@ -81,7 +100,32 @@ function phaseBuilding(level, wallColor, roofColor) {
     dyn.add(light);
   }
   flag.position.y = H + 1.55;
-  return { st, dyn, d, w, H, flag, flagMat, flagLow: H + 1.55, flagHigh: poleTop + 0.65, marker, winMat, light, chimney: level === 'M' ? V(w * 0.25, H + 1.7, -d * 0.2) : null };
+  const plaque = new THREE.Mesh(G_PLACA, placaMat(level));
+  plaque.position.set(0, 1.74, d / 2 + 0.08);
+  dyn.add(plaque);
+  return { st, dyn, d, w, H, flag, flagMat, flagLow: H + 1.55, flagHigh: poleTop + 0.65, marker, winMat, light, plaque, chimney: level === 'M' ? V(w * 0.25, H + 1.7, -d * 0.2) : null };
+}
+
+// Casa de Dúvidas: térrea, amarela, com um grande "?" girando no alto
+function duvidasBuilding() {
+  const w = 3.6, d = 3.0, H = 2.0;
+  const st = new THREE.Group(), dyn = new THREE.Group();
+  st.add(box(w, H, d, DUVIDAS.parede, 0, H / 2, 0));
+  st.add(box(w + 0.2, 0.2, d + 0.2, '#8b5a2b', 0, H, 0));
+  const r = cone(w * 0.78, 1.3, DUVIDAS.telhado, 0, H + 0.65, 0, 4); r.rotation.y = Math.PI / 4; st.add(r);
+  st.add(box(1.0, 1.4, 0.1, '#6b4423', 0, 0.7, d / 2 + 0.04));
+  for (const x of [-1.15, 1.15]) st.add(box(0.6, 0.55, 0.06, '#fff3c4', x, 1.05, d / 2 + 0.03));
+  const plaque = new THREE.Mesh(G_PLACA, placaMat('Q'));
+  plaque.position.set(0, 1.74, d / 2 + 0.08);
+  dyn.add(plaque);
+  const marker = new THREE.Group();
+  const mm = mat('#f2c94c', { emissive: '#7a5a00' });
+  const arc = new THREE.Mesh(new THREE.TorusGeometry(0.22, 0.07, 6, 12, Math.PI * 1.5), mm); arc.position.y = 0.42; arc.rotation.z = -Math.PI / 2; marker.add(arc);
+  const stem = new THREE.Mesh(G_BOX(0.12, 0.2, 0.12), mm); stem.position.y = 0.14; marker.add(stem);
+  const dot = new THREE.Mesh(G_SPH(0.08, 6, 5), mm); dot.position.y = -0.08; marker.add(dot);
+  marker.position.set(0, H + 1.9, 0);
+  dyn.add(marker);
+  return { st, dyn, d, w, H, marker, flag: null, winMat: null, plaque };
 }
 
 function campfire(st, dyn, x, y, z) {
@@ -275,7 +319,7 @@ export function buildSettlement(def, ctx) {
       const a = theta0 + (k * Math.PI * 2) / 3;
       const [lx, lz] = at(a, radius);
       const y = H(lx, lz);
-      const b = phaseBuilding(lvl, lvl === 'F' ? accent : lvl === 'M' ? '#efe2c6' : '#b9b2a6', lvl === 'F' ? '#8b5a2b' : roof);
+      const b = phaseBuilding(lvl, NIVEIS[lvl].parede, NIVEIS[lvl].telhado);
       const rotY = Math.atan2(-lx, -lz);
       for (const g of [b.st, b.dyn]) { g.position.set(lx, y, lz); g.rotation.y = rotY; g.scale.setScalar(scale); }
       st.add(b.st); dyn.add(b.dyn);
@@ -289,6 +333,35 @@ export function buildSettlement(def, ctx) {
       // atrás do prédio: esconderijo para baú/raiz
       S.hiddenSpots.push({ x: def.x + lx * 1.38, z: def.z + lz * 1.38 });
     });
+  }
+  // Casa de Dúvidas: lugar livre (longe de estradas, prédios, marco e cercado), com a porta virada para a praça
+  function addDuvidas(used, scale) {
+    const busy = [[def.x, def.z, S.plazaR + 1.2]];
+    for (const B of Object.values(S.buildings)) busy.push([B.x, B.z, 3.2]);
+    if (S.landmark) busy.push([S.landmark.x, S.landmark.z, 6.0]);
+    if (S.pen) busy.push([S.pen.x, S.pen.z, 4.2]);
+    for (const o of SETTLEMENTS) if (o !== def) busy.push([o.x, o.z, o.tipo === 'cidade' ? 13 : 10]);
+    const radii = isCity ? [13.2, 14.6, 12.4, 16] : [10.6, 12, 9.6, 13.4];
+    for (const rad of radii) for (let k = 0; k < 48; k++) {
+      const a = inA + Math.PI + (k % 2 ? 1 : -1) * Math.ceil(k / 2) * (Math.PI / 24);
+      if (Math.min(...used.map((o) => angDist(a, o))) < 0.42) continue;
+      const [hx, hz] = at(a, rad), wx = def.x + hx, wz = def.z + hz;
+      if (busy.some(([bx, bz, br]) => (bx - wx) ** 2 + (bz - wz) ** 2 < (br + 2.4) ** 2)) continue;
+      if (distToRoad(wx, wz, 8) < 3.0) continue;
+      const dir = V(-hx, 0, -hz).normalize();
+      const doorL = [hx + dir.x * (1.5 * scale + 0.7), hz + dir.z * (1.5 * scale + 0.7)];
+      const pts = [[hx, hz], [hx + 1.8, hz], [hx - 1.8, hz], [hx, hz + 1.8], [hx, hz - 1.8], doorL];
+      if (pts.some(([px, pz]) => H(px, pz) < 0.25)) continue;
+      const b = duvidasBuilding(), y = H(hx, hz), rotY = Math.atan2(-hx, -hz);
+      for (const g of [b.st, b.dyn]) { g.position.set(hx, y, hz); g.rotation.y = rotY; g.scale.setScalar(scale); }
+      st.add(b.st); dyn.add(b.dyn);
+      collision.addCircle(wx, wz, 2.1 * scale);
+      const door = { x: def.x + doorL[0], z: def.z + doorL[1] };
+      S.buildings.Q = { ...b, level: 'Q', x: wx, z: wz, y, door, rise: 0, riseTarget: 0, scale, rotY };
+      interaction.add({ x: door.x, z: door.z, r: CONFIG.triggers.door, prio: 3, label: 'Entrar: Casa de Dúvidas (ajuda, sem custo)', action: () => G.events.emit('duvidasDoor', S) });
+      used.push(a);
+      return;
+    }
   }
   function addRaizCidade(lx, lz) {
     const m = makeRaizinhaModel({ corpo: accent, anel: roof, folha: '#9ad37a' });
@@ -331,6 +404,7 @@ export function buildSettlement(def, ctx) {
         addPen(px, pz);
         used.push(side);
       }
+      if (def.duvidas) addDuvidas(used, isCity ? 1 : 0.9);
     }
     addBell(...at(inA - 0.75, R + 1.3));
     addLamps(isCity ? 10 : 8.2);

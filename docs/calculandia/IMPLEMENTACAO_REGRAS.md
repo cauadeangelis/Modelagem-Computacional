@@ -38,6 +38,9 @@ A suíte contém 79 testes, incluindo solução das 63 combinações de missão 
 10. **RPG:** níveis/perks, dano por alerta, duração da sobrecarga e baterias de chefes sem valor explícito no PDF receberam parâmetros concretos no código. As relíquias necessárias são oferecidas como ferramentas da missão; vencer chefes ou estudar derrotas registra os conceitos no inventário permanente.
 11. **Final:** o documento define a dependência entre etapas, sem fórmulas específicas. A média da solução de H₄ define T*=1+média(x); a função é T²−T*²; a temperatura encontrada define λ=20+10T e y(0)=T na EDO de resfriamento.
 
+12. **Critério |xₖ − xₖ₋₁|:** o primeiro passo não tem iterado anterior; o erro fica indefinido até o segundo passo (antes, o ponto médio igual ao chute inicial dava erro zero).
+13. **Dicas pagas:** o nível de dica comprado é guardado por fase em `ajuda` no save e não é cobrado de novo. A penalidade da dica 3 vale para a tentativa em que ela é exibida.
+
 ## Organização
 
 - `src/engine/numeric.js`: operações matemáticas puras.

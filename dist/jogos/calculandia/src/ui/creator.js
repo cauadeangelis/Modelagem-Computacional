@@ -2,7 +2,7 @@
 // As prévias usam um renderizador próprio e pequeno, copiado para o canvas 2D de cada cartão;
 // sem WebGL extra, os cartões mostram os retratos 2D.
 import * as THREE from 'three';
-import { G } from '../game.js';
+import { G, uiEl } from '../game.js';
 import { CONFIG } from '../config.js';
 import { makeHumanoid, resetPose, swingPigtails } from '../entities/rig.js';
 import { animIdle, animAction, ACTIONS } from '../entities/animations.js';
@@ -100,7 +100,7 @@ const cartao = (campo, o) => `<button type="button" class="cr-card" role="radio"
 
 // Abre a tela e devolve { nome, genero, pet } quando o jogador confirmar.
 export function showCreator({ nome = '', genero = 'm', pet = 'raizinha' } = {}) {
-  const el = document.getElementById('creator');
+  const el = uiEl('creator', 'overlay hidden');
   const st = { nome: limparNome(nome), genero, pet };
   el.innerHTML = `<div class="sheet creator" role="dialog" aria-modal="true" aria-labelledby="cr-title">
     <ol class="cr-steps"><li id="cr-s1" class="on">1. Personagem</li><li id="cr-s2">2. Pet</li></ol>

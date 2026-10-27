@@ -25,3 +25,15 @@ export const G = {
 export function lock() { G.locks++; }
 export function unlock() { G.locks = Math.max(0, G.locks - 1); }
 export const isLocked = () => G.locks > 0 || G.mode !== 'play';
+
+// Elemento da interface pelo id; se o index.html em cache for de uma versão anterior, cria o que faltar
+export function uiEl(id, className = '', parentId = 'ui') {
+  let el = document.getElementById(id);
+  if (!el) {
+    el = document.createElement('div');
+    el.id = id;
+    if (className) el.className = className;
+    (document.getElementById(parentId) || document.body).appendChild(el);
+  }
+  return el;
+}

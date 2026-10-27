@@ -1,12 +1,12 @@
 // Bootstrap, laço principal e reações do mundo ao progresso.
 // Ordem por quadro: input → herói → colisão → NPCs e bichos → interação → câmera → partículas → UI → render.
 import * as THREE from 'three';
-import { G, lock, unlock } from './game.js';
+import { G, lock, unlock, uiEl } from './game.js';
 import { CONFIG } from './config.js';
 import { SETTLEMENTS, REGIONS, BOSS_OF_REGION, NIVEIS } from './data/settlements.js';
 import { ANIMALS } from './data/animals.js';
 import { HINTS } from './data/hints.js';
-import { fala, LOADING, PET_TUTORIAL, JOGADOR, definirJogador, tx } from './data/dialogs.js';
+import { fala, LOADING, PET_TUTORIAL, COMANDOS_CONVERSA, JOGADOR, definirJogador, tx } from './data/dialogs.js';
 import { buildTerrain, regionBoost, terrainHeight, regionAt } from './world/terrain.js';
 import { buildWater } from './world/water.js';
 import { buildSky } from './world/sky.js';
@@ -33,12 +33,16 @@ import { Audio } from './systems/audio.js';
 import { Progress } from './systems/progress.js';
 import { loadSave, freshSave, clearSave } from './systems/save.js';
 import { playCinematic, landingPoint } from './systems/cinematic.js';
-import { Tutorial, Dicas } from './systems/tutorial.js';
+import { Tutorial, TutorialComandos } from './systems/tutorial.js';
 import { HUD, phasePreviewInfo } from './ui/hud.js';
 import { Bubbles, Dialog } from './ui/dialog.js';
 import { Minimap } from './ui/minimap.js';
 import { MapScreen } from './ui/map-screen.js';
 import { Menu, showTitle } from './ui/menu.js';
+import { criarMestres } from './systems/mestres.js';
+import { abrirDuvidas } from './ui/duvidas.js';
+import { abrirInventario } from './ui/inventario.js';
+import { placaMat } from './world/settlement.js';
 import { showCreator } from './ui/creator.js';
 import { irisTo, fade } from './ui/transitions.js';
 import { launchLevel, batteryFor } from './bridge/level-launcher.js';
@@ -127,7 +131,8 @@ async function boot() {
   G.ambient = new Ambient(scene, G.props);
   G.extras = new Extras(scene);
   G.tutorial = new Tutorial(scene);
-  G.dicas = new Dicas();
+  G.mestres = criarMestres(scene);
+  G.comandos = new TutorialComandos();
   await setLoad(0.92, 'Desenhando o mapa...');
   G.ui.minimap = new Minimap();
   G.ui.map = new MapScreen();
@@ -275,6 +280,12 @@ async function talkAnimal(a) {
 async function talkPet() {
   const p = G.progress, pet = G.pet;
   const quem = { name: pet.nome, portrait: pet.portrait, voice: pet.voice };
+  // tutorial de comandos: uma conversa curta, com resposta, para treinar E e 1/2/3
+  if (['interagir', 'responder'].includes(G.comandos.passo?.id)) {
+    const v = await G.ui.dialog.show({ ...quem, lines: COMANDOS_CONVERSA, options: [{ label: 'Tudo certo!', value: 'ok' }, { label: 'Pode repetir?', value: 'repetir' }] });
+    if (v === 'repetir') await G.ui.dialog.show({ ...quem, lines: COMANDOS_CONVERSA });
+    return;
+  }
   if (p.d.tutorial === 3) {
     await G.ui.dialog.show({ ...quem, lines: PET_TUTORIAL[pet.kind].conversa });
     G.tutorial.advance(4);
@@ -342,6 +353,7 @@ function applySettlement(S, animate = false, justNivel = null) {
       if (won) {
         wins++;
         B.flagMat.color.set('#f2c14e'); B.flagMat.emissive.set('#5a4000');
+        if (B.plaque) B.plaque.material = placaMat(nv, true);
         B.winMat.emissive.set('#ffcf70');
         B.riseTarget = 1;
         if (!(animate && nv === justNivel)) B.rise = 1;
@@ -631,6 +643,11 @@ function setupEvents() {
     await fade(false, 0.5);
     unlock();
   });
+  // Casa de Dúvidas e inventário no mundo: só consulta, nada é gasto
+  const ajuda = uiEl('ajuda', 'overlay hidden');
+  const abrirAjuda = (fn) => { if (G.mode !== 'play' || ui.dialog.open || ui.menu.open || ui.map.open || !ajuda.classList.contains('hidden')) return; lock(); fn(); };
+  E.on('duvidasDoor', (S) => abrirAjuda(() => abrirDuvidas(ajuda, S.def.regiao, { onClose: unlock })));
+  E.on('openInventory', () => abrirAjuda(() => abrirInventario(ajuda, { onClose: unlock })));
   E.on('openMap', () => { if (G.mode === 'play' && !ui.dialog.open && !ui.menu.open) ui.map.toggle(); });
   E.on('openMenu', () => { if (G.mode === 'play' && !ui.dialog.open) { ui.map.close(); ui.menu.toggle(); } });
   E.on('mapOpened', () => { if (G.progress.d.tutorial === 5) { G.tutorial.advance(6); refreshHudVisibility(); } });
@@ -684,6 +701,7 @@ function frame(now, manual = false) {
     if (!G.locks) {
       if (inp.hit('KeyQ')) G.camRig.rotate(-1);
       if (inp.hit('KeyR')) G.camRig.rotate(1);
+      if (inp.hit('KeyI')) G.events.emit('openInventory');
       if (inp.hit('KeyH')) { G.hero.play('think', { dur: 1.2 }); G.audio.sfx('dica'); const o = G.objective; G.pet.say(o ? o.text.replace(/<[^>]+>/g, '') : G.pet.fala('idle'), 4.5); }
     }
   }
@@ -726,6 +744,7 @@ function frame(now, manual = false) {
       a.introduced = true; G.progress.d.intro[a.id] = true;
     }
   }
+  for (const m of G.mestres) m.update(dt, t);
   for (const r of G.roots) if (r.state !== 'done' && Math.abs(r.home.x - G.hero.pos.x) < 60 && Math.abs(r.home.z - G.hero.pos.z) < 60) r.update(dt, t);
 
   // interação
@@ -746,7 +765,7 @@ function frame(now, manual = false) {
   G.ambient.update(t, dt);
   G.extras.update(t, dt);
   G.tutorial.update(dt, t);
-  G.dicas.update(dt);
+  G.comandos.update(dt);
 
   // partículas → UI
   G.particles.update(dt);
@@ -755,8 +774,9 @@ function frame(now, manual = false) {
   objT -= dt;
   if (objT <= 0 && G.mode === 'play') {
     objT = 0.5;
-    G.objective = G.tutorial.objective() || G.progress.nextObjective();
-    ui.hud.setObjective(G.objective?.text);
+    G.objective = G.comandos.objective() || G.tutorial.objective() || G.progress.nextObjective();
+    // durante o tutorial de comandos, o cartão dele faz o papel do objetivo
+    ui.hud.setObjective(G.comandos.ativo ? null : G.objective?.text);
   }
   mmT -= dt;
   if (mmT <= 0 && G.mode === 'play' && G.progress.d.tutorial >= 5) { mmT = 1 / 20; ui.minimap.draw(t); }

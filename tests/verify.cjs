@@ -1,13 +1,17 @@
 /* Execute com node tests/verify.cjs. Testes numéricos, adversariais e de integração sem dependências. */
 const fs=require('fs'),vm=require('vm'),path=require('path');
 const dir=path.join(__dirname,'../dist'),read=f=>fs.readFileSync(path.join(dir,f),'utf8');
+// Arquivos do site na ordem do index.html: base (motor, conteúdo, dados) e as partes da interface (js/site e js/paginas).
+const BASE=['js/motor/motor-numerico.js','js/conteudo/conteudo.js','js/progresso/progresso.js','js/terminal/grafico-de-convergencia.js','dados/treino-exercicios.js','js/treino/treino.js','js/personagens/raiz-e-pivo.js'];
+const SITE=["js/site/estado-e-utilitarios.js", "js/site/jornada-e-backup.js", "js/site/ilustracoes.js", "js/site/moldura.js", "js/site/demonstracoes.js", "js/site/visuais-das-secoes.js", "js/paginas/inicio.js", "js/paginas/trilhas.js", "js/paginas/aulas-em-video.js", "js/paginas/licao.js", "js/paginas/missoes.js", "js/paginas/jogos.js", "js/paginas/revisao-e-progresso.js", "js/site/graficos.js", "js/paginas/terminal.js", "js/site/eventos-e-inicializacao.js"];
+const loadSite=c=>{c.__NUMERA_TESTE__=true;for(const f of SITE)vm.runInContext(read(f),c,{filename:f});};
 let count=0;const groups={};let group='Parser';
 function ok(cond,msg){if(!cond)throw Error(`[${group}] ${msg}`);count++;groups[group]=(groups[group]||0)+1;}
 function near(a,b,tol=1e-7){return Math.abs(a-b)<=tol;}
 const safeHtml=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function fail(fn,msg){let error;try{fn();}catch(e){error=e;}ok(!!error,msg);}
 const ctx={window:null,console,Date,Math,Number,String,JSON,Array,Boolean,Object,Error,RegExp,parseFloat,isFinite,Set,Map,Intl,URL,Blob};ctx.window=ctx;vm.createContext(ctx);
-for(const f of ['math-engine.js','content.js','progress.js','convergencia.js','treino-data.js','treino.js','mascotes.js'])vm.runInContext(read(f),ctx,{filename:f});
+for(const f of BASE)vm.runInContext(read(f),ctx,{filename:f});
 const M=ctx.NumeraMath,C=ctx.NumeraContent,P=ctx.NumeraProgress;
 for(const [expr,x,v] of [['-x^2',3,-9],['2^3^2',0,512],['2x+3(x-1)',4,17],['sen(pi/2)',0,1],['2,5x=5',2,0],['x²-4',2,0],['log(100)+ln(e)',0,3],['exp(0)+sqrt(9)',0,4]])ok(near(M.parseFunction(expr)(x),v),expr);
 for(const expr of ['alert(1)','constructor(1)','window.location','x;1','x+','x=2=3','sin x','process.exit(0)','x[0]'])fail(()=>M.parseFunction(expr)(1),'Rejeitar '+expr);
@@ -60,7 +64,7 @@ const mem=new Map([['numera-academy-v3',JSON.stringify({xp:40,done:['bisection-0
 group='Integração da interface';
 const elements={'#app':{innerHTML:''},'#main':{focus(){}},'#answer':{value:''}},handlers={};let title='';
 Object.assign(ctx,{document:{get title(){return title},set title(v){title=v},querySelector:q=>elements[q]||null,getElementById:id=>elements['#'+id]||null,addEventListener:(name,fn)=>handlers[name]=fn,createElement:()=>({click(){}})},localStorage:{getItem:()=>null,setItem(){}},history:{replaceState(){}},location:{hash:''},setTimeout(){},scrollTo(){},addEventListener(){},confirm:()=>true});
-const code=read('app.js').replace(/\}\)\(\);\s*$/,'window.__test={s,TR,getP:()=>p,render,navigate,solve,answerQuestion,simulationResult,openCourse,graph,parseAnswer,question,guideTasks,checkGuide,backupEnvelope,readBackup,persist,introScreens,labResult,verification,rootStatus,supHtml,supText,worldOpen,calcSummary,qdSummary,mascotOn,startNode,setP:v=>{p=v;},camarim};})();');vm.runInContext(code,ctx,{filename:'app.js'});
+loadSite(ctx);
 const t=ctx.__test;ok(elements['#app'].innerHTML.includes('resolvendo de verdade'),'Início');const out=path.join(__dirname,'rendered');fs.mkdirSync(out,{recursive:true});
 function snapshot(name){fs.writeFileSync(path.join(out,name+'.html'),elements['#app'].innerHTML);ok(!/undefined|NaN/.test(elements['#app'].innerHTML),'Render '+name);}
 for(const page of ['home','academy','cases','jogos','lab','progress','review']){t.navigate(page);snapshot(page);}
@@ -99,8 +103,8 @@ t.s.source='x^3 - x - 2 = 0';t.solve();t.s.resultTab='verify';t.render();ok(elem
 t.s.help=true;t.render();ok(elements['#app'].innerHTML.includes('até 400 candidatas'),'Ajuda descreve a nova busca');
 // Teclado científico: escrita bonita <-> sintaxe do motor.
 const cx={window:null,console,Math,Number,String,JSON,Array,Object,Error,RegExp,Set,Map,document:{getElementById:()=>null,querySelector:()=>null,querySelectorAll:()=>[],addEventListener(){}},localStorage:{getItem:()=>null,setItem(){}},matchMedia:()=>({matches:false}),MutationObserver:class{observe(){}},Event:class{}};cx.window=cx;vm.createContext(cx);
-vm.runInContext(read('math-engine.js'),cx,{filename:'math-engine.js'});vm.runInContext(read('calculator.js'),cx,{filename:'calculator.js'});
-const K=cx.NumeraCalc,MM=cx.NumeraMath;ok(!!K&&typeof K.toEngine==='function','calculator.js carregado');
+vm.runInContext(read('js/motor/motor-numerico.js'),cx,{filename:'motor-numerico.js'});vm.runInContext(read('js/terminal/teclado-cientifico.js'),cx,{filename:'teclado-cientifico.js'});
+const K=cx.NumeraCalc,MM=cx.NumeraMath;ok(!!K&&typeof K.toEngine==='function','teclado-cientifico.js carregado');
 for(const [pretty,engine] of [['x²⁰ - 3x¹⁰ + 2 = 0','x^(20) - 3x^(10) + 2 = 0'],['e⁻ˣ = x','e^(-x) = x'],['x¹ᐟ³ = 3','x^(1/3) = 3'],['2ˣ⁺¹ = 32','2^(x+1) = 32'],['x²˙⁵ = 3','x^(2.5) = 3'],['√(x + 8) = x - 1','sqrt(x + 8) = x - 1'],['x·π = 1,5','x* pi  = 1,5'],['asin(x) = e÷4','asin(x) = e/4'],['x² − 5x + 6 = 0','x^(2) - 5x + 6 = 0']])ok(K.toEngine(pretty)===engine,'Converter '+pretty);
 const same=(a,b)=>{const f=MM.parseFunction(a);return [0.3,1.7,2.9,-1.2].every(x=>{const u=f(x),v=MM.parseFunction(b)(x);return (Number.isNaN(u)&&Number.isNaN(v))||Math.abs(u-v)<=1e-12*(1+Math.abs(u));});};
 for(const ascii of ['x^3 - x - 2 = 0','x^20 - 3x^10 + 2 = 0','e^(-x) = x','x^(1/3) = 3','2^x = 151','x exp(x) = 6','sqrt(x + 8) = x - 1','x^2.5 = 3','e^(sin(x)) = 2','2^x^2 = 16','x*pi = 3','(x - 2.8)^2 = 0','x^-1 + x = 3','cos(4x) = x^2','(x^2 - 4)/(x - 1) = 2'])ok(same(K.toPretty(ascii),ascii),'Ida e volta: '+ascii+' → '+K.toPretty(ascii));
@@ -230,10 +234,10 @@ group='Correções da auditoria (v10)';
  ok(elements['#app'].innerHTML.includes('único arquivo com tudo'),'Texto do backup diz que inclui tudo');}
 // Gravação recusada pelo navegador: nada de mensagem de sucesso.
 {const cx2={window:null,console,Date,Math,Number,String,JSON,Array,Boolean,Object,Error,RegExp,parseFloat,isFinite,Set,Map,Intl,URL,Blob};cx2.window=cx2;vm.createContext(cx2);
- for(const f of ['math-engine.js','content.js','progress.js','convergencia.js','treino-data.js','treino.js','mascotes.js'])vm.runInContext(read(f),cx2,{filename:f});
+ for(const f of BASE)vm.runInContext(read(f),cx2,{filename:f});
  const el2={'#app':{innerHTML:''},'#main':{focus(){}}},h2={};
  Object.assign(cx2,{document:{title:'',querySelector:q=>el2[q]||null,getElementById:id=>el2['#'+id]||null,addEventListener:(n,fn)=>h2[n]=fn,createElement:()=>({click(){}})},localStorage:{getItem:()=>null,setItem(){throw Error('QuotaExceededError');}},history:{replaceState(){}},location:{hash:''},setTimeout(){},scrollTo(){},addEventListener(){}});
- vm.runInContext(code,cx2,{filename:'app.js'});const t2=cx2.__test;
+ loadSite(cx2);const t2=cx2.__test;
  ok(t2.persist()===false&&/não conseguiu salvar/.test(t2.s.warning),'persist() devolve falha e avisa');
  t2.s.pendingRestore=t2.readBackup(t2.backupEnvelope());t2.s.confirm='restore';h2.click({target:{closest:()=>({dataset:{act:'confirm-yes'},disabled:false})}});
  ok(/não deixou gravar/.test(t2.s.warning)&&!/^Backup importado/.test(t2.s.warning),'Importar com armazenamento bloqueado não diz "Backup importado"');
@@ -271,8 +275,8 @@ group='Correções da auditoria (v10)';
 // Fontes locais, CSP e service worker.
 {const html=read('index.html');ok(!/googleapis|gstatic/.test(html),'Nenhuma fonte externa no index.html');ok(/Content-Security-Policy/.test(html)&&/script-src 'self';/.test(html)&&/object-src 'none'/.test(html),'Política de segurança (CSP) sem script embutido');
  ok(!/<script>(?!<\/script>)/.test(html),'Nenhum script embutido na página');ok(/name="referrer" content="strict-origin-when-cross-origin"/.test(html),'Referrer-Policy');
- const fcss=read('fonts.css'),urls=[...fcss.matchAll(/url\((fonts\/[^)]+)\)/g)].map(m=>m[1]);ok(urls.length>=6&&urls.every(u=>fs.existsSync(path.join(dir,u))),'Arquivos de fonte existem ('+new Set(urls).size+')');
- ok(['Figtree','Newsreader','JetBrains Mono'].every(f=>fcss.includes(`font-family: '${f}'`)),'Três famílias empacotadas');ok(fs.readdirSync(path.join(dir,'fonts')).filter(f=>f.startsWith('LICENSE')).length===3,'Licenças das fontes incluídas');
+ const fcss=read('css/fontes.css'),urls=[...fcss.matchAll(/url\(\.\.\/(fontes\/[^)]+)\)/g)].map(m=>m[1]);ok(urls.length>=6&&urls.every(u=>fs.existsSync(path.join(dir,u))),'Arquivos de fonte existem ('+new Set(urls).size+')');
+ ok(['Figtree','Newsreader','JetBrains Mono'].every(f=>fcss.includes(`font-family: '${f}'`)),'Três famílias empacotadas');ok(fs.readdirSync(path.join(dir,'fontes')).filter(f=>f.startsWith('LICENSE')).length===3,'Licenças das fontes incluídas');
  const sw=read('sw.js');ok(sw.includes('Response.error()')&&!/googleapis/.test(sw),'Service worker: erro de verdade sem cache nem rede, sem Google Fonts');
  for(const f of ['e2e','terminal'])ok(JSON.parse(fs.readFileSync(path.join(__dirname,f,'package.json'),'utf8')).devDependencies.playwright==='1.56.1','Playwright 1.56.1 em tests/'+f+' (corrige o alerta do npm audit)');}
 group='Intervalo no Terminal (v10.1)';
@@ -333,7 +337,7 @@ group='Expoentes elevados (v10.1)';
  t.s.help=false;}
 group='Gamificação (v11)';
 // Ponto Fixo escondido (reversível): some das telas, mas o motor, o conteúdo e o progresso ficam.
-// Para trazer de volta, basta C.HIDDEN=[] em content.js: aí este bloco confere que ele voltou a todas as telas.
+// Para trazer de volta, basta C.HIDDEN=[] em js/conteudo/conteudo.js: aí este bloco confere que ele voltou a todas as telas.
 const PF_HIDDEN=C.isHidden('fixedpoint');
 if(!PF_HIDDEN){ok(C.METHODS.some(m=>m.id==='fixedpoint')&&C.JOURNEY.map(w=>w.id).join()==='bisection,falseposition,fixedpoint,newton,secant,gauss,seidel','Ponto Fixo de volta: Mundo 3, entre a Falsa Posição e o Newton');ok(C.CASES.some(c=>c.id==='kepler'),'Ponto Fixo de volta às missões');t.navigate('academy');ok(elements['#app'].innerHTML.includes('data-id="fixedpoint"'),'Ponto Fixo de volta ao mapa');}
 else{ok(C.HIDDEN.includes('fixedpoint')&&!C.METHODS.some(m=>m.id==='fixedpoint')&&C.ALL_METHODS.some(m=>m.id==='fixedpoint')&&C.TASKS.fixedpoint.length===12,'Ponto Fixo escondido das trilhas, guardado no conteúdo');
@@ -445,10 +449,10 @@ group='Quem Divergiu? (v12)';
  for(const [x,v] of L2)ok(v===null?Q.lerNumero(x)===null:near(Q.lerNumero(x),v,1e-12),'Lê o palpite '+JSON.stringify(x));
  ok(Q.fmt(1.625,4)==='1,625'&&Q.fmt(18000,0)==='18.000'&&Q.fmt(2**-52,3)==='2,22·10⁻¹⁶'&&Q.fmt(-0.5,2)==='−0,5','Números em português');
  // página do jogo
- const qh=read('jogos/quem-divergiu/index.html');ok(/script-src 'self'/.test(qh)&&!/<script>/.test(qh)&&qh.includes('../../content.js')&&qh.indexOf('perguntas.js')<qh.indexOf('qd.js'),'Página do jogo: CSP sem script embutido e scripts na ordem');
- const qjs=read('jogos/quem-divergiu/qd.js');ok(qjs.includes("'numera-quem-divergiu-v1'")&&qjs.includes('prefers-reduced-motion')&&qjs.includes('anunciar(')&&qh.includes('aria-live="polite"'),'Guarda no navegador, respeita reduzir movimento e anuncia ao leitor de tela');
+ const qh=read('jogos/quem-divergiu/index.html');ok(/script-src 'self'/.test(qh)&&!/<script>/.test(qh)&&qh.includes('../../js/conteudo/conteudo.js')&&qh.indexOf('perguntas.js')<qh.indexOf('quem-divergiu.js'),'Página do jogo: CSP sem script embutido e scripts na ordem');
+ const qjs=read('jogos/quem-divergiu/quem-divergiu.js');ok(qjs.includes("'numera-quem-divergiu-v1'")&&qjs.includes('prefers-reduced-motion')&&qjs.includes('anunciar(')&&qh.includes('aria-live="polite"'),'Guarda no navegador, respeita reduzir movimento e anuncia ao leitor de tela');
  ok(!/[\w)\]]\^/.test(qjs.replace(/\/\/.*$/gm,'')),'Sem ^ nos textos do jogo');
- {const cores=JSON.parse((/const ROUPA = (\[[^\]]+\])/.exec(qjs)||[,'[]'])[1].replace(/'/g,'"')),css=read('jogos/quem-divergiu/qd.css'),a=Number((/rgba\(0,0,0,(\.\d+)\)\),var\(--c\)/.exec(css)||[,0])[1]);
+ {const cores=JSON.parse((/const ROUPA = (\[[^\]]+\])/.exec(qjs)||[,'[]'])[1].replace(/'/g,'"')),css=read('jogos/quem-divergiu/quem-divergiu.css'),a=Number((/rgba\(0,0,0,(\.\d+)\)\),var\(--c\)/.exec(css)||[,0])[1]);
   const lum=h=>{const c=[1,3,5].map(i=>parseInt(h.slice(i,i+2),16)/255*(1-a)).map(v=>v<=0.03928?v/12.92:((v+0.055)/1.055)**2.4);return 0.2126*c[0]+0.7152*c[1]+0.0722*c[2];};
   ok(cores.length>=12&&a>0&&cores.every(h=>1.05/(lum(h)+0.05)>=4.5),'Pódio: texto branco legível sobre a cor de qualquer aluno (contraste ≥ 4,5:1)');}}
 group='PWA e organização';
@@ -459,10 +463,10 @@ group='PWA e organização';
  ok(/EM_USO = \/\\\/jogos\\\/calculandia\\\//.test(read('sw.js'))&&read('sw.js').includes('guardar(req, res)'),'Calculândia guardada no cache na primeira vez que abre (offline depois)');
  ok(files.every(f=>sw.assets.includes(f)),'Todo arquivo do site está no cache offline: '+files.filter(f=>!sw.assets.includes(f)).join(','));ok(sw.assets.filter(a=>a!=='./').every(a=>files.includes(a)),'Nenhum arquivo fantasma no cache offline');
  ok(read('sw.js').includes(`const VERSION = '${sw.version}'`),'Versão do cache offline em dia (rode tests/pwa/atualizar-sw.cjs)');
- const html=read('index.html');ok(html.includes('rel="manifest"')&&read('sw-register.js').includes("register('sw.js')")&&html.includes('apple-touch-icon'),'index.html liga o manifesto e o service worker');
- const scripts=[...html.matchAll(/<script src="([^"]+)"/g)].map(m=>m[1]);ok(scripts.join()==='math-engine.js,content.js,progress.js,convergencia.js,treino-data.js,treino.js,mascotes.js,app.js,calculator.js,sw-register.js','Ordem dos scripts');
- const css=[...html.matchAll(/<link rel="stylesheet" href="([^"]+\.css)"/g)].map(m=>m[1]);ok(['fonts.css','styles.css','calculator.css','treino.css','convergencia.css','mascotes.css'].every(c=>css.includes(c)),'Folhas de estilo ligadas');
+ const html=read('index.html');ok(html.includes('rel="manifest"')&&read('js/offline/registrar-offline.js').includes("register('sw.js')")&&html.includes('apple-touch-icon'),'index.html liga o manifesto e o service worker');
+ const scripts=[...html.matchAll(/<script src="([^"]+)"/g)].map(m=>m[1]);ok(scripts.join()===[...BASE,...SITE,'js/terminal/teclado-cientifico.js','js/offline/registrar-offline.js'].join(),'Ordem dos scripts');
+ const css=[...html.matchAll(/<link rel="stylesheet" href="([^"]+\.css)"/g)].map(m=>m[1]);ok(['css/fontes.css','css/site.css','css/terminal.css','css/treino.css','css/grafico-de-convergencia.css','css/personagens.css'].every(c=>css.includes(c)),'Folhas de estilo ligadas');
  for(const f of files.filter(f=>f.endsWith('.js')))ok(!/\(\?<[=!]/.test(read(f)),'Sem lookbehind em regex (Safari < 16.4): '+f);}
 // O número de verificações mostrado no site tem de ser o real (inclui esta).
-{const shown=Number((read('app.js').match(/const VERIFY_COUNT=(\d+);/)||[])[1]);ok(shown===count+1,`O site diz ${shown} verificações; o total real é ${count+1}. Atualize VERIFY_COUNT em app.js.`);}
+{const shown=Number((read('js/site/estado-e-utilitarios.js').match(/const VERIFY_COUNT=(\d+);/)||[])[1]);ok(shown===count+1,`O site diz ${shown} verificações; o total real é ${count+1}. Atualize VERIFY_COUNT em js/site/estado-e-utilitarios.js.`);}
 console.log(JSON.stringify({status:'PASS',checks:count,groups},null,2));

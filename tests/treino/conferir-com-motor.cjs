@@ -1,4 +1,4 @@
-// Confere o gabarito dos 140 exercícios do Treino com o motor do site (math-engine.js).
+// Confere o gabarito dos 140 exercícios do Treino com o motor do site (js/motor/motor-numerico.js).
 // O gabarito foi calculado de forma independente (sympy/mpmath, 50 dígitos); aqui o motor refaz cada conta,
 // confere que cada "erro típico" (trap) é mesmo diferente da resposta e que o gráfico de convergência
 // do gabarito mostra o método do exercício chegando à raiz certa.
@@ -6,8 +6,8 @@
 const fs = require('fs'), vm = require('vm'), path = require('path');
 const dist = path.join(__dirname, '../../dist');
 const ctx = { window: {}, Math, Number, console }; vm.createContext(ctx);
-vm.runInContext(fs.readFileSync(path.join(dist, 'math-engine.js'), 'utf8'), ctx);
-vm.runInContext(fs.readFileSync(path.join(dist, 'treino-data.js'), 'utf8'), ctx);
+vm.runInContext(fs.readFileSync(path.join(dist, 'js/motor/motor-numerico.js'), 'utf8'), ctx);
+vm.runInContext(fs.readFileSync(path.join(dist, 'dados/treino-exercicios.js'), 'utf8'), ctx);
 const M = ctx.window.NumeraMath, E = ctx.window.NumeraTreino.exercises;
 const rel = (a, b, t = 1e-7) => Math.abs(a - b) <= t * (1 + Math.abs(b));
 const fails = []; let checks = 0, trapChecks = 0, convChecks = 0;

@@ -1,5 +1,5 @@
 // Roda a busca automática (smartRoot) do motor em cada caso, sem navegador.
-// Uso: node rodar-motor.cjs ../../../dist/math-engine.js polinomios-1000.json resultados-polinomios-v7.json
+// Uso: node rodar-motor.cjs ../../../dist/js/motor/motor-numerico.js polinomios-1000.json resultados-polinomios-v7.json
 const fs = require('fs'), vm = require('vm');
 const [,, engine, casesFile, outFile] = process.argv;
 const ctx = { window: {}, Math, Number, console }; vm.createContext(ctx);

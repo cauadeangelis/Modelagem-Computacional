@@ -1,8 +1,8 @@
-// Escreve TREINO.md a partir de dist/treino-data.js (a documentação nunca fica desatualizada em relação aos dados).
+// Escreve TREINO.md a partir de dist/dados/treino-exercicios.js (a documentação nunca fica desatualizada em relação aos dados).
 // Uso: node tests/treino/gerar-treino-md.cjs
 const fs = require('fs'), path = require('path');
 const root = path.join(__dirname, '../..');
-const w = {}; new Function('window', fs.readFileSync(path.join(root, 'dist/treino-data.js'), 'utf8'))(w);
+const w = {}; new Function('window', fs.readFileSync(path.join(root, 'dist/dados/treino-exercicios.js'), 'utf8'))(w);
 const E = w.NumeraTreino.exercises;
 const NOME = { bisection: 'Bisseção', falseposition: 'Falsa Posição', fixedpoint: 'Ponto Fixo', newton: 'Newton-Raphson', secant: 'Secante', gauss: 'Eliminação de Gauss', seidel: 'Gauss-Seidel' };
 // Expoentes elevados de verdade no Markdown (<sup>), como no site: nada de x^3 no texto.
@@ -36,7 +36,7 @@ const tot = [1, 2, 3].map(l => E.filter(e => e.level === l).length);
 const nTraps = E.reduce((s, e) => s + (e.traps || []).length, 0);
 let md = `# Treino — ${E.length} exercícios de diagnóstico e resolução
 
-> Arquivo gerado por \`tests/treino/gerar-treino-md.cjs\` a partir de \`dist/treino-data.js\`. Não edite à mão.
+> Arquivo gerado por \`tests/treino/gerar-treino-md.cjs\` a partir de \`dist/dados/treino-exercicios.js\`. Não edite à mão.
 
 > **v11:** a pedido da professora, o Ponto Fixo está escondido no site, então o Treino mostra 120 exercícios (renumerados de 1 a 120, sem dois métodos iguais seguidos). Os 20 do Ponto Fixo continuam no arquivo e neste documento, com a numeração original, e voltam ao site quando o método voltar.
 
@@ -58,9 +58,9 @@ A aba **Treino** (entre Jogos e Terminal) tem ${E.length} problemas misturados, 
 
 ## Como os exercícios foram feitos e conferidos
 
-- **Gerador:** \`tests/treino/gerar-treino.py\` escreve \`dist/treino-data.js\` (reproduzível byte a byte).
+- **Gerador:** \`tests/treino/gerar-treino.py\` escreve \`dist/dados/treino-exercicios.js\` (reproduzível byte a byte).
 - **Gabarito independente do site:** sympy (derivadas exatas e frações) e mpmath com 50 dígitos.
-- **Conferência com o motor do site:** \`node tests/treino/conferir-com-motor.cjs\` refaz as ${E.length} contas com o \`math-engine.js\`, confere que nenhum erro típico é aceito como certo e que o gráfico de convergência de cada gabarito mostra o método do exercício chegando à raiz certa.
+- **Conferência com o motor do site:** \`node tests/treino/conferir-com-motor.cjs\` refaz as ${E.length} contas com o \`js/motor/motor-numerico.js\`, confere que nenhum erro típico é aceito como certo e que o gráfico de convergência de cada gabarito mostra o método do exercício chegando à raiz certa.
 - **Pela interface:** \`node tests/verify.cjs\` (grupo “Treino”) resolve os ${E.length} exercícios digitando a resposta com vírgula, faz uma prova completa, testa a revisão, os erros típicos e a migração do progresso.
 - **Ordem:** misturada com semente fixa, **nunca dois métodos iguais seguidos**; os 14 primeiros já trazem os 7 métodos e o primeiro é de nível 1. Sequência dos 30 primeiros: ${E.slice(0, 30).map(e => CURTO[e.method]).join(' ')}.
 

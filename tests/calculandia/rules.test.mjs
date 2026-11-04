@@ -1,8 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { getLevel, METHODS } from '../../dist/jogos/calculandia/src/fases/levels.js';
-import { Session, Battle, score } from '../../dist/jogos/calculandia/src/fases/session.js';
-import { half, floatBits, fromBits, quadrature, factor, solveFactors, norm, mv, spline, fit } from '../../dist/jogos/calculandia/src/engine/numeric.js';
+import { getLevel, METHODS } from '../../dist/jogos/calculandia/codigo/fases/catalogo-de-fases.js';
+import { Session, Battle, score } from '../../dist/jogos/calculandia/codigo/fases/sessao.js';
+import { half, floatBits, fromBits, quadrature, factor, solveFactors, norm, mv, spline, fit } from '../../dist/jogos/calculandia/codigo/motor/numerico.js';
 
 function prepare(g) {
   const { method: m, difficulty: n } = g.level;

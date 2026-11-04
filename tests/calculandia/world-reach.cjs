@@ -12,7 +12,7 @@ const CHROME = process.env.CHROMIUM_EXECUTABLE || (process.platform === 'win32' 
   await page.goto('http://localhost:8080/?debug=1');
   await page.waitForFunction(() => window.G?.mode === 'title', null, { timeout: 120000 });
   const res = await page.evaluate(async () => {
-    const { isWalkable } = await import('/src/world/ground.js');
+    const { isWalkable } = await import('/codigo/mundo/chao.js');
     for (const c of G.collision.dynamic) c.enabled = false; // portões, névoa e prefeitura abertos
     const S = 0.5, N = Math.round(280 / S), H = 140;
     const idx = (i, j) => j * N + i;

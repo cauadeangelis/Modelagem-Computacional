@@ -5,8 +5,60 @@
    v12: o Quem Divergiu? entra no cache inicial (é leve e precisa abrir sem internet na sala). A Calculândia (≈ 1,5 MB, 3D)
    não pesa no primeiro acesso: cada arquivo dela é guardado na primeira vez que o jogo abre e, daí em diante, ele também
    funciona offline. Uma versão nova do site apaga esse cache junto com o resto. */
-const VERSION = 'numera-v12-e39cc070c7';
-const ASSETS = ['./', 'index.html', 'fonts.css', 'styles.css', 'calculator.css', 'treino.css', 'convergencia.css', 'mascotes.css', 'math-engine.js', 'content.js', 'progress.js', 'convergencia.js', 'treino-data.js', 'treino.js', 'mascotes.js', 'app.js', 'calculator.js', 'sw-register.js', 'favicon.svg', 'manifest.webmanifest', 'icon-192.png', 'icon-512.png', 'maskable-512.png', 'apple-touch-icon.png', 'fonts/figtree-latin-wght-normal.woff2', 'fonts/figtree-latin-ext-wght-normal.woff2', 'fonts/newsreader-latin-opsz-normal.woff2', 'fonts/newsreader-latin-ext-opsz-normal.woff2', 'fonts/jetbrains-mono-latin-wght-normal.woff2', 'fonts/jetbrains-mono-latin-ext-wght-normal.woff2', 'jogos/capas/calculandia.webp', 'jogos/capas/quem-divergiu.webp', 'jogos/quem-divergiu/index.html', 'jogos/quem-divergiu/qd.css', 'jogos/quem-divergiu/perguntas.js', 'jogos/quem-divergiu/qd.js'];
+const VERSION = 'numera-v13-6206346ed7';
+const ASSETS = [
+  './',
+  'index.html',
+  'css/fontes.css',
+  'css/grafico-de-convergencia.css',
+  'css/personagens.css',
+  'css/site.css',
+  'css/terminal.css',
+  'css/treino.css',
+  'dados/treino-exercicios.js',
+  'fontes/figtree-latin-ext-wght-normal.woff2',
+  'fontes/figtree-latin-wght-normal.woff2',
+  'fontes/jetbrains-mono-latin-ext-wght-normal.woff2',
+  'fontes/jetbrains-mono-latin-wght-normal.woff2',
+  'fontes/newsreader-latin-ext-opsz-normal.woff2',
+  'fontes/newsreader-latin-opsz-normal.woff2',
+  'imagens/favicon.svg',
+  'imagens/icone-192.png',
+  'imagens/icone-512.png',
+  'imagens/icone-adaptavel-512.png',
+  'imagens/icone-apple.png',
+  'jogos/capas/calculandia.webp',
+  'jogos/capas/quem-divergiu.webp',
+  'jogos/quem-divergiu/index.html',
+  'jogos/quem-divergiu/perguntas.js',
+  'jogos/quem-divergiu/quem-divergiu.css',
+  'jogos/quem-divergiu/quem-divergiu.js',
+  'js/conteudo/conteudo.js',
+  'js/motor/motor-numerico.js',
+  'js/offline/registrar-offline.js',
+  'js/paginas/aulas-em-video.js',
+  'js/paginas/inicio.js',
+  'js/paginas/jogos.js',
+  'js/paginas/licao.js',
+  'js/paginas/missoes.js',
+  'js/paginas/revisao-e-progresso.js',
+  'js/paginas/terminal.js',
+  'js/paginas/trilhas.js',
+  'js/personagens/raiz-e-pivo.js',
+  'js/progresso/progresso.js',
+  'js/site/demonstracoes.js',
+  'js/site/estado-e-utilitarios.js',
+  'js/site/eventos-e-inicializacao.js',
+  'js/site/graficos.js',
+  'js/site/ilustracoes.js',
+  'js/site/jornada-e-backup.js',
+  'js/site/moldura.js',
+  'js/site/visuais-das-secoes.js',
+  'js/terminal/grafico-de-convergencia.js',
+  'js/terminal/teclado-cientifico.js',
+  'js/treino/treino.js',
+  'manifest.webmanifest',
+];
 const EM_USO = /\/jogos\/calculandia\//; // guardado na primeira vez que abre (ver acima)
 const guardar = (req, res) => { if (res.ok && EM_USO.test(new URL(req.url).pathname)) { const copia = res.clone(); caches.open(VERSION).then(c => c.put(req, copia)); } return res; };
 

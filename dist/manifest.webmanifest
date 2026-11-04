@@ -9,15 +9,40 @@
   "orientation": "any",
   "background_color": "#F5F4F1",
   "theme_color": "#111A21",
-  "categories": ["education"],
+  "categories": [
+    "education"
+  ],
   "icons": [
-    { "src": "favicon.svg", "sizes": "any", "type": "image/svg+xml" },
-    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
-    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" },
-    { "src": "maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+    {
+      "src": "imagens/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "imagens/icone-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "imagens/icone-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "imagens/icone-adaptavel-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
   ],
   "shortcuts": [
-    { "name": "Treino", "url": "./index.html#treino" },
-    { "name": "Terminal", "url": "./index.html#lab" }
+    {
+      "name": "Treino",
+      "url": "./index.html#treino"
+    },
+    {
+      "name": "Terminal",
+      "url": "./index.html#lab"
+    }
   ]
 }

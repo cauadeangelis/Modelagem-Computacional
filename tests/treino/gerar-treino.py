@@ -1,4 +1,4 @@
-"""Gera os 140 exercícios da aba Treino (dist/treino-data.js), 20 por método (v9: + Falsa Posição e Ponto Fixo).
+"""Gera os 140 exercícios da aba Treino (dist/dados/treino-exercicios.js), 20 por método (v9: + Falsa Posição e Ponto Fixo).
 
 Cada exercício traz o enunciado (com as pistas marcadas como [[trecho|rótulo]]), o método
 mais adequado, a pergunta, o gabarito e o passo a passo. Todas as contas do gabarito são
@@ -7,7 +7,7 @@ feitas aqui, de forma independente do site: sympy (derivadas exatas e frações)
 Cada exercício traz também a pergunta sem o nome do método (askBlind), os erros típicos
 reconhecíveis (traps) e os dados do gráfico de convergência (conv).
 
-Uso: python3 tests/treino/gerar-treino.py dist/treino-data.js   (precisa de: pip install sympy mpmath)
+Uso: python3 tests/treino/gerar-treino.py dist/dados/treino-exercicios.js   (precisa de: pip install sympy mpmath)
 """
 import json, math, random, sys, re
 from fractions import Fraction as Fr

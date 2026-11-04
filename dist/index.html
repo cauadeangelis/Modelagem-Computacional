@@ -8,32 +8,51 @@
 <meta name="theme-color" content="#F5F4F1">
 <meta name="description" content="Aprenda métodos numéricos com lições interativas, uma jornada do fácil ao difícil com moedas e mascotes, a aventura 3D Calculândia, o jogo de sala Quem Divergiu?, um Treino de diagnóstico com 120 exercícios, modo prova e um terminal que mostra cada passo do cálculo. Funciona offline.">
 <title>Numera Academy</title>
-<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="imagens/favicon.svg" type="image/svg+xml">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="apple-touch-icon" href="imagens/icone-apple.png">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Numera">
-<link rel="stylesheet" href="fonts.css">
-<link rel="stylesheet" href="styles.css">
-<link rel="stylesheet" href="calculator.css">
-<link rel="stylesheet" href="treino.css">
-<link rel="stylesheet" href="convergencia.css">
-<link rel="stylesheet" href="mascotes.css">
+<!-- Estilos (pasta css/) -->
+<link rel="stylesheet" href="css/fontes.css">
+<link rel="stylesheet" href="css/site.css">
+<link rel="stylesheet" href="css/terminal.css">
+<link rel="stylesheet" href="css/treino.css">
+<link rel="stylesheet" href="css/grafico-de-convergencia.css">
+<link rel="stylesheet" href="css/personagens.css">
 </head>
 <body>
 <a class="skip-link" href="#main">Pular para o conteúdo</a>
 <div id="app"></div>
 <div id="announcer" class="sr-only" role="status" aria-live="polite"></div>
 <noscript>Ative o JavaScript para usar as atividades e o motor numérico. Os cálculos são executados no seu navegador.</noscript>
-<script src="math-engine.js"></script>
-<script src="content.js"></script>
-<script src="progress.js"></script>
-<script src="convergencia.js"></script>
-<script src="treino-data.js"></script>
-<script src="treino.js"></script>
-<script src="mascotes.js"></script>
-<script src="app.js"></script>
-<script src="calculator.js"></script>
-<script src="sw-register.js"></script>
+<!-- Motor numérico, conteúdo e dados (a ordem importa: cada arquivo usa os anteriores) -->
+<script src="js/motor/motor-numerico.js"></script>
+<script src="js/conteudo/conteudo.js"></script>
+<script src="js/progresso/progresso.js"></script>
+<script src="js/terminal/grafico-de-convergencia.js"></script>
+<script src="dados/treino-exercicios.js"></script>
+<script src="js/treino/treino.js"></script>
+<script src="js/personagens/raiz-e-pivo.js"></script>
+<!-- Interface: partes do site e páginas -->
+<script src="js/site/estado-e-utilitarios.js"></script>
+<script src="js/site/jornada-e-backup.js"></script>
+<script src="js/site/ilustracoes.js"></script>
+<script src="js/site/moldura.js"></script>
+<script src="js/site/demonstracoes.js"></script>
+<script src="js/site/visuais-das-secoes.js"></script>
+<script src="js/paginas/inicio.js"></script>
+<script src="js/paginas/trilhas.js"></script>
+<script src="js/paginas/aulas-em-video.js"></script>
+<script src="js/paginas/licao.js"></script>
+<script src="js/paginas/missoes.js"></script>
+<script src="js/paginas/jogos.js"></script>
+<script src="js/paginas/revisao-e-progresso.js"></script>
+<script src="js/site/graficos.js"></script>
+<script src="js/paginas/terminal.js"></script>
+<script src="js/site/eventos-e-inicializacao.js"></script>
+<!-- Teclado do Terminal e modo offline -->
+<script src="js/terminal/teclado-cientifico.js"></script>
+<script src="js/offline/registrar-offline.js"></script>
 </body>
 </html>

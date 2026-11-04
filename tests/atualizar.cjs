@@ -1,9 +1,9 @@
 // Deixa os números "oficiais" em dia antes de publicar:
-// 1) VERIFY_COUNT em dist/app.js (o número de verificações mostrado no site);
+// 1) VERIFY_COUNT em dist/js/site/estado-e-utilitarios.js (o número de verificações mostrado no site);
 // 2) a VERSION do service worker (cache offline), que depende do conteúdo dos arquivos.
 // Uso: node tests/atualizar.cjs
 const { spawnSync } = require('child_process'), fs = require('fs'), path = require('path');
-const root = path.join(__dirname, '..'), app = path.join(root, 'dist/app.js');
+const root = path.join(__dirname, '..'), app = path.join(root, 'dist/js/site/estado-e-utilitarios.js');
 const run = () => spawnSync(process.execPath, [path.join(__dirname, 'verify.cjs')], { encoding: 'utf8' });
 const sw = () => spawnSync(process.execPath, [path.join(__dirname, 'pwa/atualizar-sw.cjs')], { encoding: 'utf8' }).stdout.trim();
 for (let i = 0; i < 3; i++) {

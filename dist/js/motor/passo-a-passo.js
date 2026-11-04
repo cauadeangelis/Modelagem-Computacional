@@ -251,7 +251,9 @@
   function fl(x, { t, m = -99, M: Mx = 99, modo = 'arredondamento' }) {
     if (x === 0) return { valor: 0, mantissa: 0, expoente: 0, regiao: 'normal' };
     let e = Math.floor(Math.log10(Math.abs(x))) + 1; let man = x / Math.pow(10, e);
-    const k = Math.pow(10, t); man = modo === 'truncamento' ? Math.trunc(man * k * (1 + 1e-14)) / k : Math.round(man * k) / k;
+    // toPrecision(12) limpa o ruído binário (0,27395 vira 0,2739499… em binário).
+    const k = Math.pow(10, t), mk = Number((man * k).toPrecision(12));
+    man = modo === 'truncamento' ? Math.trunc(mk) / k : Math.sign(mk) * Math.round(Math.abs(mk)) / k;
     if (Math.abs(man) >= 1) { man /= 10; e += 1; }
     const regiao = e > Mx ? 'overflow' : e < m ? 'underflow' : 'normal';
     return { valor: Number((man * Math.pow(10, e)).toPrecision(t + 1)), mantissa: Number(man.toFixed(t)), expoente: e, regiao };

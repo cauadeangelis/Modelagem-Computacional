@@ -808,5 +808,7 @@
     return { maxD, maps };
   }
 
-  global.NumeraMath = { parseFunction, parseSystem, bisection, falsePosition, newton, secant, fixedPoint, gauss, seidel, autoRoot, smartRoot, compareRoot, autoSystem, convergenceRoot, convergenceSystem, convergenceStart, observedOrder, value, derivative, fmt, maxResidual, backwardError, validateSystem, certifyRoot, conditionNumber, equilibrate, constValue, parseInterval, splitInterval, intervalStart, signChanges, bisectionBound, fixedPointCheck };
+  // Expressão com várias variáveis, ex.: f(x, y) = 2y/(x + 1) + (x + 1)^3 (EDOs do banco de questões).
+  function parseExpression(raw, variables = ['x', 'y']) { const ast = parseSide(raw, variables); return (vals) => evalNode(ast, vals); }
+  global.NumeraMath = { parseExpression, parseFunction, parseSystem, bisection, falsePosition, newton, secant, fixedPoint, gauss, seidel, autoRoot, smartRoot, compareRoot, autoSystem, convergenceRoot, convergenceSystem, convergenceStart, observedOrder, value, derivative, fmt, maxResidual, backwardError, validateSystem, certifyRoot, conditionNumber, equilibrate, constValue, parseInterval, splitInterval, intervalStart, signChanges, bisectionBound, fixedPointCheck };
 })(window);

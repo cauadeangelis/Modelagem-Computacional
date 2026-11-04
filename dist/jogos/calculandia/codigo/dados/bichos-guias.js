@@ -63,7 +63,7 @@ export const ANIMALS = {
     cores: { corpo: '#8e5bd1', barriga: '#c7a6f0' },
     extras: [], assinatura: 'encolheBracos',
     voz: { onda: 'sine', pitch: 200 },
-    intro: ['Oito braços, uma missão: zerar tudo abaixo da diagonal. Coluna por coluna.', 'Depois que fica triangular, é só subir de volta. Retrossubstituição, meu amor.'],
+    intro: ['Oito braços, uma missão: zerar tudo abaixo da diagonal. Coluna por coluna.', 'Depois que fica triangular, é só subir de volta. Substituição regressiva, meu amor.'],
   },
   caranguejo: {
     nome: 'Caranguejo Pivô', corpo: 'caranguejo', escala: 1.1,

@@ -515,33 +515,39 @@
     validateSystem(A,b);return {A,b,variables};
   }
   const maxResidual = (A,b,x) => Math.max(...A.map((row,i)=>Math.abs(row.reduce((sum,v,j)=>sum+v*x[j],0)-b[i])));
+  // Eliminação de Gauss na notação dos slides: etapas Eᵢ⁽ᵏ⁾ → Eᵢ⁽ᵏ⁻¹⁾ − mᵢₖEₖ⁽ᵏ⁻¹⁾ e substituição regressiva.
+  // options.pivoting: 'parcial' (padrão, mais estável) ou 'nenhum' (como no Exemplo 1 dos slides; só troca linha se o pivô for nulo).
+  const SUBS = (n) => String(n).replace(/[0-9]/g, (c) => '₀₁₂₃₄₅₆₇₈₉'[c]);
+  const SUPS = (n) => '⁽' + String(n).replace(/[0-9]/g, (c) => '⁰¹²³⁴⁵⁶⁷⁸⁹'[c]) + '⁾';
   function gauss(A0, b0, options = {}) {
     const {tolerance}=opts(options); validateSystem(A0,b0); requireUnique(A0,b0); const n = A0.length;
+    const partial = options.pivoting !== 'nenhum';
     const A = A0.map(r=>r.slice()), b = b0.slice(), logs=[];
     const push = (label) => logs.push({ i: logs.length+1, detail: label, matrix: A.map((row,k)=>[...row,b[k]]) });
-    push('Matriz aumentada inicial');
+    push('Etapa zero: matriz ampliada [A⁽⁰⁾ | B⁽⁰⁾]');
     for (let k = 0; k < n; k++) {
       let pivot = k;
-      for (let i=k+1;i<n;i++) if(Math.abs(A[i][k]) > Math.abs(A[pivot][k])) pivot=i;
+      if (partial) { for (let i=k+1;i<n;i++) if(Math.abs(A[i][k]) > Math.abs(A[pivot][k])) pivot=i; }
+      else if (A[k][k] === 0) { for (let i=k+1;i<n;i++) if (A[i][k] !== 0) { pivot = i; break; } }
       // O teste de posto (com escala equilibrada) já garantiu solução única; aqui só um pivô exatamente nulo impede a divisão.
       if (!(Math.abs(A[pivot][k]) > 0)) err('Sistema sem solução única numericamente identificável: matriz singular ou muito mal condicionada.');
-      if (pivot !== k) { [A[pivot],A[k]]=[A[k],A[pivot]]; [b[pivot],b[k]]=[b[k],b[pivot]]; push(`Trocar L${k+1} ↔ L${pivot+1} (pivotamento parcial)`); }
+      if (pivot !== k) { [A[pivot],A[k]]=[A[k],A[pivot]]; [b[pivot],b[k]]=[b[k],b[pivot]]; push(partial ? `Trocar E${SUBS(k+1)} ↔ E${SUBS(pivot+1)} (pivoteamento parcial: o maior |aᵢ${SUBS(k+1)}| da coluna vira o pivô)` : `Trocar E${SUBS(k+1)} ↔ E${SUBS(pivot+1)} (o pivô a${SUBS(k+1)}${SUBS(k+1)}${SUPS(k)} era nulo)`); }
       for(let i=k+1;i<n;i++) {
         const m = A[i][k]/A[k][k];
         A[i][k]=0;
         for(let j=k+1;j<n;j++) A[i][j] -= m*A[k][j];
         b[i]-=m*b[k];
-        push(`L${i+1} ← L${i+1} − (${fmt(m)})·L${k+1}`);
+        push(`E${SUBS(i+1)}${SUPS(k+1)} → E${SUBS(i+1)}${SUPS(k)} − m${SUBS(i+1)}${SUBS(k+1)}E${SUBS(k+1)}${SUPS(k)}, com m${SUBS(i+1)}${SUBS(k+1)} = a${SUBS(i+1)}${SUBS(k+1)}${SUPS(k)}/a${SUBS(k+1)}${SUBS(k+1)}${SUPS(k)} = ${fmt(m)} (pivô ${fmt(A[k][k])})`);
       }
     }
     const x=Array(n).fill(0);
     for(let i=n-1;i>=0;i--){
       const rest=A[i].slice(i+1).reduce((sum,c,j)=>sum+c*x[i+j+1],0);
       x[i]=(b[i]-rest)/A[i][i];
-      push(`Retrossubstituição: x${i+1} = ${fmt(x[i])}`);
+      push(`Substituição regressiva: x${SUBS(i+1)} = ${fmt(x[i])}`);
     }
     const residual=maxResidual(A0,b0,x),cn=conditionNote(A0);
-    return { method: 'gauss', root: x, residual, steps: logs.length, iterations: logs, backwardError: backwardError(A0,b0,x), cond: cn.cond, converged: Number.isFinite(residual) && backwardError(A0,b0,x) <= tolerance, note: 'Eliminação direta com pivotamento parcial.'+cn.note };
+    return { method: 'gauss', root: x, residual, steps: logs.length, iterations: logs, backwardError: backwardError(A0,b0,x), cond: cn.cond, converged: Number.isFinite(residual) && backwardError(A0,b0,x) <= tolerance, note: (partial ? 'Eliminação de Gauss com pivoteamento parcial.' : 'Eliminação de Gauss sem pivoteamento (como no Exemplo 1 dos slides).')+cn.note };
   }
   function seidel(A, b, initial, options={}) {
     const {tolerance,maxIterations}=opts(options);

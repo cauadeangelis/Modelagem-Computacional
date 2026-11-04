@@ -261,10 +261,10 @@ const M2 = {
     const A1 = A.map((r) => r.slice()), b1 = b.slice();
     A1[1] = A[1].map((v, j) => v - m21 * A[0][j]); b1[1] = y[1];
     passos.push({ enunciado: en, texto: 'Multiplicador para zerar a₂₁: m₂₁ = a₂₁ ÷ a₁₁', ...opcoes(m21, [A[0][0] / A[1][0], -m21, A[1][0] - A[0][0], m21 + 1]), explica: `m₂₁ = ${fmt(A[1][0])} ÷ ${fmt(A[0][0])} = ${fmt(m21)}.`, vis: mat(A, b, [[0, 0]], [[1, 0]]), erro: 'pivo_zero' });
-    if (nivel !== 'D') passos.push({ enunciado: en, texto: 'Depois de L₂ ← L₂ − m₂₁·L₁, quanto vale o novo a₂₂?', ...opcoes(U[1][1], [A[1][1] + m21 * A[0][1], A[1][1] - A[0][1], A[1][1] - m21 * A[1][0]]), explica: `${fmt(A[1][1])} − ${fmt(m21)}·${fmt(A[0][1])} = ${fmt(U[1][1])}.`, vis: mat(A, b, [[0, 1]], [[1, 1]]) });
+    if (nivel !== 'D') passos.push({ enunciado: en, texto: 'Depois de E₂⁽¹⁾ → E₂⁽⁰⁾ − m₂₁E₁⁽⁰⁾, quanto vale o novo a₂₂⁽¹⁾?', ...opcoes(U[1][1], [A[1][1] + m21 * A[0][1], A[1][1] - A[0][1], A[1][1] - m21 * A[1][0]]), explica: `${fmt(A[1][1])} − ${fmt(m21)}·${fmt(A[0][1])} = ${fmt(U[1][1])}.`, vis: mat(A, b, [[0, 1]], [[1, 1]]) });
     if (n === 2) {
       const x2 = y[1] / U[1][1], x1 = (y[0] - U[0][1] * x2) / U[0][0];
-      passos.push({ enunciado: `Triangular:<br>${sysText(U, y)}`, texto: 'Retrossubstituição: x₂ =', ...opcoes(x2, [y[1], -x2, x2 + 1, U[1][1] / y[1]]), explica: `x₂ = ${fmt(y[1])} ÷ ${fmt(U[1][1])} = ${fmt(x2)}.`, vis: mat(U, y, [[1, 1]]) });
+      passos.push({ enunciado: `Triangular:<br>${sysText(U, y)}`, texto: 'Substituição regressiva: x₂ =', ...opcoes(x2, [y[1], -x2, x2 + 1, U[1][1] / y[1]]), explica: `x₂ = ${fmt(y[1])} ÷ ${fmt(U[1][1])} = ${fmt(x2)}.`, vis: mat(U, y, [[1, 1]]) });
       passos.push({ enunciado: `Triangular:<br>${sysText(U, y)}<br>x₂ = ${fmt(x2)}`, texto: 'Agora x₁ =', ...opcoes(x1, [y[0] / U[0][0], -x1, x1 + 1, (y[0] + U[0][1] * x2) / U[0][0]]), explica: `x₁ = (${fmt(y[0])} − ${fmt(U[0][1])}·${fmt(x2)}) ÷ ${fmt(U[0][0])} = ${fmt(x1)}.`, vis: mat(U, y, [[0, 0]]) });
       return { passos, erroFinal: 0 };
     }
@@ -275,7 +275,7 @@ const M2 = {
     if (nivel === 'D') passos.push({ enunciado: `Depois da coluna 1:<br>${sysText(A1, b1)}`, texto: 'Novo pivô a₂₂ (depois de zerar a coluna 1) =', ...opcoes(U[1][1], [A[1][1], A[1][1] + m21 * A[0][1], -U[1][1]]), explica: `a₂₂ = ${fmt(U[1][1])}.`, vis: mat(A1, b1, [], [[1, 1]]) });
     passos.push({ enunciado: `Depois da coluna 1:<br>${sysText(A1, b1)}`, texto: 'Multiplicador m₃₂ = a₃₂ ÷ a₂₂', ...opcoes(m32, [A1[1][1] / (A1[2][1] || 1), -m32, m32 + 1, A1[2][1]]), explica: `m₃₂ = ${fmt(A1[2][1])} ÷ ${fmt(A1[1][1])} = ${fmt(m32)}.`, vis: mat(A1, b1, [[1, 1]], [[2, 1]]), erro: 'pivo_zero' });
     const x3 = y[2] / U[2][2], x2 = (y[1] - U[1][2] * x3) / U[1][1], x1 = (y[0] - U[0][1] * x2 - U[0][2] * x3) / U[0][0];
-    passos.push({ enunciado: `Triangular superior:<br>${sysText(U, y)}`, texto: 'Retrossubstituição: x₃ =', ...opcoes(x3, [y[2], -x3, x3 + 1, U[2][2] / (y[2] || 1)]), explica: `x₃ = ${fmt(y[2])} ÷ ${fmt(U[2][2])} = ${fmt(x3)}.`, vis: mat(U, y, [[2, 2]]) });
+    passos.push({ enunciado: `Triangular superior:<br>${sysText(U, y)}`, texto: 'Substituição regressiva: x₃ =', ...opcoes(x3, [y[2], -x3, x3 + 1, U[2][2] / (y[2] || 1)]), explica: `x₃ = ${fmt(y[2])} ÷ ${fmt(U[2][2])} = ${fmt(x3)}.`, vis: mat(U, y, [[2, 2]]) });
     passos.push({ enunciado: `Triangular superior:<br>${sysText(U, y)}<br>x₃ = ${fmt(x3)}`, texto: 'Subindo: x₂ =', ...opcoes(x2, [y[1] / U[1][1], -x2, x2 + 1, (y[1] + U[1][2] * x3) / U[1][1]]), explica: `x₂ = (${fmt(y[1])} − ${fmt(U[1][2])}·${fmt(x3)}) ÷ ${fmt(U[1][1])} = ${fmt(x2)}.`, vis: mat(U, y, [[1, 1]]) });
     if (nivel === 'D') passos.push({ enunciado: `Triangular superior:<br>${sysText(U, y)}<br>x₃ = ${fmt(x3)}, x₂ = ${fmt(x2)}`, texto: 'Por fim, x₁ =', ...opcoes(x1, [y[0] / U[0][0], -x1, x1 + 1]), explica: `x₁ = ${fmt(x1)}.`, vis: mat(U, y, [[0, 0]]) });
     return { passos, erroFinal: Math.abs(x1 - x[0]) };

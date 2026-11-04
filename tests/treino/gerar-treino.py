@@ -148,22 +148,22 @@ def fmt_mat(M):
     return [[br(v) for v in row] for row in M]
 
 def gauss_steps(A, b, names):
-    n = len(A); M = [A[i][:] + [b[i]] for i in range(n)]; steps = [{'t': 'Matriz aumentada inicial', 'm': fmt_mat(M)}]
+    n = len(A); M = [A[i][:] + [b[i]] for i in range(n)]; steps = [{'t': 'Etapa zero: matriz ampliada [A⁽⁰⁾ | B⁽⁰⁾]', 'm': fmt_mat(M)}]
     for k in range(n):
         col = [abs(M[i][k]) for i in range(k, n)]; big = max(col)
         if M[k][k] == 0 or abs(M[k][k]) < Fr(1, 100) * big:
             p = k + col.index(big); M[k], M[p] = M[p], M[k]
-            steps.append({'t': f'Trocar L{k+1} ↔ L{p+1}: o pivô {"é zero" if col[0] == 0 else "é muito pequeno"}', 'm': fmt_mat(M)})
+            steps.append({'t': f'Trocar E{sub(k+1)} ↔ E{sub(p+1)} (pivoteamento): o pivô {"é zero" if col[0] == 0 else "é muito pequeno"}', 'm': fmt_mat(M)})
         for i in range(k + 1, n):
             if M[i][k] == 0: continue
             m = M[i][k] / M[k][k]
             M[i] = [M[i][j] - m * M[k][j] for j in range(n + 1)]
-            steps.append({'t': f'L{i+1} ← L{i+1} − ({br(m)})·L{k+1}', 'm': fmt_mat(M)})
+            steps.append({'t': f'E{sub(i+1)}{sup(k+1)} → E{sub(i+1)}{sup(k)} − m{sub(i+1)}{sub(k+1)}E{sub(k+1)}{sup(k)}, com m{sub(i+1)}{sub(k+1)} = {br(m)}', 'm': fmt_mat(M)})
     x = [Fr(0)] * n; back = []
     for i in range(n - 1, -1, -1):
         s = M[i][n] - sum(M[i][j] * x[j] for j in range(i + 1, n)); x[i] = s / M[i][i]
         back.append(f'{names[i]} = {br(x[i])}')
-    steps.append({'t': 'Retrossubstituição: ' + '; '.join(back), 'm': None})
+    steps.append({'t': 'Substituição regressiva: ' + '; '.join(back), 'm': None})
     return steps, x
 
 def seidel_rows(A, b, x0, k):
@@ -204,6 +204,8 @@ def update_formulas(A, b, names):
 
 SUBS = str.maketrans('0123456789', '₀₁₂₃₄₅₆₇₈₉')
 def sub(k): return str(k).translate(SUBS)
+SUPS = str.maketrans('0123456789', '⁰¹²³⁴⁵⁶⁷⁸⁹')
+def sup(k): return '⁽' + str(k).translate(SUPS) + '⁾'
 
 def pretty_sym(e):
     s = sp.sstr(sp.simplify(e)).replace('**', '^').replace('*', '·').replace('log(', 'ln(').replace('exp(', 'e^(')
@@ -443,12 +445,12 @@ def N_k(level, area, title, story, src, x0, k, why, deriv_hint=None):
     d = sp.diff(side(src), X); r = true_root(src, x)
     ans = {'type': 'num', 'value': r10(x)}
     cands = [(newton_x(src, x0, k - 1) if k > 1 else None, T_ANTES), (newton_x(src, x0, k + 1), T_DEPOIS),
-             (newton_x(src, x0, k, plus=True), 'Sinal trocado na fórmula: o passo de Newton é xₖ₊₁ = xₖ − f(xₖ)/f′(xₖ), com sinal de menos.'),
+             (newton_x(src, x0, k, plus=True), 'Sinal trocado na fórmula: o passo de Newton é xᵢ₊₁ = xᵢ − f(xᵢ)/f′(xᵢ), com sinal de menos.'),
              (mpf(side(src))(x), T_FX)]
     if has_trig(side(src)): cands.append((newton_x(src, x0, k, expr=deg_expr(side(src))), T_GRAUS))
     add('newton', level, area, title, story, f'Partindo de x₀ = {br(x0)}, faça {k} {it(k)} de Newton-Raphson. Qual é x{sub(k)}?',
         ans,
-        {'kind': 'table', 'cols': ['k', 'xₖ', 'f(xₖ)', 'f′(xₖ)', 'xₖ₊₁ = xₖ − f/f′'], 'rows': rows,
+        {'kind': 'table', 'cols': ['i', 'xᵢ', 'f(xᵢ)', 'f′(xᵢ)', 'xᵢ₊₁ = xᵢ − f/f′'], 'rows': rows,
          'note': f'f′(x) = {deriv_hint or pretty_sym(d)}.'},
         why, [['x₀', br(x0)], ['f′(x)', deriv_hint or pretty_sym(d)]], src, {'algorithm': 'newton', 'x0': x0}, {'check': {'k': k, 'x0': x0}},
         blind=f'Partindo de x₀ = {br(x0)}, faça {k} {it(k)} do método mais indicado. Qual é x{sub(k)}?',
@@ -465,7 +467,7 @@ def N_tol(level, area, title, story, src, x0, digits, why, deriv_hint=None):
         except Exception: pass
     add('newton', level, area, title, story, f'Partindo de x₀ = {br(x0)}, itere Newton-Raphson até a variação ficar menor que 10^−{digits + 1}. Qual é a raiz, com {digits} casas decimais?',
         ans,
-        {'kind': 'table', 'cols': ['k', 'xₖ', 'f(xₖ)', 'f′(xₖ)', 'xₖ₊₁'], 'rows': rows,
+        {'kind': 'table', 'cols': ['i', 'xᵢ', 'f(xᵢ)', 'f′(xᵢ)', 'xᵢ₊₁'], 'rows': rows,
          'note': f'f′(x) = {deriv_hint or pretty_sym(d)}. Repare como as casas corretas quase dobram a cada passo (convergência quadrática).'},
         why, [['x₀', br(x0)], ['f′(x)', deriv_hint or pretty_sym(d)]], src, {'algorithm': 'newton', 'x0': x0}, {'check': {'root': True}},
         blind=f'Partindo de x₀ = {br(x0)}, encontre a raiz com {digits} casas decimais. Qual é ela?',
@@ -476,14 +478,14 @@ def S_k(level, area, title, story, src, x0, x1, k, why):
     rows, x = secant_rows(src, x0, x1, k); r = true_root(src, x)
     ans = {'type': 'num', 'value': r10(x)}
     cands = [(secant_x(src, x0, x1, k - 1) if k > 1 else None, T_ANTES), (secant_x(src, x0, x1, k + 1), T_DEPOIS),
-             (secant_x(src, x0, x1, k, plus=True), 'Sinal trocado: xₖ₊₁ = xₖ − f(xₖ)·(xₖ − xₖ₋₁)/(f(xₖ) − f(xₖ₋₁)).'),
+             (secant_x(src, x0, x1, k, plus=True), 'Sinal trocado: xᵢ₊₁ = xᵢ − f(xᵢ)·(xᵢ − xᵢ₋₁)/(f(xᵢ) − f(xᵢ₋₁)).'),
              (secant_x(src, x0, x1, k, fixed=True) if k > 1 else None, 'Você manteve x₀ fixo em todas as iterações. Na Secante, os dois pontos mais recentes substituem os anteriores.'),
              (f(x), T_FX)]
     if has_trig(side(src)): cands.append((secant_x(src, x0, x1, k, expr=deg_expr(side(src))), T_GRAUS))
     add('secant', level, area, title, story, f'Com x₀ = {br(x0)} e x₁ = {br(x1)}, faça {k} {it(k)} da Secante. Qual é x{sub(k + 1)}?',
         ans,
-        {'kind': 'table', 'cols': ['passo', 'xₖ₋₁', 'xₖ', 'f(xₖ₋₁)', 'f(xₖ)', 'xₖ₊₁'], 'rows': rows,
-         'note': 'xₖ₊₁ = xₖ − f(xₖ)·(xₖ − xₖ₋₁)/(f(xₖ) − f(xₖ₋₁)). Nenhuma derivada foi calculada.'},
+        {'kind': 'table', 'cols': ['passo', 'xᵢ₋₁', 'xᵢ', 'f(xᵢ₋₁)', 'f(xᵢ)', 'xᵢ₊₁'], 'rows': rows,
+         'note': 'xᵢ₊₁ = xᵢ − f(xᵢ)·(xᵢ − xᵢ₋₁)/(f(xᵢ) − f(xᵢ₋₁)). Nenhuma derivada foi calculada.'},
         why, [['x₀', br(x0)], ['x₁', br(x1)]], src, {'algorithm': 'secant', 'x0': x0, 'x1': x1}, {'check': {'k': k, 'x0': x0, 'x1': x1}},
         blind=f'Com x₀ = {br(x0)} e x₁ = {br(x1)}, faça {k} {it(k)} do método mais indicado. Qual é x{sub(k + 1)}?',
         traps=traps_for(ans, cands), conv=conv_root(src, r, x0=x0, x1=x1), root=r)
@@ -495,7 +497,7 @@ def S_tol(level, area, title, story, src, x0, x1, digits, why):
     cands = [(o, T_OUTRA) for o in other_roots(src, x, max(1e-6, x0 / 10) if x0 > 0 else x0 - 10, x0 + 10)]
     add('secant', level, area, title, story, f'Com x₀ = {br(x0)} e x₁ = {br(x1)}, itere a Secante até a variação ficar menor que 10^−{digits + 1}. Qual é a raiz, com {digits} casas decimais?',
         ans,
-        {'kind': 'table', 'cols': ['passo', 'xₖ₋₁', 'xₖ', 'f(xₖ₋₁)', 'f(xₖ)', 'xₖ₊₁'], 'rows': rows,
+        {'kind': 'table', 'cols': ['passo', 'xᵢ₋₁', 'xᵢ', 'f(xᵢ₋₁)', 'f(xᵢ)', 'xᵢ₊₁'], 'rows': rows,
          'note': 'Cada passo usa só uma avaliação nova de f.'},
         why, [['x₀', br(x0)], ['x₁', br(x1)]], src, {'algorithm': 'secant', 'x0': x0, 'x1': x1}, {'check': {'root': True}},
         blind=f'Com x₀ = {br(x0)} e x₁ = {br(x1)}, encontre a raiz com {digits} casas decimais.',
@@ -524,8 +526,8 @@ def G(level, area, title, story, lines, names, why, ask_var=None, nondom=True):
     A, b = linsys(lines, names)
     if nondom: assert not dominant(A), title
     steps, x = gauss_steps(A, b, names)
-    cands = [(gauss_variant(A, b, 'rhs'), 'Você atualizou os coeficientes, mas esqueceu o lado direito: a operação Lᵢ ← Lᵢ − m·Lₖ vale também para o termo independente.'),
-             (gauss_variant(A, b, 'sign'), 'Sinal do multiplicador trocado: para zerar o coeficiente, faça Lᵢ ← Lᵢ − m·Lₖ, com m = aᵢₖ/aₖₖ.')]
+    cands = [(gauss_variant(A, b, 'rhs'), 'Você atualizou os coeficientes, mas esqueceu o lado direito: a operação Eᵢ⁽ᵏ⁾ → Eᵢ⁽ᵏ⁻¹⁾ − mᵢₖEₖ⁽ᵏ⁻¹⁾ vale também para o termo independente.'),
+             (gauss_variant(A, b, 'sign'), 'Sinal do multiplicador trocado: para zerar o coeficiente, faça Eᵢ⁽ᵏ⁾ → Eᵢ⁽ᵏ⁻¹⁾ − mᵢₖEₖ⁽ᵏ⁻¹⁾, com mᵢₖ = aᵢₖ⁽ᵏ⁻¹⁾/aₖₖ⁽ᵏ⁻¹⁾.')]
     if ask_var:
         i = names.index(ask_var)
         ask = f'Resolva o sistema por Eliminação de Gauss. Qual é o valor de {ask_var}?'
@@ -599,7 +601,7 @@ def FP_tol(level, area, title, story, src, a, b, eps, digits, why):
     nb = bisect_count_f(src, a, b, eps)
     ans = {'type': 'num', 'value': r10(r), 'abs': 0.6 * 10 ** -digits}
     cands = [(o, T_OUTRA) for o in other_roots(src, r, a - 10 * (b - a), b + 10 * (b - a))] + [(rows and fp_rows(src, a, b, k=1)[1], 'Esse é só o primeiro corte da corda. Continue até |f(x)| ficar abaixo do limite pedido.')]
-    add('falseposition', level, area, title, story, f'Use a Falsa Posição em [{br(a)}; {br(b)}] até |f(xₖ)| ≤ {br(eps, 10)}. Qual é a raiz, com {digits} casas decimais?', ans,
+    add('falseposition', level, area, title, story, f'Use a Falsa Posição em [{br(a)}; {br(b)}] até |f(xᵢ)| ≤ {br(eps, 10)}. Qual é a raiz, com {digits} casas decimais?', ans,
         {'kind': 'table', 'cols': FP_COLS, 'rows': rows, 'note': FP_NOTE + f' Foram {n} iterações; a Bisseção precisaria de {nb} para o mesmo |f(x)| ≤ {br(eps, 10)}.'},
         why, [['Intervalo', f'[{br(a)}; {br(b)}]'], ['Critério', f'|f(x)| ≤ {br(eps, 10)}']], src, {'algorithm': 'falseposition', 'a': a, 'b': b}, {'check': {'root': True}},
         blind=f'Encontre a raiz em [{br(a)}; {br(b)}] com {digits} casas decimais, mantendo-a sempre cercada. Qual é ela?',
@@ -616,14 +618,14 @@ def FP_count(level, area, title, story, src, a, b, eps, why):
     cands = [(nb, f'{nb} é a contagem da Bisseção para o mesmo critério. A corda chega lá em menos passos: refaça com x = (a·f(b) − b·f(a))/(f(b) − f(a)).'),
              (n - 1, f'Na iteração {n - 1}, |f(x)| ainda era {br(abs(prevx), 4) if prevx is not None else "—"}, acima de {br(eps, 10)}.'),
              (n + 1, f'Uma iteração a mais: na iteração {n} já vale |f(x)| ≤ {br(eps, 10)}.')]
-    add('falseposition', level, area, title, story, f'Com a Falsa Posição em [{br(a)}; {br(b)}], quantas iterações são necessárias até |f(xₖ)| ≤ {br(eps, 10)}?', ans,
+    add('falseposition', level, area, title, story, f'Com a Falsa Posição em [{br(a)}; {br(b)}], quantas iterações são necessárias até |f(xᵢ)| ≤ {br(eps, 10)}?', ans,
         {'kind': 'table', 'cols': FP_COLS, 'rows': rows, 'note': FP_NOTE + f' A Bisseção, no mesmo intervalo, precisaria de {nb} iterações para chegar a |f(m)| ≤ {br(eps, 10)}.'},
         why, [['Intervalo', f'[{br(a)}; {br(b)}]'], ['Critério', f'|f(x)| ≤ {br(eps, 10)}']], src, {'algorithm': 'falseposition', 'a': a, 'b': b}, {'check': {'count': n, 'a': a, 'b': b, 'eps': eps}},
-        blind=f'Com o método mais indicado em [{br(a)}; {br(b)}], quantas iterações são necessárias até |f(xₖ)| ≤ {br(eps, 10)}?',
+        blind=f'Com o método mais indicado em [{br(a)}; {br(b)}], quantas iterações são necessárias até |f(xᵢ)| ≤ {br(eps, 10)}?',
         traps=traps_for(ans, cands), conv=conv_root(src, r, a, b), root=r)
 
 # ---------------------------------------------------------------- Ponto Fixo
-PF_COLS = ['k', 'xₖ', 'g(xₖ) = xₖ₊₁', '|xₖ₊₁ − xₖ|']
+PF_COLS = ['i', 'xᵢ', 'xᵢ₊₁ = g(xᵢ)', '|xᵢ₊₁ − xᵢ|']
 
 def PF_k(level, area, title, story, g, x0, k, why, gpretty=None):
     ge = F(g); G_ = mpf(ge)
@@ -632,10 +634,10 @@ def PF_k(level, area, title, story, g, x0, k, why, gpretty=None):
     src = f'x - ({g})'
     ans = {'type': 'num', 'value': r10(x)}
     cands = [(pf_rows(g, x0, k=k - 1)[1] if k > 1 else None, T_ANTES), (pf_rows(g, x0, k=k + 1)[1], T_DEPOIS),
-             (x - G_(x), 'Esse é o resíduo x − g(x), não a aproximação. A resposta é o próprio xₖ.')]
+             (x - G_(x), 'Esse é o resíduo x − g(x), não a aproximação. A resposta é o próprio xᵢ.')]
     if has_trig(ge): cands.append((pf_rows(g, x0, k=k, gexpr=deg_expr(ge))[1], T_GRAUS))
     gp = gpretty or pretty_sym(ge)
-    add('fixedpoint', level, area, title, story, f'Partindo de x₀ = {br(x0)}, faça {k} {it(k)} de Ponto Fixo, xₖ₊₁ = g(xₖ). Qual é x{sub(k)}?', ans,
+    add('fixedpoint', level, area, title, story, f'Partindo de x₀ = {br(x0)}, faça {k} {it(k)} de Ponto Fixo, xᵢ₊₁ = g(xᵢ). Qual é x{sub(k)}?', ans,
         {'kind': 'table', 'cols': PF_COLS, 'rows': rows,
          'note': f'g(x) = {gp}. Perto do ponto fixo, |g′(x*)| ≈ {br(L, 3)} < 1: o erro cai por um fator de cerca de {br(L, 3)} a cada passo{" e os valores oscilam em volta da raiz, porque g′ é negativa" if mp.diff(G_, r) < 0 else ""}.'},
         why, [['g(x)', gp], ['x₀', br(x0)]], src, {'algorithm': 'fixedpoint', 'x0': x0, 'g': g}, {'g': g, 'check': {'k': k, 'x0': x0}},
@@ -654,7 +656,7 @@ def PF_tol(level, area, title, story, g, x0, digits, why, gpretty=None):
         try: cands.append((pf_rows(g, x0, tol=10 ** -(digits + 1), gexpr=deg_expr(ge))[1], T_GRAUS))
         except Exception: pass
     gp = gpretty or pretty_sym(ge)
-    add('fixedpoint', level, area, title, story, f'Partindo de x₀ = {br(x0)}, itere xₖ₊₁ = g(xₖ) até |xₖ₊₁ − xₖ| < 10^−{digits + 1}. Qual é o ponto fixo, com {digits} casas decimais?', ans,
+    add('fixedpoint', level, area, title, story, f'Partindo de x₀ = {br(x0)}, itere xᵢ₊₁ = g(xᵢ) até |xᵢ₊₁ − xᵢ| < 10^−{digits + 1}. Qual é o ponto fixo, com {digits} casas decimais?', ans,
         {'kind': 'table', 'cols': PF_COLS, 'rows': rows,
          'note': f'g(x) = {gp}. |g′(x*)| ≈ {br(L, 3)}: com fator L < 1, o erro fica abaixo de L/(1 − L) vezes a última variação.'},
         why, [['g(x)', gp], ['x₀', br(x0)]], src, {'algorithm': 'fixedpoint', 'x0': x0, 'g': g}, {'g': g, 'check': {'root': True}},
@@ -742,7 +744,7 @@ N_k(2, 'Biologia', 'Colônia com perdas',
     'Uma colônia de bactérias segue N(t) = 100e^{0,3t} − 50t e o laboratório quer o instante em que N = 500. [[f′(t) = 30e^{0,3t} − 50 é direta|derivada fácil]] e [[o gráfico do experimento indica t₀ = 7 h|chute inicial bom]].',
     '100*exp(0.3*x) - 50*x - 500', 7, 2, W_NEW, '30·e^(0,3x) − 50')
 N_k(1, 'Computação', 'Dividir sem dividir',
-    'Processadores calculam 1/7 sem dividir: resolvem 1/x − 7 = 0 por Newton. [[A derivada −1/x² transforma a iteração em xₙ₊₁ = xₙ(2 − 7xₙ), só com multiplicações|derivada simples gera fórmula barata]] e [[0,1 é um bom chute para 1/7|chute inicial bom]].',
+    'Processadores calculam 1/7 sem dividir: resolvem 1/x − 7 = 0 por Newton. [[A derivada −1/x² transforma a iteração em xᵢ₊₁ = xᵢ(2 − 7xᵢ), só com multiplicações|derivada simples gera fórmula barata]] e [[0,1 é um bom chute para 1/7|chute inicial bom]].',
     '1/x - 7', 0.1, 2, W_NEW, '−1/x²')
 N_k(2, 'História da matemática', 'O exemplo do próprio Newton',
     'Em 1669, Newton ilustrou seu método com x³ − 2x − 5 = 0. [[f′(x) = 3x² − 2 é imediata|derivada fácil]] e [[x₀ = 2 está a um passo da raiz, pois f(2) = −1|chute inicial bom]].', 'x^3 - 2*x - 5', 2, 2, W_NEW, '3x² − 2')
@@ -846,7 +848,7 @@ G(2, 'Nutrição', 'Cardápio balanceado', 'Três alimentos (x, y e z porções)
 G(2, 'Trânsito', 'Fluxo nos cruzamentos', 'Em três ruas de mão única, os fluxos x, y e z (carros/h) obedecem à conservação nos cruzamentos: x + y = 900, y − z = 200 e x − z = 300. [[A matriz tem zeros na diagonal relativa e não é dominante|sem dominância diagonal]], e [[é um sistema pequeno com resposta exata|sistema pequeno e solução exata]].',
   ['x + y = 900', 'y - z = 200', 'x - z = 300'], ['x', 'y', 'z'], W_GAU)
 G(1, 'Matemática', 'Pivô zero', 'Resolva 2y = 6 e x + y = 5, nessa ordem. [[O primeiro pivô (coeficiente de x na 1ª linha) é zero: é preciso trocar as linhas|pivô nulo]], e [[Gauss-Seidel dividiria por zero na diagonal|iterativo inviável]].',
-  ['2y = 6', 'x + y = 5'], ['x', 'y'], 'Com pivô nulo, Gauss com troca de linhas (pivotamento) resolve direto. Um método iterativo dividiria por zero.')
+  ['2y = 6', 'x + y = 5'], ['x', 'y'], 'Com pivô nulo, Gauss com troca de linhas (pivoteamento) resolve direto. Um método iterativo dividiria por zero.')
 G(3, 'Produção', 'Quatro produtos, quatro máquinas', 'Uma fábrica usa quatro máquinas para quatro produtos (x, y, z e u unidades). As horas disponíveis definem um sistema 4×4. [[Nenhuma linha tem dominância diagonal|sem dominância diagonal]] e o plano exige [[quantidades exatas|solução exata]].',
   ['x + 2y + z + u = 70', '2x + y + 3z + u = 70', 'x + y + z + 3u = 80', '3x + y + z + 2u = 85'], ['x', 'y', 'z', 'u'], W_GAU)
 G(2, 'Química', 'Diluição de soluções', 'Três soluções (x, y e z litros, a 10%, 20% e 40%) formam 10 L com 2,4 L de soluto, usando o dobro de y em x. [[Sistema pequeno com coeficientes decimais|sistema pequeno e solução exata]], e [[a segunda linha (0,2 < 0,1 + 0,4) não é dominante|sem dominância diagonal]].',
@@ -863,8 +865,8 @@ G(1, 'Comércio', 'Preço de dois produtos', 'Dois cadernos e três canetas cust
   ['2x + 3y = 18', '5x + 2y = 23'], ['x', 'y'], W_GAU)
 G(2, 'Física', 'Posição, velocidade e aceleração', 'Um carrinho tem s(t) = x + y·t + z·t², com s(1) = 7 m, s(2) = 16 m e s(3) = 29 m. [[Vandermonde sem dominância diagonal|sem dominância diagonal]] e [[três valores exatos|sistema pequeno e solução exata]]. (A aceleração é 2z.)',
   ['x + y + z = 7', 'x + 2y + 4z = 16', 'x + 3y + 9z = 29'], ['x', 'y', 'z'], W_GAU)
-G(3, 'Matemática', 'Pivô minúsculo', 'Resolva 0,0001x + y = 1 e x + y = 2. [[O primeiro pivô é 0,0001: sem trocar as linhas (pivotamento parcial), o arredondamento estraga a resposta|pivô pequeno]], e [[Gauss-Seidel nessa ordem diverge (0,0001 < 1)|iterativo inviável]].',
-  ['0.0001x + y = 1', 'x + y = 2'], ['x', 'y'], 'Pivô minúsculo pede Gauss com pivotamento parcial. Gauss-Seidel, com 0,0001 na diagonal, divergiria.')
+G(3, 'Matemática', 'Pivô minúsculo', 'Resolva 0,0001x + y = 1 e x + y = 2. [[O primeiro pivô é 0,0001: sem trocar as linhas (pivoteamento parcial), o arredondamento estraga a resposta|pivô pequeno]], e [[Gauss-Seidel nessa ordem diverge (0,0001 < 1)|iterativo inviável]].',
+  ['0.0001x + y = 1', 'x + y = 2'], ['x', 'y'], 'Pivô minúsculo pede Gauss com pivoteamento parcial. Gauss-Seidel, com 0,0001 na diagonal, divergiria.')
 G(2, 'Agricultura', 'Adubação N-P-K', 'Três fertilizantes (x, y e z kg) têm teores diferentes de N, P e K, e a lavoura precisa de 65 kg de N, 80 de P e 70 de K. [[Sistema 3×3: a dose precisa ser exata|sistema pequeno e solução exata]], e [[a primeira linha (0,1 < 0,2 + 0,05) não é dominante|sem dominância diagonal]].',
   ['0.1x + 0.2y + 0.05z = 65', '0.1x + 0.05y + 0.2z = 80', '0.2x + 0.1y + 0.1z = 70'], ['x', 'y', 'z'], W_GAU)
 G(1, 'Matemática', 'Sistema 3×3 clássico', 'Resolva x + y + z = 6, 2x − y + z = 3 e x + 2y − z = 2. [[Três incógnitas, solução exata|sistema pequeno e solução exata]]; [[nenhuma linha tem dominância diagonal|sem dominância diagonal]].',
@@ -979,7 +981,7 @@ FP_tol(3, 'Engenharia civil', 'Reservatório em tronco de cone',
        'pi*x/3*(1 + (1 + x/5) + (1 + x/5)^2) - 30', 2, 5, 0.000001, 4, W_FP)
 
 # ================================================================= PONTO FIXO (20)
-W_PF = 'A equação já aparece na forma x = g(x), com |g′(x)| < 1 perto da raiz (contração) e um único chute: basta repetir xₖ₊₁ = g(xₖ), sem derivada e sem intervalo.'
+W_PF = 'A equação já aparece na forma x = g(x), com |g′(x)| < 1 perto da raiz (contração) e um único chute: basta repetir xᵢ₊₁ = g(xᵢ), sem derivada e sem intervalo.'
 PF_k(1, 'Matemática', 'Número de ouro em fração contínua',
      'O número de ouro satisfaz x = 1 + 1/x. [[A equação já está na forma x = g(x)|forma x = g(x)]], [[com |g′| ≈ 0,38 < 1 perto da raiz|contração]], e você parte de [[um único chute, x₀ = 1|um único chute]].',
      '1 + 1/x', 1, 4, W_PF, '1 + 1/x')

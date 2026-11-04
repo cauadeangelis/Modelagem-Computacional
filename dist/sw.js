@@ -5,7 +5,7 @@
    v12: o Quem Divergiu? entra no cache inicial (é leve e precisa abrir sem internet na sala). A Calculândia (≈ 1,5 MB, 3D)
    não pesa no primeiro acesso: cada arquivo dela é guardado na primeira vez que o jogo abre e, daí em diante, ele também
    funciona offline. Uma versão nova do site apaga esse cache junto com o resto. */
-const VERSION = 'numera-v13-6206346ed7';
+const VERSION = 'numera-v13-ce82b6eea3';
 const ASSETS = [
   './',
   'index.html',
@@ -35,6 +35,7 @@ const ASSETS = [
   'jogos/quem-divergiu/quem-divergiu.js',
   'js/conteudo/conteudo.js',
   'js/motor/motor-numerico.js',
+  'js/motor/passo-a-passo.js',
   'js/offline/registrar-offline.js',
   'js/paginas/aulas-em-video.js',
   'js/paginas/inicio.js',

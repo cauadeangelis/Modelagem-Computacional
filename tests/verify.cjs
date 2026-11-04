@@ -2,7 +2,7 @@
 const fs=require('fs'),vm=require('vm'),path=require('path');
 const dir=path.join(__dirname,'../dist'),read=f=>fs.readFileSync(path.join(dir,f),'utf8');
 // Arquivos do site na ordem do index.html: base (motor, conteúdo, dados) e as partes da interface (js/site e js/paginas).
-const BASE=['js/motor/motor-numerico.js','js/conteudo/conteudo.js','js/progresso/progresso.js','js/terminal/grafico-de-convergencia.js','dados/treino-exercicios.js','js/treino/treino.js','js/personagens/raiz-e-pivo.js'];
+const BASE=['js/motor/motor-numerico.js','js/motor/passo-a-passo.js','js/conteudo/conteudo.js','js/progresso/progresso.js','js/terminal/grafico-de-convergencia.js','dados/treino-exercicios.js','js/treino/treino.js','js/personagens/raiz-e-pivo.js'];
 const SITE=["js/site/estado-e-utilitarios.js", "js/site/jornada-e-backup.js", "js/site/ilustracoes.js", "js/site/moldura.js", "js/site/demonstracoes.js", "js/site/visuais-das-secoes.js", "js/paginas/inicio.js", "js/paginas/trilhas.js", "js/paginas/aulas-em-video.js", "js/paginas/licao.js", "js/paginas/missoes.js", "js/paginas/jogos.js", "js/paginas/revisao-e-progresso.js", "js/site/graficos.js", "js/paginas/terminal.js", "js/site/eventos-e-inicializacao.js"];
 const loadSite=c=>{c.__NUMERA_TESTE__=true;for(const f of SITE)vm.runInContext(read(f),c,{filename:f});};
 let count=0;const groups={};let group='Parser';
@@ -61,6 +61,21 @@ ok(C.ALL_METHODS.every(m=>C.ARENA.filter(t=>t.method===m.id).length===6),'6 desa
 for(const [i,t] of [...Object.values(C.TASKS).flat(),...C.ARENA,...C.CASES.flatMap(c=>c.tasks)].entries()){ok(!!t.q&&!!t.explain&&(t.type==='choice'?Number.isInteger(t.answer)&&t.answer>=0&&t.answer<t.options.length:Number.isFinite(t.value)),'Questão válida '+i);}
 let p=P.fresh(),id='c:bisection:0';P.complete(p,id);P.complete(p,id);ok(p.xp===20,'Sem duplicação de XP');P.complete(p,'c:bisection:1');P.complete(p,'c:bisection:2');ok(p.xp===90,'Bônus diário uma vez');P.complete(p,id);ok(p.xp===90,'Repetição sem bônus adicional');P.wrong(p,'c:newton:0');ok(!!p.review['c:newton:0'],'Erro cria revisão');P.complete(p,'c:newton:0',{wrong:2});ok(p.completed['c:newton:0'].stars===1,'Estrelas refletem tentativas');P.complete(p,'c:newton:0');ok(p.completed['c:newton:0'].stars===3,'Revisão melhora desempenho');ok(P.validate(JSON.parse(JSON.stringify(p))).xp===p.xp,'Backup válido');fail(()=>P.validate({version:3}),'Backup inválido');
 const mem=new Map([['numera-academy-v3',JSON.stringify({xp:40,done:['bisection-0','bogus-0'],arenaDone:[0]})]]),storage={getItem:k=>mem.get(k)||null,setItem:(k,v)=>mem.set(k,v)};const old=P.load(storage);ok(Object.keys(old.p.completed).length===2&&old.p.xp===40,'Migração v3');ok(!P.save(p,{setItem(){throw Error('quota')}}),'Falha de armazenamento explícita');
+group='Slides da professora (v13)';
+{const PP=ctx.NumeraPassos,n6=v=>Number(v.toFixed(6));ok(!!PP,'passo-a-passo.js carregado');
+ let r=PP.bissecao({f:'x^3-9x+3',a:0,b:1,eps:1e-2,K:10,criterio:'relativo'});ok(r.iteracoes===9&&n6(r.raiz)===0.337891&&Math.abs(r.linhas[8].erro-0.00578)<1e-5,'Exemplo 05: Bisseção para na 9ª iteração com x₉ = 0,337891 e erro 0,00578');
+ ok(r.linhas.map(l=>n6(l.x)).join()==='0.5,0.25,0.375,0.3125,0.34375,0.328125,0.335938,0.339844,0.337891','Exemplo 05: os nove valores médios da tabela');
+ r=PP.falsaPosicao({f:'x^3-9x+3',a:0,b:1,eps:1e-2,K:10,criterio:'percentual'});ok(r.iteracoes===4&&Math.abs(r.raiz-0.33761)<5e-6&&n6(r.linhas[0].x)===0.375,'Exemplo 06: Falsa Posição chega a 0,33761 na 4ª iteração');
+ r=PP.pontoFixo({g:'exp(-x)',x0:0,iteracoes:10});ok(n6(r.linhas[1].novo)===0.367879&&Math.abs(r.linhas[1].erro-171.8281828)<1e-6&&Math.abs(r.linhas[9].erro-1.108868242)<1e-6,'Exemplo 3: Ponto Fixo e o estimador Eᵣ% da tabela');
+ r=PP.newton({f:'exp(-x)-x',df:'-exp(-x)-1',x0:0,eps:1e-2,K:20});ok(r.linhas.length===4&&Math.abs(r.linhas[1].erro-11.70929098)<1e-6&&Math.abs(r.raiz-0.56714329)<1e-8,'Exemplo 5: Newton-Raphson converge na linha i = 3');
+ r=PP.secante({f:'exp(-x)-x',x0:0,x1:1,eps:1e-2,K:20});ok(r.linhas.length===4&&r.linhas[3].i===4&&Math.abs(r.linhas[0].erro-63.21206)<1e-4&&Math.abs(r.linhas[3].erro-0.00477)<1e-5,'Exemplo 7: Secante com ER% 63,21206 … 0,00477');
+ r=PP.gauss({A:[[3,2,4],[1,1,2],[4,3,-2]],b:[1,2,3]});ok(r.solucao.join()==='-3,5,0'&&r.etapas[1].multiplicadores.map(m=>PP.frac(m.m)).join()==='1/3,4/3'&&PP.frac(r.etapas[2].multiplicadores[0].m)==='1'&&r.etapas[2].matriz[2][2]===-8,'Gauss, Exemplo 1: m₂₁ = 1/3, m₃₁ = 4/3, m₃₂ = 1, −8x₃ = 0 e X* = (−3, 5, 0)');
+ ok(r.etapas[1].operacoes[0]==='E₂⁽¹⁾ → E₂⁽⁰⁾ − (1/3)E₁⁽⁰⁾'&&r.substituicao[1].texto==='(1/3)x₂ + (2/3)·0 = 5/3 ⇒ x₂ = 5','Gauss na notação dos slides (Eᵢ⁽ᵏ⁾ e substituição regressiva)');
+ r=PP.gauss({A:[[0,8,2],[3,5,2],[6,2,8]],b:[-7,8,26],pivoteamento:'parcial'});ok(r.solucao.map(PP.frac).join()==='4,−1,1/2','Gauss, Exercício 2 com pivoteamento: X* = (4, −1, 1/2)');
+ ok(PP.gauss({A:[[0.0002,2],[2,2]],b:[5,6],t:3}).solucao.join()==='0,2.5'&&PP.gauss({A:[[0.0002,2],[2,2]],b:[5,6],t:3,pivoteamento:'parcial'}).solucao.join()==='0.5,2.5','Gauss, Exemplo 3 em F(10, 3): sem pivoteamento (0; 2,5), com pivoteamento (0,5; 2,5)');
+ ok(PP.iteracoesBissecao(0,1,1e-2).k===7,'Número de iterações: k > (log(b₀ − a₀) − log ε)/log 2');
+ const g=PP.seidel({A:[[8,1,-1],[1,-7,2],[2,1,9]],b:[8,-4,12],x0:[0,0,0],iteracoes:2}).solucao.map(v=>Number(v.toFixed(5)));ok(g.join()==='1.03968,1.01474,0.98954','Lista 3, 1ª questão: Gauss-Seidel (1,03968; 1,01474; 0,98954)');
+ ok(Math.abs(PP.sassenfeld([[1,.4,-.1,.1],[.3,1,-.2,-.1],[-.1,-.2,1,.2],[.1,.3,.2,1]]).max-.6)<1e-12,'Critério de Sassenfeld: β = 0,6 (Lista 2, 16ª questão)');}
 group='Integração da interface';
 const elements={'#app':{innerHTML:''},'#main':{focus(){}},'#answer':{value:''}},handlers={};let title='';
 Object.assign(ctx,{document:{get title(){return title},set title(v){title=v},querySelector:q=>elements[q]||null,getElementById:id=>elements['#'+id]||null,addEventListener:(name,fn)=>handlers[name]=fn,createElement:()=>({click(){}})},localStorage:{getItem:()=>null,setItem(){}},history:{replaceState(){}},location:{hash:''},setTimeout(){},scrollTo(){},addEventListener(){},confirm:()=>true});
@@ -74,7 +89,7 @@ t.navigate('arena');ok(t.s.page==='jogos','Link antigo #arena leva à página Jo
 for(const c of C.CASES){t.navigate('case');t.s.caseId=c.id;for(let i=0;i<3;i++){t.s.caseQ=i;const task=c.tasks[i];t.s.selected=task.type==='choice'?task.answer:null;elements['#answer'].value=String(task.value??'');t.answerQuestion();ok(t.s.feedback?.ok,'Missão '+c.id+' '+i);}snapshot('case-'+c.id);}
 for(const source of ['x^2-2','(x-1.337)^2','2x+y=5\nx+3y=6','10x-y+2z=6\n-x+11y-z=22\n2x-y+10z=-10']){t.navigate('lab');t.s.source=source;t.s.algorithm='auto';t.solve();ok(t.s.result?.converged,'Resolver '+source);for(const tab of ['solution','steps','compare','converge','verify']){t.s.resultTab=tab;t.render();snapshot('lab-'+t.s.mode+'-'+tab);if(tab==='converge')ok(elements['#app'].innerHTML.includes('conv-plot'),'Gráfico de convergência '+source);}}
 for(const m of C.METHODS){
- t.navigate('lab');t.s.algorithm=m.id;t.s.mode=['gauss','seidel'].includes(m.id)?'system':'root';t.s.source=C.DEEP[m.id].system||C.DEEP[m.id].example;t.s.x0='1.5';t.s.x1='2';t.s.a='1';t.s.b='2';t.s.g=C.DEEP[m.id].g||'';t.solve();ok(t.s.result?.converged,'Terminal manual '+m.id);
+ t.navigate('lab');t.s.algorithm=m.id;t.s.mode=['gauss','seidel'].includes(m.id)?'system':'root';t.s.source=C.DEEP[m.id].system||C.DEEP[m.id].example;{const c=(C.DEEP[m.id].professora||{}).chamada||{},d=C.DEEP[m.id],v=(k,p)=>String(typeof c[k]==='number'?c[k]:typeof d[k]==='number'?d[k]:p);t.s.x0=v('x0',1.5);t.s.x1=v('x1',2);t.s.a=v('a',1);t.s.b=v('b',2);}t.s.g=C.DEEP[m.id].g||'';t.solve();ok(t.s.result?.converged,'Terminal manual '+m.id);
  const tasks=t.guideTasks(t.s.result);ok(tasks.length>0,'Modo guiado possui passos '+m.id);t.s.resultTab='guide';t.s.guideIndex=0;t.render();snapshot('guide-'+m.id);
  elements['#guideAnswer']={value:String(tasks[0].value)};t.checkGuide();ok(t.s.guideFeedback?.ok,'Correção guiada '+m.id);
 }
@@ -270,7 +285,7 @@ group='Correções da auditoria (v10)';
  t.openCourse('newton');ok(elements['#app'].innerHTML.includes('Aulas em vídeo sobre Newton-Raphson')&&elements['#app'].innerHTML.includes('youtube.com/watch?v=k7biHtHPJS8'),'Página da trilha lista as aulas');
  ok(!elements['#app'].innerHTML.includes('youtube-nocookie.com/embed'),'O player só é carregado depois do clique');
  ok(!elements['#app'].innerHTML.includes('Assistir aqui'),'Aberto do disco (file://), só o link: sem player embutido');
- const sc=t.introScreens();ok(sc.length===7&&sc[6].body.includes('youtube.com/watch'),'Leitura guiada termina com as aulas em vídeo');
+ const sc=t.introScreens();ok(sc.length===8&&sc[7].body.includes('youtube.com/watch'),'Leitura guiada termina com as aulas em vídeo');ok(sc[4].eyebrow==='Como a professora resolve'&&sc[4].body.includes('pp-table'),'Leitura guiada traz o exemplo dos slides com a tabela da professora');
  ok(elements['#app'].innerHTML.includes('rel="noopener noreferrer"')&&elements['#app'].innerHTML.includes('target="_blank"'),'Links externos abrem em nova aba, sem referência à página');}
 // Fontes locais, CSP e service worker.
 {const html=read('index.html');ok(!/googleapis|gstatic/.test(html),'Nenhuma fonte externa no index.html');ok(/Content-Security-Policy/.test(html)&&/script-src 'self';/.test(html)&&/object-src 'none'/.test(html),'Política de segurança (CSP) sem script embutido');

@@ -1,6 +1,6 @@
 # Treino — 140 exercícios de diagnóstico e resolução
 
-> Arquivo gerado por `tests/treino/gerar-treino-md.cjs` a partir de `dist/treino-data.js`. Não edite à mão.
+> Arquivo gerado por `tests/treino/gerar-treino-md.cjs` a partir de `dist/dados/treino-exercicios.js`. Não edite à mão.
 
 > **v11:** a pedido da professora, o Ponto Fixo está escondido no site, então o Treino mostra 120 exercícios (renumerados de 1 a 120, sem dois métodos iguais seguidos). Os 20 do Ponto Fixo continuam no arquivo e neste documento, com a numeração original, e voltam ao site quando o método voltar.
 
@@ -22,9 +22,9 @@ A aba **Treino** (entre Jogos e Terminal) tem 140 problemas misturados, **20 par
 
 ## Como os exercícios foram feitos e conferidos
 
-- **Gerador:** `tests/treino/gerar-treino.py` escreve `dist/treino-data.js` (reproduzível byte a byte).
+- **Gerador:** `tests/treino/gerar-treino.py` escreve `dist/dados/treino-exercicios.js` (reproduzível byte a byte).
 - **Gabarito independente do site:** sympy (derivadas exatas e frações) e mpmath com 50 dígitos.
-- **Conferência com o motor do site:** `node tests/treino/conferir-com-motor.cjs` refaz as 140 contas com o `math-engine.js`, confere que nenhum erro típico é aceito como certo e que o gráfico de convergência de cada gabarito mostra o método do exercício chegando à raiz certa.
+- **Conferência com o motor do site:** `node tests/treino/conferir-com-motor.cjs` refaz as 140 contas com o `js/motor/motor-numerico.js`, confere que nenhum erro típico é aceito como certo e que o gráfico de convergência de cada gabarito mostra o método do exercício chegando à raiz certa.
 - **Pela interface:** `node tests/verify.cjs` (grupo “Treino”) resolve os 140 exercícios digitando a resposta com vírgula, faz uma prova completa, testa a revisão, os erros típicos e a migração do progresso.
 - **Ordem:** misturada com semente fixa, **nunca dois métodos iguais seguidos**; os 14 primeiros já trazem os 7 métodos e o primeiro é de nível 1. Sequência dos 30 primeiros: G FP S PF FP GS PF N GS PF S B GS FP B GS FP GS G N B FP PF N S GS PF B S B.
 
@@ -72,7 +72,7 @@ x + y = 50 ; x − y = 10
 
 **Gabarito:** Eliminação de Gauss — x ≈ 30, y ≈ 20. Sistema pequeno, sem dominância diagonal e com pedido de solução exata: a Eliminação de Gauss resolve em um número finito de passos, sem depender de convergência.
 
-**Erros típicos reconhecidos:** (55; -5) → Você atualizou os coeficientes, mas esqueceu o lado direito: a operação Lᵢ ← Lᵢ − m·Lₖ vale também para o termo independente. · (20; 30) → Os valores estão certos, mas na ordem trocada. Confira qual incógnita é qual.
+**Erros típicos reconhecidos:** (55; -5) → Você atualizou os coeficientes, mas esqueceu o lado direito: a operação Eᵢ⁽ᵏ⁾ → Eᵢ⁽ᵏ⁻¹⁾ − mᵢₖEₖ⁽ᵏ⁻¹⁾ vale também para o termo independente. · (20; 30) → Os valores estão certos, mas na ordem trocada. Confira qual incógnita é qual.
 
 ### 2. Velocidade de cruzeiro do drone
 *Nível 2 · Aeronáutica · id `fp14`*
@@ -111,9 +111,9 @@ x = 5·(1 − e<sup>−x</sup>)
 
 **Pergunta (sem o método):** Partindo de x₀ = 5, encontre a solução com 6 casas decimais. Qual é ela?
 
-**Depois do diagnóstico:** Partindo de x₀ = 5, itere xₖ₊₁ = g(xₖ) até |xₖ₊₁ − xₖ| < 10<sup>−7</sup>. Qual é o ponto fixo, com 6 casas decimais?
+**Depois do diagnóstico:** Partindo de x₀ = 5, itere xᵢ₊₁ = g(xᵢ) até |xᵢ₊₁ − xᵢ| < 10<sup>−7</sup>. Qual é o ponto fixo, com 6 casas decimais?
 
-**Gabarito:** Ponto Fixo — 4,965114232 (tolerância 6e-7). A equação já aparece na forma x = g(x), com |g′(x)| < 1 perto da raiz (contração) e um único chute: basta repetir xₖ₊₁ = g(xₖ), sem derivada e sem intervalo.
+**Gabarito:** Ponto Fixo — 4,965114232 (tolerância 6e-7). A equação já aparece na forma x = g(x), com |g′(x)| < 1 perto da raiz (contração) e um único chute: basta repetir xᵢ₊₁ = g(xᵢ), sem derivada e sem intervalo.
 
 **Erros típicos reconhecidos:** 4,965155931 → Você parou cedo demais: a variação entre dois valores seguidos ainda estava acima do limite pedido.
 
@@ -156,11 +156,11 @@ x = 45 − x/2
 
 **Pergunta (sem o método):** Partindo de x₀ = 0, faça 3 iterações do método mais indicado. Qual é x₃?
 
-**Depois do diagnóstico:** Partindo de x₀ = 0, faça 3 iterações de Ponto Fixo, xₖ₊₁ = g(xₖ). Qual é x₃?
+**Depois do diagnóstico:** Partindo de x₀ = 0, faça 3 iterações de Ponto Fixo, xᵢ₊₁ = g(xᵢ). Qual é x₃?
 
-**Gabarito:** Ponto Fixo — 33,75. A equação já aparece na forma x = g(x), com |g′(x)| < 1 perto da raiz (contração) e um único chute: basta repetir xₖ₊₁ = g(xₖ), sem derivada e sem intervalo.
+**Gabarito:** Ponto Fixo — 33,75. A equação já aparece na forma x = g(x), com |g′(x)| < 1 perto da raiz (contração) e um único chute: basta repetir xᵢ₊₁ = g(xᵢ), sem derivada e sem intervalo.
 
-**Erros típicos reconhecidos:** 22,5 → Esse é o resultado de uma iteração a menos. Conte de novo: x₀ é o ponto de partida, e a 1ª iteração já produz x₁. · 28,125 → Esse é o resultado de uma iteração a mais do que o pedido. · 5,625 → Esse é o resíduo x − g(x), não a aproximação. A resposta é o próprio xₖ.
+**Erros típicos reconhecidos:** 22,5 → Esse é o resultado de uma iteração a menos. Conte de novo: x₀ é o ponto de partida, e a 1ª iteração já produz x₁. · 28,125 → Esse é o resultado de uma iteração a mais do que o pedido. · 5,625 → Esse é o resíduo x − g(x), não a aproximação. A resposta é o próprio xᵢ.
 
 ### 8. Produção de lucro máximo
 *Nível 2 · Economia · id `nw04`*
@@ -175,7 +175,7 @@ f(x) = 60 − 4·x − e<sup>0,1·x</sup>
 
 **Gabarito:** Newton-Raphson — 13,98748509. Derivada fácil de obter e chute inicial bom: Newton-Raphson converge quadraticamente (as casas corretas quase dobram a cada passo).
 
-**Erros típicos reconhecidos:** 14,04550872 → Esse é o resultado de uma iteração a menos. Conte de novo: x₀ é o ponto de partida, e a 1ª iteração já produz x₁. · -2,264841132 → Sinal trocado na fórmula: o passo de Newton é xₖ₊₁ = xₖ − f(xₖ)/f′(xₖ), com sinal de menos. · -6,8443·10<sup>−5</sup> → Esse é o valor de f na aproximação, não a aproximação. A resposta é o próprio x.
+**Erros típicos reconhecidos:** 14,04550872 → Esse é o resultado de uma iteração a menos. Conte de novo: x₀ é o ponto de partida, e a 1ª iteração já produz x₁. · -2,264841132 → Sinal trocado na fórmula: o passo de Newton é xᵢ₊₁ = xᵢ − f(xᵢ)/f′(xᵢ), com sinal de menos. · -6,8443·10<sup>−5</sup> → Esse é o valor de f na aproximação, não a aproximação. A resposta é o próprio x.
 
 ### 9. Reordenar para convergir
 *Nível 3 · Matemática · id `gs08`*
@@ -201,11 +201,11 @@ x = 40 − 0,75·x
 
 **Pergunta (sem o método):** Partindo de x₀ = 30, faça 3 iterações do método mais indicado. Qual é x₃?
 
-**Depois do diagnóstico:** Partindo de x₀ = 30, faça 3 iterações de Ponto Fixo, xₖ₊₁ = g(xₖ). Qual é x₃?
+**Depois do diagnóstico:** Partindo de x₀ = 30, faça 3 iterações de Ponto Fixo, xᵢ₊₁ = g(xᵢ). Qual é x₃?
 
-**Gabarito:** Ponto Fixo — 19,84375. A equação já aparece na forma x = g(x), com |g′(x)| < 1 perto da raiz (contração) e um único chute: basta repetir xₖ₊₁ = g(xₖ), sem derivada e sem intervalo.
+**Gabarito:** Ponto Fixo — 19,84375. A equação já aparece na forma x = g(x), com |g′(x)| < 1 perto da raiz (contração) e um único chute: basta repetir xᵢ₊₁ = g(xᵢ), sem derivada e sem intervalo.
 
-**Erros típicos reconhecidos:** 26,875 → Esse é o resultado de uma iteração a menos. Conte de novo: x₀ é o ponto de partida, e a 1ª iteração já produz x₁. · 25,1171875 → Esse é o resultado de uma iteração a mais do que o pedido. · -5,2734375 → Esse é o resíduo x − g(x), não a aproximação. A resposta é o próprio xₖ.
+**Erros típicos reconhecidos:** 26,875 → Esse é o resultado de uma iteração a menos. Conte de novo: x₀ é o ponto de partida, e a 1ª iteração já produz x₁. · 25,1171875 → Esse é o resultado de uma iteração a mais do que o pedido. · -5,2734375 → Esse é o resíduo x − g(x), não a aproximação. A resposta é o próprio xᵢ.
 
 ### 11. Velocidade máxima do carro
 *Nível 2 · Engenharia automotiva · id `sc19`*
@@ -220,7 +220,7 @@ f(x) = 0,396·x<sup>3</sup> + 176,58·x − 60000
 
 **Gabarito:** Secante — 50,57906891. Sem derivada disponível (ou cara de obter) e com dois palpites que não cercam a raiz: a Secante aproxima f′ pelos dois últimos pontos e converge rápido (ordem ≈ 1,6), com uma avaliação de f por passo. Sem troca de sinal, Bisseção e Falsa Posição nem começam.
 
-**Erros típicos reconhecidos:** 51,2023726 → Esse é o resultado de uma iteração a menos. Conte de novo: x₀ é o ponto de partida, e a 1ª iteração já produz x₁. · 66,47097637 → Sinal trocado: xₖ₊₁ = xₖ − f(xₖ)·(xₖ − xₖ₋₁)/(f(xₖ) − f(xₖ₋₁)). · 171,0815935 → Esse é o valor de f na aproximação, não a aproximação. A resposta é o próprio x.
+**Erros típicos reconhecidos:** 51,2023726 → Esse é o resultado de uma iteração a menos. Conte de novo: x₀ é o ponto de partida, e a 1ª iteração já produz x₁. · 66,47097637 → Sinal trocado: xᵢ₊₁ = xᵢ − f(xᵢ)·(xᵢ − xᵢ₋₁)/(f(xᵢ) − f(xᵢ₋₁)). · 171,0815935 → Esse é o valor de f na aproximação, não a aproximação. A resposta é o próprio x.
 
 ### 12. Raiz cúbica de 7
 *Nível 1 · Matemática · id `bi15`*
@@ -259,9 +259,9 @@ Um software de redes hidráulicas leva uma hora por simulação. A perda de carg
 
 f(x) = 0,0004·x<sup>1,85</sup> + 0,000001·x<sup>3</sup> − 15
 
-**Pergunta (sem o método):** Com o método mais indicado em [150; 250], quantas iterações são necessárias até |f(xₖ)| ≤ 0,0001?
+**Pergunta (sem o método):** Com o método mais indicado em [150; 250], quantas iterações são necessárias até |f(xᵢ)| ≤ 0,0001?
 
-**Depois do diagnóstico:** Com a Falsa Posição em [150; 250], quantas iterações são necessárias até |f(xₖ)| ≤ 0,0001?
+**Depois do diagnóstico:** Com a Falsa Posição em [150; 250], quantas iterações são necessárias até |f(xᵢ)| ≤ 0,0001?
 
 **Gabarito:** Falsa Posição — 7. Sinais opostos nas pontas e uma curva suave, quase reta no intervalo: a Falsa Posição mantém a raiz cercada como a Bisseção, mas corta onde a corda cruza o eixo e chega perto em bem menos passos, sem derivada.
 
@@ -306,7 +306,7 @@ f(x) = 200·((1 + x)<sup>24</sup> − 1)/x − 5300
 
 **Pergunta (sem o método):** Encontre a raiz em [0,002; 0,01] com 6 casas decimais, mantendo-a sempre cercada. Qual é ela?
 
-**Depois do diagnóstico:** Use a Falsa Posição em [0,002; 0,01] até |f(xₖ)| ≤ 0,001. Qual é a raiz, com 6 casas decimais?
+**Depois do diagnóstico:** Use a Falsa Posição em [0,002; 0,01] até |f(xᵢ)| ≤ 0,001. Qual é a raiz, com 6 casas decimais?
 
 **Gabarito:** Falsa Posição — 0,0085032361 (tolerância 6e-7). Sinais opostos nas pontas e uma curva suave, quase reta no intervalo: a Falsa Posição mantém a raiz cercada como a Bisseção, mas corta onde a corda cruza o eixo e chega perto em bem menos passos, sem derivada.
 
@@ -330,7 +330,7 @@ Três reservatórios trocam água e o equilíbrio dos níveis forma **um sistema
 ### 19. Pivô minúsculo
 *Nível 3 · Matemática · id `ga17`*
 
-Resolva 0,0001x + y = 1 e x + y = 2. **O primeiro pivô é 0,0001: sem trocar as linhas (pivotamento parcial), o arredondamento estraga a resposta**, e **Gauss-Seidel nessa ordem diverge (0,0001 < 1)**.
+Resolva 0,0001x + y = 1 e x + y = 2. **O primeiro pivô é 0,0001: sem trocar as linhas (pivoteamento parcial), o arredondamento estraga a resposta**, e **Gauss-Seidel nessa ordem diverge (0,0001 < 1)**.
 
 0,0001x + y = 1 ; x + y = 2
 
@@ -338,7 +338,7 @@ Resolva 0,0001x + y = 1 e x + y = 2. **O primeiro pivô é 0,0001: sem trocar as
 
 **Depois do diagnóstico:** Resolva o sistema por Eliminação de Gauss. Quais são os valores de x e y?
 
-**Gabarito:** Eliminação de Gauss — x ≈ 1,00010001, y ≈ 0,99989999. Pivô minúsculo pede Gauss com pivotamento parcial. Gauss-Seidel, com 0,0001 na diagonal, divergiria.
+**Gabarito:** Eliminação de Gauss — x ≈ 1,00010001, y ≈ 0,99989999. Pivô minúsculo pede Gauss com pivoteamento parcial. Gauss-Seidel, com 0,0001 na diagonal, divergiria.
 
 ### 20. Ângulo de pressão da engrenagem
 *Nível 2 · Engenharia mecânica · id `nw19`*
@@ -353,7 +353,7 @@ f(x) = tan(x) − x − 0,05
 
 **Gabarito:** Newton-Raphson — 0,5120400999. Derivada fácil de obter e chute inicial bom: Newton-Raphson converge quadraticamente (as casas corretas quase dobram a cada passo).
 
-**Erros típicos reconhecidos:** 0,4616983556 → Sinal trocado na fórmula: o passo de Newton é xₖ₊₁ = xₖ − f(xₖ)/f′(xₖ), com sinal de menos. · 9,0203·10<sup>−8</sup> → Esse é o valor de f na aproximação, não a aproximação. A resposta é o próprio x. · -0,0508881663 → Sua calculadora estava em graus. Em métodos numéricos (e no Cálculo) os ângulos ficam em radianos.
+**Erros típicos reconhecidos:** 0,4616983556 → Sinal trocado na fórmula: o passo de Newton é xᵢ₊₁ = xᵢ − f(xᵢ)/f′(xᵢ), com sinal de menos. · 9,0203·10<sup>−8</sup> → Esse é o valor de f na aproximação, não a aproximação. A resposta é o próprio x. · -0,0508881663 → Sua calculadora estava em graus. Em métodos numéricos (e no Cálculo) os ângulos ficam em radianos.
 
 ### 21. Máximos da difração
 *Nível 1 · Física · id `bi09`*
@@ -394,11 +394,11 @@ x = 2 + 0,093·sin(x)
 
 **Pergunta (sem o método):** Partindo de x₀ = 2, faça 3 iterações do método mais indicado. Qual é x₃?
 
-**Depois do diagnóstico:** Partindo de x₀ = 2, faça 3 iterações de Ponto Fixo, xₖ₊₁ = g(xₖ). Qual é x₃?
+**Depois do diagnóstico:** Partindo de x₀ = 2, faça 3 iterações de Ponto Fixo, xᵢ₊₁ = g(xᵢ). Qual é x₃?
 
-**Gabarito:** Ponto Fixo — 2,081156282. A equação já aparece na forma x = g(x), com |g′(x)| < 1 perto da raiz (contração) e um único chute: basta repetir xₖ₊₁ = g(xₖ), sem derivada e sem intervalo.
+**Gabarito:** Ponto Fixo — 2,081156282. A equação já aparece na forma x = g(x), com |g′(x)| < 1 perto da raiz (contração) e um único chute: basta repetir xᵢ₊₁ = g(xᵢ), sem derivada e sem intervalo.
 
-**Erros típicos reconhecidos:** 7,3905·10<sup>−6</sup> → Esse é o resíduo x − g(x), não a aproximação. A resposta é o próprio xₖ. · 2,003250927 → Sua calculadora estava em graus. Em métodos numéricos (e no Cálculo) os ângulos ficam em radianos.
+**Erros típicos reconhecidos:** 7,3905·10<sup>−6</sup> → Esse é o resíduo x − g(x), não a aproximação. A resposta é o próprio xᵢ. · 2,003250927 → Sua calculadora estava em graus. Em métodos numéricos (e no Cálculo) os ângulos ficam em radianos.
 
 ### 24. O exemplo do próprio Newton
 *Nível 2 · História da matemática · id `nw07`*
@@ -413,7 +413,7 @@ f(x) = x<sup>3</sup> − 2·x − 5
 
 **Gabarito:** Newton-Raphson — 2,094568121. Derivada fácil de obter e chute inicial bom: Newton-Raphson converge quadraticamente (as casas corretas quase dobram a cada passo).
 
-**Erros típicos reconhecidos:** 2,1 → Esse é o resultado de uma iteração a menos. Conte de novo: x₀ é o ponto de partida, e a 1ª iteração já produz x₁. · 1,6801812 → Sinal trocado na fórmula: o passo de Newton é xₖ₊₁ = xₖ − f(xₖ)/f′(xₖ), com sinal de menos. · 0,0001857232 → Esse é o valor de f na aproximação, não a aproximação. A resposta é o próprio x.
+**Erros típicos reconhecidos:** 2,1 → Esse é o resultado de uma iteração a menos. Conte de novo: x₀ é o ponto de partida, e a 1ª iteração já produz x₁. · 1,6801812 → Sinal trocado na fórmula: o passo de Newton é xᵢ₊₁ = xᵢ − f(xᵢ)/f′(xᵢ), com sinal de menos. · 0,0001857232 → Esse é o valor de f na aproximação, não a aproximação. A resposta é o próprio x.
 
 ### 25. Flecha do cabo suspenso
 *Nível 2 · Engenharia civil · id `sc05`*
@@ -428,7 +428,7 @@ f(x) = x·cosh(50/x) − x − 10
 
 **Gabarito:** Secante — 126,263894. Sem derivada disponível (ou cara de obter) e com dois palpites que não cercam a raiz: a Secante aproxima f′ pelos dois últimos pontos e converge rápido (ordem ≈ 1,6), com uma avaliação de f por passo. Sem troca de sinal, Bisseção e Falsa Posição nem começam.
 
-**Erros típicos reconhecidos:** 126,6727821 → Esse é o resultado de uma iteração a mais do que o pedido. · 153,736106 → Sinal trocado: xₖ₊₁ = xₖ − f(xₖ)·(xₖ − xₖ₋₁)/(f(xₖ) − f(xₖ₋₁)). · 0,0299480226 → Esse é o valor de f na aproximação, não a aproximação. A resposta é o próprio x.
+**Erros típicos reconhecidos:** 126,6727821 → Esse é o resultado de uma iteração a mais do que o pedido. · 153,736106 → Sinal trocado: xᵢ₊₁ = xᵢ − f(xᵢ)·(xᵢ − xᵢ₋₁)/(f(xᵢ) − f(xᵢ₋₁)). · 0,0299480226 → Esse é o valor de f na aproximação, não a aproximação. A resposta é o próprio x.
 
 ### 26. Dominância com sinais
 *Nível 1 · Matemática · id `gs14`*
@@ -454,11 +454,11 @@ x = (x + 2)<sup>1/3</sup>
 
 **Pergunta (sem o método):** Partindo de x₀ = 1,5, faça 3 iterações do método mais indicado. Qual é x₃?
 
-**Depois do diagnóstico:** Partindo de x₀ = 1,5, faça 3 iterações de Ponto Fixo, xₖ₊₁ = g(xₖ). Qual é x₃?
+**Depois do diagnóstico:** Partindo de x₀ = 1,5, faça 3 iterações de Ponto Fixo, xᵢ₊₁ = g(xᵢ). Qual é x₃?
 
-**Gabarito:** Ponto Fixo — 1,521315698. A equação já aparece na forma x = g(x), com |g′(x)| < 1 perto da raiz (contração) e um único chute: basta repetir xₖ₊₁ = g(xₖ), sem derivada e sem intervalo.
+**Gabarito:** Ponto Fixo — 1,521315698. A equação já aparece na forma x = g(x), com |g′(x)| < 1 perto da raiz (contração) e um único chute: basta repetir xᵢ₊₁ = g(xᵢ), sem derivada e sem intervalo.
 
-**Erros típicos reconhecidos:** -5,4790·10<sup>−5</sup> → Esse é o resíduo x − g(x), não a aproximação. A resposta é o próprio xₖ.
+**Erros típicos reconhecidos:** -5,4790·10<sup>−5</sup> → Esse é o resíduo x − g(x), não a aproximação. A resposta é o próprio xᵢ.
 
 ### 28. Diodo com exponencial íngreme
 *Nível 3 · Eletrônica · id `bi05`*
@@ -488,7 +488,7 @@ f(x) = x·e<sup>x</sup> − 2
 
 **Gabarito:** Secante — 0,8606426945. Sem derivada disponível (ou cara de obter) e com dois palpites que não cercam a raiz: a Secante aproxima f′ pelos dois últimos pontos e converge rápido (ordem ≈ 1,6), com uma avaliação de f por passo. Sem troca de sinal, Bisseção e Falsa Posição nem começam.
 
-**Erros típicos reconhecidos:** 0,8865146712 → Esse é o resultado de uma iteração a menos. Conte de novo: x₀ é o ponto de partida, e a 1ª iteração já produz x₁. · 0,8528125366 → Esse é o resultado de uma iteração a mais do que o pedido. · 2,042126654 → Sinal trocado: xₖ₊₁ = xₖ − f(xₖ)·(xₖ − xₖ₋₁)/(f(xₖ) − f(xₖ₋₁)). · 0,856239246 → Você manteve x₀ fixo em todas as iterações. Na Secante, os dois pontos mais recentes substituem os anteriores. · 0,0351445429 → Esse é o valor de f na aproximação, não a aproximação. A resposta é o próprio x.
+**Erros típicos reconhecidos:** 0,8865146712 → Esse é o resultado de uma iteração a menos. Conte de novo: x₀ é o ponto de partida, e a 1ª iteração já produz x₁. · 0,8528125366 → Esse é o resultado de uma iteração a mais do que o pedido. · 2,042126654 → Sinal trocado: xᵢ₊₁ = xᵢ − f(xᵢ)·(xᵢ − xᵢ₋₁)/(f(xᵢ) − f(xᵢ₋₁)). · 0,856239246 → Você manteve x₀ fixo em todas as iterações. Na Secante, os dois pontos mais recentes substituem os anteriores. · 0,0351445429 → Esse é o valor de f na aproximação, não a aproximação. A resposta é o próprio x.
 
 ### 30. O Newton que ficou girando
 *Nível 3 · Matemática · id `bi06`*
@@ -514,7 +514,7 @@ f(x) = 2·√(x<sup>2</sup> − 0,01) + 0,4·π + 0,2·arcsen(0,1/x) − 3
 
 **Pergunta (sem o método):** Encontre a raiz em [0,8; 1,2] com 6 casas decimais, mantendo-a sempre cercada. Qual é ela?
 
-**Depois do diagnóstico:** Use a Falsa Posição em [0,8; 1,2] até |f(xₖ)| ≤ 1·10<sup>−9</sup>. Qual é a raiz, com 6 casas decimais?
+**Depois do diagnóstico:** Use a Falsa Posição em [0,8; 1,2] até |f(xᵢ)| ≤ 1·10<sup>−9</sup>. Qual é a raiz, com 6 casas decimais?
 
 **Gabarito:** Falsa Posição — 0,8659006914 (tolerância 6e-7). Sinais opostos nas pontas e uma curva suave, quase reta no intervalo: a Falsa Posição mantém a raiz cercada como a Bisseção, mas corta onde a corda cruza o eixo e chega perto em bem menos passos, sem derivada.
 
@@ -533,7 +533,7 @@ f(x) = cos(x) − x<sup>3</sup>
 
 **Gabarito:** Secante — 0,8217949944. Sem derivada disponível (ou cara de obter) e com dois palpites que não cercam a raiz: a Secante aproxima f′ pelos dois últimos pontos e converge rápido (ordem ≈ 1,6), com uma avaliação de f por passo. Sem troca de sinal, Bisseção e Falsa Posição nem começam.
 
-**Erros típicos reconhecidos:** 1,025374242 → Esse é o resultado de uma iteração a menos. Conte de novo: x₀ é o ponto de partida, e a 1ª iteração já produz x₁. · 0,8592041497 → Esse é o resultado de uma iteração a mais do que o pedido. · -0,9510294961 → Sinal trocado: xₖ₊₁ = xₖ − f(xₖ)·(xₖ − xₖ₋₁)/(f(xₖ) − f(xₖ₋₁)). · 0,8013913168 → Você manteve x₀ fixo em todas as iterações. Na Secante, os dois pontos mais recentes substituem os anteriores. · 0,1259109116 → Esse é o valor de f na aproximação, não a aproximação. A resposta é o próprio x. · 0,8324480472 → Sua calculadora estava em graus. Em métodos numéricos (e no Cálculo) os ângulos ficam em radianos.
+**Erros típicos reconhecidos:** 1,025374242 → Esse é o resultado de uma iteração a menos. Conte de novo: x₀ é o ponto de partida, e a 1ª iteração já produz x₁. · 0,8592041497 → Esse é o resultado de uma iteração a mais do que o pedido. · -0,9510294961 → Sinal trocado: xᵢ₊₁ = xᵢ − f(xᵢ)·(xᵢ − xᵢ₋₁)/(f(xᵢ) − f(xᵢ₋₁)). · 0,8013913168 → Você manteve x₀ fixo em todas as iterações. Na Secante, os dois pontos mais recentes substituem os anteriores. · 0,1259109116 → Esse é o valor de f na aproximação, não a aproximação. A resposta é o próprio x. · 0,8324480472 → Sua calculadora estava em graus. Em métodos numéricos (e no Cálculo) os ângulos ficam em radianos.
 
 ### 33. Correntes num circuito
 *Nível 2 · Engenharia elétrica · id `ga03`*
@@ -548,7 +548,7 @@ x − y − z = 0 ; 2x + 4y = 20 ; 4y − 12z = 0
 
 **Gabarito:** Eliminação de Gauss — x ≈ 4, y ≈ 3, z ≈ 1. Sistema pequeno, sem dominância diagonal e com pedido de solução exata: a Eliminação de Gauss resolve em um número finito de passos, sem depender de convergência.
 
-**Erros típicos reconhecidos:** (3,333333333; 3,333333333; 0) → Você atualizou os coeficientes, mas esqueceu o lado direito: a operação Lᵢ ← Lᵢ − m·Lₖ vale também para o termo independente. · (5; 7,5; -2,5) → Sinal do multiplicador trocado: para zerar o coeficiente, faça Lᵢ ← Lᵢ − m·Lₖ, com m = aᵢₖ/aₖₖ. · (1; 3; 4) → Os valores estão certos, mas na ordem trocada. Confira qual incógnita é qual.
+**Erros típicos reconhecidos:** (3,333333333; 3,333333333; 0) → Você atualizou os coeficientes, mas esqueceu o lado direito: a operação Eᵢ⁽ᵏ⁾ → Eᵢ⁽ᵏ⁻¹⁾ − mᵢₖEₖ⁽ᵏ⁻¹⁾ vale também para o termo independente. · (5; 7,5; -2,5) → Sinal do multiplicador trocado: para zerar o coeficiente, faça Eᵢ⁽ᵏ⁾ → Eᵢ⁽ᵏ⁻¹⁾ − mᵢₖEₖ⁽ᵏ⁻¹⁾, com mᵢₖ = aᵢₖ⁽ᵏ⁻¹⁾/aₖₖ⁽ᵏ⁻¹⁾. · (1; 3; 4) → Os valores estão certos, mas na ordem trocada. Confira qual incógnita é qual.
 
 ### 34. A tarde passa dos 20 °C
 *Nível 2 · Meteorologia · id `bi14`*
@@ -578,7 +578,7 @@ f(x) = x<sup>4</sup> − 3
 
 **Gabarito:** Newton-Raphson — 1,316374602. Derivada fácil de obter e chute inicial bom: Newton-Raphson converge quadraticamente (as casas corretas quase dobram a cada passo).
 
-**Erros típicos reconhecidos:** 1,283625398 → Sinal trocado na fórmula: o passo de Newton é xₖ₊₁ = xₖ − f(xₖ)/f′(xₖ), com sinal de menos. · 0,0027417161 → Esse é o valor de f na aproximação, não a aproximação. A resposta é o próprio x.
+**Erros típicos reconhecidos:** 1,283625398 → Sinal trocado na fórmula: o passo de Newton é xᵢ₊₁ = xᵢ − f(xᵢ)/f′(xᵢ), com sinal de menos. · 0,0027417161 → Esse é o valor de f na aproximação, não a aproximação. A resposta é o próprio x.
 
 ### 36. Rede com quatro nós
 *Nível 3 · Engenharia elétrica · id `ga20`*
@@ -593,7 +593,7 @@ x + 2y − z + u = −2 ; 2x − y + z + 3u = 11 ; x + y + z − 2u = 2 ; −x +
 
 **Gabarito:** Eliminação de Gauss — x ≈ 2, y ≈ -1, z ≈ 3, u ≈ 1. Sistema pequeno, sem dominância diagonal e com pedido de solução exata: a Eliminação de Gauss resolve em um número finito de passos, sem depender de convergência.
 
-**Erros típicos reconhecidos:** (1,808403361; -1,084033613; 1,805042017; 0,1647058824) → Você atualizou os coeficientes, mas esqueceu o lado direito: a operação Lᵢ ← Lᵢ − m·Lₖ vale também para o termo independente. · (-3,975308642; -0,4567901235; -1,518518519; 1,37037037) → Sinal do multiplicador trocado: para zerar o coeficiente, faça Lᵢ ← Lᵢ − m·Lₖ, com m = aᵢₖ/aₖₖ. · (1; 3; -1; 2) → Os valores estão certos, mas na ordem trocada. Confira qual incógnita é qual.
+**Erros típicos reconhecidos:** (1,808403361; -1,084033613; 1,805042017; 0,1647058824) → Você atualizou os coeficientes, mas esqueceu o lado direito: a operação Eᵢ⁽ᵏ⁾ → Eᵢ⁽ᵏ⁻¹⁾ − mᵢₖEₖ⁽ᵏ⁻¹⁾ vale também para o termo independente. · (-3,975308642; -0,4567901235; -1,518518519; 1,37037037) → Sinal do multiplicador trocado: para zerar o coeficiente, faça Eᵢ⁽ᵏ⁾ → Eᵢ⁽ᵏ⁻¹⁾ − mᵢₖEₖ⁽ᵏ⁻¹⁾, com mᵢₖ = aᵢₖ⁽ᵏ⁻¹⁾/aₖₖ⁽ᵏ⁻¹⁾. · (1; 3; -1; 2) → Os valores estão certos, mas na ordem trocada. Confira qual incógnita é qual.
 
 ### 37. Taxa interna de retorno
 *Nível 2 · Finanças · id `sc01`*
@@ -608,7 +608,7 @@ f(x) = −1000 + 300/(1 + x) + 400/(1 + x)<sup>2</sup> + 500/(1 + x)<sup>3</sup>
 
 **Gabarito:** Secante — 0,0884217065. Sem derivada disponível (ou cara de obter) e com dois palpites que não cercam a raiz: a Secante aproxima f′ pelos dois últimos pontos e converge rápido (ordem ≈ 1,6), com uma avaliação de f por passo. Sem troca de sinal, Bisseção e Falsa Posição nem começam.
 
-**Erros típicos reconhecidos:** 0,0889899276 → Esse é o resultado de uma iteração a mais do que o pedido. · 0,1515782935 → Sinal trocado: xₖ₊₁ = xₖ − f(xₖ)·(xₖ − xₖ₋₁)/(f(xₖ) − f(xₖ₋₁)). · 1,051329021 → Esse é o valor de f na aproximação, não a aproximação. A resposta é o próprio x.
+**Erros típicos reconhecidos:** 0,0889899276 → Esse é o resultado de uma iteração a mais do que o pedido. · 0,1515782935 → Sinal trocado: xᵢ₊₁ = xᵢ − f(xᵢ)·(xᵢ − xᵢ₋₁)/(f(xᵢ) − f(xᵢ₋₁)). · 1,051329021 → Esse é o valor de f na aproximação, não a aproximação. A resposta é o próprio x.
 
 ### 38. x = 2 + ln(x)
 *Nível 1 · Matemática · id `pf04`*
@@ -619,11 +619,11 @@ x = 2 + ln(x)
 
 **Pergunta (sem o método):** Partindo de x₀ = 3, faça 3 iterações do método mais indicado. Qual é x₃?
 
-**Depois do diagnóstico:** Partindo de x₀ = 3, faça 3 iterações de Ponto Fixo, xₖ₊₁ = g(xₖ). Qual é x₃?
+**Depois do diagnóstico:** Partindo de x₀ = 3, faça 3 iterações de Ponto Fixo, xᵢ₊₁ = g(xᵢ). Qual é x₃?
 
-**Gabarito:** Ponto Fixo — 3,141337866. A equação já aparece na forma x = g(x), com |g′(x)| < 1 perto da raiz (contração) e um único chute: basta repetir xₖ₊₁ = g(xₖ), sem derivada e sem intervalo.
+**Gabarito:** Ponto Fixo — 3,141337866. A equação já aparece na forma x = g(x), com |g′(x)| < 1 perto da raiz (contração) e um único chute: basta repetir xᵢ₊₁ = g(xᵢ), sem derivada e sem intervalo.
 
-**Erros típicos reconhecidos:** 3,130954362 → Esse é o resultado de uma iteração a menos. Conte de novo: x₀ é o ponto de partida, e a 1ª iteração já produz x₁. · -0,003310915 → Esse é o resíduo x − g(x), não a aproximação. A resposta é o próprio xₖ.
+**Erros típicos reconhecidos:** 3,130954362 → Esse é o resultado de uma iteração a menos. Conte de novo: x₀ é o ponto de partida, e a 1ª iteração já produz x₁. · -0,003310915 → Esse é o resíduo x − g(x), não a aproximação. A resposta é o próprio xᵢ.
 
 ### 39. Temperaturas numa placa
 *Nível 2 · Transferência de calor · id `gs02`*
@@ -668,7 +668,7 @@ Três ligas (x, y e z, em kg) misturam cobre, zinco e estanho para obter 43 kg d
 
 **Gabarito:** Eliminação de Gauss — x ≈ 20, y ≈ 30, z ≈ 50. Sistema pequeno, sem dominância diagonal e com pedido de solução exata: a Eliminação de Gauss resolve em um número finito de passos, sem depender de convergência.
 
-**Erros típicos reconhecidos:** (-67,57692308; 53,23076923; 149,5) → Você atualizou os coeficientes, mas esqueceu o lado direito: a operação Lᵢ ← Lᵢ − m·Lₖ vale também para o termo independente. · (45,89424572; -15,94090202; 98,72472784) → Sinal do multiplicador trocado: para zerar o coeficiente, faça Lᵢ ← Lᵢ − m·Lₖ, com m = aᵢₖ/aₖₖ. · (50; 30; 20) → Os valores estão certos, mas na ordem trocada. Confira qual incógnita é qual.
+**Erros típicos reconhecidos:** (-67,57692308; 53,23076923; 149,5) → Você atualizou os coeficientes, mas esqueceu o lado direito: a operação Eᵢ⁽ᵏ⁾ → Eᵢ⁽ᵏ⁻¹⁾ − mᵢₖEₖ⁽ᵏ⁻¹⁾ vale também para o termo independente. · (45,89424572; -15,94090202; 98,72472784) → Sinal do multiplicador trocado: para zerar o coeficiente, faça Eᵢ⁽ᵏ⁾ → Eᵢ⁽ᵏ⁻¹⁾ − mᵢₖEₖ⁽ᵏ⁻¹⁾, com mᵢₖ = aᵢₖ⁽ᵏ⁻¹⁾/aₖₖ⁽ᵏ⁻¹⁾. · (50; 30; 20) → Os valores estão certos, mas na ordem trocada. Confira qual incógnita é qual.
 
 ### 42. e⁻ˣ = x²
 *Nível 1 · Matemática · id `sc18`*
@@ -683,7 +683,7 @@ f(x) = e<sup>−x</sup> − x<sup>2</sup>
 
 **Gabarito:** Secante — 0,7045590071. Sem derivada disponível (ou cara de obter) e com dois palpites que não cercam a raiz: a Secante aproxima f′ pelos dois últimos pontos e converge rápido (ordem ≈ 1,6), com uma avaliação de f por passo. Sem troca de sinal, Bisseção e Falsa Posição nem começam.
 
-**Erros típicos reconhecidos:** 0,7136159284 → Esse é o resultado de uma iteração a menos. Conte de novo: x₀ é o ponto de partida, e a 1ª iteração já produz x₁. · 1,815306134 → Sinal trocado: xₖ₊₁ = xₖ − f(xₖ)·(xₖ − xₖ₋₁)/(f(xₖ) − f(xₖ₋₁)). · -0,0020768739 → Esse é o valor de f na aproximação, não a aproximação. A resposta é o próprio x.
+**Erros típicos reconhecidos:** 0,7136159284 → Esse é o resultado de uma iteração a menos. Conte de novo: x₀ é o ponto de partida, e a 1ª iteração já produz x₁. · 1,815306134 → Sinal trocado: xᵢ₊₁ = xᵢ − f(xᵢ)·(xᵢ − xᵢ₋₁)/(f(xᵢ) − f(xᵢ₋₁)). · -0,0020768739 → Esse é o valor de f na aproximação, não a aproximação. A resposta é o próprio x.
 
 ### 43. Controlador que recalcula
 *Nível 1 · Controle · id `gs05`*
@@ -713,7 +713,7 @@ f(x) = x·ln(x) − 10
 
 **Gabarito:** Newton-Raphson — 5,728937535. Derivada fácil de obter e chute inicial bom: Newton-Raphson converge quadraticamente (as casas corretas quase dobram a cada passo).
 
-**Erros típicos reconhecidos:** 5,7483644 → Esse é o resultado de uma iteração a menos. Conte de novo: x₀ é o ponto de partida, e a 1ª iteração já produz x₁. · 2,679868377 → Sinal trocado na fórmula: o passo de Newton é xₖ₊₁ = xₖ − f(xₖ)/f′(xₖ), com sinal de menos. · 3,2864·10<sup>−5</sup> → Esse é o valor de f na aproximação, não a aproximação. A resposta é o próprio x.
+**Erros típicos reconhecidos:** 5,7483644 → Esse é o resultado de uma iteração a menos. Conte de novo: x₀ é o ponto de partida, e a 1ª iteração já produz x₁. · 2,679868377 → Sinal trocado na fórmula: o passo de Newton é xᵢ₊₁ = xᵢ − f(xᵢ)/f′(xᵢ), com sinal de menos. · 3,2864·10<sup>−5</sup> → Esse é o valor de f na aproximação, não a aproximação. A resposta é o próprio x.
 
 ### 45. Quando a população chega a 600?
 *Nível 2 · Biologia · id `bi11`*
@@ -758,7 +758,7 @@ f(x) = 0,0000000567·(x<sup>4</sup> − 8100000000) + 10·(x − 300) − 1000
 
 **Gabarito:** Secante — 355,4458837. Sem derivada disponível (ou cara de obter) e com dois palpites que não cercam a raiz: a Secante aproxima f′ pelos dois últimos pontos e converge rápido (ordem ≈ 1,6), com uma avaliação de f por passo. Sem troca de sinal, Bisseção e Falsa Posição nem começam.
 
-**Erros típicos reconhecidos:** 450,734357 → Sinal trocado: xₖ₊₁ = xₖ − f(xₖ)·(xₖ − xₖ₋₁)/(f(xₖ) − f(xₖ₋₁)). · 0,2480958807 → Esse é o valor de f na aproximação, não a aproximação. A resposta é o próprio x.
+**Erros típicos reconhecidos:** 450,734357 → Sinal trocado: xᵢ₊₁ = xᵢ − f(xᵢ)·(xᵢ − xᵢ₋₁)/(f(xᵢ) − f(xᵢ₋₁)). · 0,2480958807 → Esse é o valor de f na aproximação, não a aproximação. A resposta é o próprio x.
 
 ### 48. Segmento circular de meia unidade
 *Nível 2 · Geometria · id `fp10`*
@@ -769,7 +769,7 @@ f(x) = x − sin(x) − 1
 
 **Pergunta (sem o método):** Encontre a raiz em [1,5; 2,5] com 4 casas decimais, mantendo-a sempre cercada. Qual é ela?
 
-**Depois do diagnóstico:** Use a Falsa Posição em [1,5; 2,5] até |f(xₖ)| ≤ 1·10<sup>−5</sup>. Qual é a raiz, com 4 casas decimais?
+**Depois do diagnóstico:** Use a Falsa Posição em [1,5; 2,5] até |f(xᵢ)| ≤ 1·10<sup>−5</sup>. Qual é a raiz, com 4 casas decimais?
 
 **Gabarito:** Falsa Posição — 1,934563211 (tolerância 0,00006). Sinais opostos nas pontas e uma curva suave, quase reta no intervalo: a Falsa Posição mantém a raiz cercada como a Bisseção, mas corta onde a corda cruza o eixo e chega perto em bem menos passos, sem derivada.
 
@@ -788,7 +788,7 @@ f(x) = 100·x<sup>2,5</sup>/(32 + x<sup>2,5</sup>) − 70
 
 **Gabarito:** Secante — 5,506020793. Sem derivada disponível (ou cara de obter) e com dois palpites que não cercam a raiz: a Secante aproxima f′ pelos dois últimos pontos e converge rápido (ordem ≈ 1,6), com uma avaliação de f por passo. Sem troca de sinal, Bisseção e Falsa Posição nem começam.
 
-**Erros típicos reconhecidos:** 5,642614035 → Esse é o resultado de uma iteração a mais do que o pedido. · 8,493979207 → Sinal trocado: xₖ₊₁ = xₖ − f(xₖ)·(xₖ − xₖ₋₁)/(f(xₖ) − f(xₖ₋₁)). · -1,026738389 → Esse é o valor de f na aproximação, não a aproximação. A resposta é o próprio x.
+**Erros típicos reconhecidos:** 5,642614035 → Esse é o resultado de uma iteração a mais do que o pedido. · 8,493979207 → Sinal trocado: xᵢ₊₁ = xᵢ − f(xᵢ)·(xᵢ − xᵢ₋₁)/(f(xᵢ) − f(xᵢ₋₁)). · -1,026738389 → Esse é o valor de f na aproximação, não a aproximação. A resposta é o próprio x.
 
 ### 50. Raiz de 5 sem calculadora
 *Nível 1 · Matemática · id `bi01`*
@@ -818,7 +818,7 @@ u = 1 ; x + y + z + u = 2 ; 8x + 4y + 2z + u = 9 ; 27x + 9y + 3z + u = 28
 
 **Gabarito:** Eliminação de Gauss — x ≈ 1, y ≈ 0, z ≈ 0, u ≈ 1. Sistema pequeno, sem dominância diagonal e com pedido de solução exata: a Eliminação de Gauss resolve em um número finito de passos, sem depender de convergência.
 
-**Erros típicos reconhecidos:** (-4,62962963; 22; -15,33333333; 1) → Você atualizou os coeficientes, mas esqueceu o lado direito: a operação Lᵢ ← Lᵢ − m·Lₖ vale também para o termo independente. · (1,013157895; -1,065789474; 3,078947368; 1) → Sinal do multiplicador trocado: para zerar o coeficiente, faça Lᵢ ← Lᵢ − m·Lₖ, com m = aᵢₖ/aₖₖ.
+**Erros típicos reconhecidos:** (-4,62962963; 22; -15,33333333; 1) → Você atualizou os coeficientes, mas esqueceu o lado direito: a operação Eᵢ⁽ᵏ⁾ → Eᵢ⁽ᵏ⁻¹⁾ − mᵢₖEₖ⁽ᵏ⁻¹⁾ vale também para o termo independente. · (1,013157895; -1,065789474; 3,078947368; 1) → Sinal do multiplicador trocado: para zerar o coeficiente, faça Eᵢ⁽ᵏ⁾ → Eᵢ⁽ᵏ⁻¹⁾ − mᵢₖEₖ⁽ᵏ⁻¹⁾, com mᵢₖ = aᵢₖ⁽ᵏ⁻¹⁾/aₖₖ⁽ᵏ⁻¹⁾.
 
 ### 52. Ponto de operação da bomba
 *Nível 2 · Hidráulica · id `fp15`*
@@ -859,9 +859,9 @@ x = √(2,4/(3 − x))
 
 **Pergunta (sem o método):** Partindo de x₀ = 1, encontre a solução com 4 casas decimais. Qual é ela?
 
-**Depois do diagnóstico:** Partindo de x₀ = 1, itere xₖ₊₁ = g(xₖ) até |xₖ₊₁ − xₖ| < 10<sup>−5</sup>. Qual é o ponto fixo, com 4 casas decimais?
+**Depois do diagnóstico:** Partindo de x₀ = 1, itere xᵢ₊₁ = g(xᵢ) até |xᵢ₊₁ − xᵢ| < 10<sup>−5</sup>. Qual é o ponto fixo, com 4 casas decimais?
 
-**Gabarito:** Ponto Fixo — 1,134137846 (tolerância 0,00006). A equação já aparece na forma x = g(x), com |g′(x)| < 1 perto da raiz (contração) e um único chute: basta repetir xₖ₊₁ = g(xₖ), sem derivada e sem intervalo.
+**Gabarito:** Ponto Fixo — 1,134137846 (tolerância 0,00006). A equação já aparece na forma x = g(x), com |g′(x)| < 1 perto da raiz (contração) e um único chute: basta repetir xᵢ₊₁ = g(xᵢ), sem derivada e sem intervalo.
 
 **Erros típicos reconhecidos:** 1,122558221 → Você parou cedo demais: a variação entre dois valores seguidos ainda estava acima do limite pedido.
 
@@ -878,7 +878,7 @@ f(x) = x<sup>2</sup> − 10
 
 **Gabarito:** Newton-Raphson — 3,162280702. Derivada fácil de obter e chute inicial bom: Newton-Raphson converge quadraticamente (as casas corretas quase dobram a cada passo).
 
-**Erros típicos reconhecidos:** 2,485294118 → Sinal trocado na fórmula: o passo de Newton é xₖ₊₁ = xₖ − f(xₖ)/f′(xₖ), com sinal de menos. · 1,9237·10<sup>−5</sup> → Esse é o valor de f na aproximação, não a aproximação. A resposta é o próprio x.
+**Erros típicos reconhecidos:** 2,485294118 → Sinal trocado na fórmula: o passo de Newton é xᵢ₊₁ = xᵢ − f(xᵢ)/f′(xᵢ), com sinal de menos. · 1,9237·10<sup>−5</sup> → Esse é o valor de f na aproximação, não a aproximação. A resposta é o próprio x.
 
 ### 56. ln(x) + x² = 4
 *Nível 1 · Matemática · id `sc10`*
@@ -893,7 +893,7 @@ f(x) = ln(x) + x<sup>2</sup> − 4
 
 **Gabarito:** Secante — 1,859865154. Sem derivada disponível (ou cara de obter) e com dois palpites que não cercam a raiz: a Secante aproxima f′ pelos dois últimos pontos e converge rápido (ordem ≈ 1,6), com uma avaliação de f por passo. Sem troca de sinal, Bisseção e Falsa Posição nem começam.
 
-**Erros típicos reconhecidos:** 1,843356764 → Esse é o resultado de uma iteração a mais do que o pedido. · 3,140134846 → Sinal trocado: xₖ₊₁ = xₖ − f(xₖ)·(xₖ − xₖ₋₁)/(f(xₖ) − f(xₖ₋₁)). · 0,079602379 → Esse é o valor de f na aproximação, não a aproximação. A resposta é o próprio x.
+**Erros típicos reconhecidos:** 1,843356764 → Esse é o resultado de uma iteração a mais do que o pedido. · 3,140134846 → Sinal trocado: xᵢ₊₁ = xᵢ − f(xᵢ)·(xᵢ − xᵢ₋₁)/(f(xᵢ) − f(xᵢ₋₁)). · 0,079602379 → Esse é o valor de f na aproximação, não a aproximação. A resposta é o próprio x.
 
 ### 57. Número de ouro em fração contínua
 *Nível 1 · Matemática · id `pf01`*
@@ -904,11 +904,11 @@ x = 1 + 1/x
 
 **Pergunta (sem o método):** Partindo de x₀ = 1, faça 4 iterações do método mais indicado. Qual é x₄?
 
-**Depois do diagnóstico:** Partindo de x₀ = 1, faça 4 iterações de Ponto Fixo, xₖ₊₁ = g(xₖ). Qual é x₄?
+**Depois do diagnóstico:** Partindo de x₀ = 1, faça 4 iterações de Ponto Fixo, xᵢ₊₁ = g(xᵢ). Qual é x₄?
 
-**Gabarito:** Ponto Fixo — 1,6. A equação já aparece na forma x = g(x), com |g′(x)| < 1 perto da raiz (contração) e um único chute: basta repetir xₖ₊₁ = g(xₖ), sem derivada e sem intervalo.
+**Gabarito:** Ponto Fixo — 1,6. A equação já aparece na forma x = g(x), com |g′(x)| < 1 perto da raiz (contração) e um único chute: basta repetir xᵢ₊₁ = g(xᵢ), sem derivada e sem intervalo.
 
-**Erros típicos reconhecidos:** 1,666666667 → Esse é o resultado de uma iteração a menos. Conte de novo: x₀ é o ponto de partida, e a 1ª iteração já produz x₁. · 1,625 → Esse é o resultado de uma iteração a mais do que o pedido. · -0,025 → Esse é o resíduo x − g(x), não a aproximação. A resposta é o próprio xₖ.
+**Erros típicos reconhecidos:** 1,666666667 → Esse é o resultado de uma iteração a menos. Conte de novo: x₀ é o ponto de partida, e a 1ª iteração já produz x₁. · 1,625 → Esse é o resultado de uma iteração a mais do que o pedido. · -0,025 → Esse é o resíduo x − g(x), não a aproximação. A resposta é o próprio xᵢ.
 
 ### 58. Arrasto do paraquedista
 *Nível 2 · Física · id `fp07`*
@@ -938,7 +938,7 @@ f(x) = x<sup>3</sup> − 20
 
 **Gabarito:** Newton-Raphson — 2,740740741. Derivada fácil de obter e chute inicial bom: Newton-Raphson converge quadraticamente (as casas corretas quase dobram a cada passo).
 
-**Erros típicos reconhecidos:** 2,714669625 → Esse é o resultado de uma iteração a mais do que o pedido. · 3,259259259 → Sinal trocado na fórmula: o passo de Newton é xₖ₊₁ = xₖ − f(xₖ)/f′(xₖ), com sinal de menos. · 0,5875120663 → Esse é o valor de f na aproximação, não a aproximação. A resposta é o próprio x.
+**Erros típicos reconhecidos:** 2,714669625 → Esse é o resultado de uma iteração a mais do que o pedido. · 3,259259259 → Sinal trocado na fórmula: o passo de Newton é xᵢ₊₁ = xᵢ − f(xᵢ)/f′(xᵢ), com sinal de menos. · 0,5875120663 → Esse é o valor de f na aproximação, não a aproximação. A resposta é o próprio x.
 
 ### 60. Iterar até a precisão pedida
 *Nível 3 · Engenharia · id `gs16`*
@@ -968,7 +968,7 @@ f(x) = x − 0,9·sin(x) − 0,1
 
 **Gabarito:** Newton-Raphson — 0,638231676. Com excentricidade alta, a iteração de Ponto Fixo E ← M + e·sen(E) fica lenta (|g′| perto de 1). Newton, com derivada fácil e o chute clássico E₀ = M + e, dobra as casas corretas a cada passo.
 
-**Erros típicos reconhecidos:** 0,7222730033 → Esse é o resultado de uma iteração a menos. Conte de novo: x₀ é o ponto de partida, e a 1ª iteração já produz x₁. · 0,6308961515 → Esse é o resultado de uma iteração a mais do que o pedido. · 1,704892801 → Sinal trocado na fórmula: o passo de Newton é xₖ₊₁ = xₖ − f(xₖ)/f′(xₖ), com sinal de menos. · 0,0020331471 → Esse é o valor de f na aproximação, não a aproximação. A resposta é o próprio x. · 0,1015958633 → Sua calculadora estava em graus. Em métodos numéricos (e no Cálculo) os ângulos ficam em radianos.
+**Erros típicos reconhecidos:** 0,7222730033 → Esse é o resultado de uma iteração a menos. Conte de novo: x₀ é o ponto de partida, e a 1ª iteração já produz x₁. · 0,6308961515 → Esse é o resultado de uma iteração a mais do que o pedido. · 1,704892801 → Sinal trocado na fórmula: o passo de Newton é xᵢ₊₁ = xᵢ − f(xᵢ)/f′(xᵢ), com sinal de menos. · 0,0020331471 → Esse é o valor de f na aproximação, não a aproximação. A resposta é o próprio x. · 0,1015958633 → Sua calculadora estava em graus. Em métodos numéricos (e no Cálculo) os ângulos ficam em radianos.
 
 ### 62. Coluna de destilação
 *Nível 2 · Engenharia química · id `gs13`*
@@ -1028,7 +1028,7 @@ x + y + z = 10 ; 0,1x + 0,2y + 0,4z = 2,4 ; x − 2y = 0
 
 **Gabarito:** Eliminação de Gauss — x ≈ 4, y ≈ 2, z ≈ 4. Sistema pequeno, sem dominância diagonal e com pedido de solução exata: a Eliminação de Gauss resolve em um número finito de passos, sem depender de convergência.
 
-**Erros típicos reconhecidos:** (-14; 24; 0) → Você atualizou os coeficientes, mas esqueceu o lado direito: a operação Lᵢ ← Lᵢ − m·Lₖ vale também para o termo independente. · (0; 8; 2) → Sinal do multiplicador trocado: para zerar o coeficiente, faça Lᵢ ← Lᵢ − m·Lₖ, com m = aᵢₖ/aₖₖ.
+**Erros típicos reconhecidos:** (-14; 24; 0) → Você atualizou os coeficientes, mas esqueceu o lado direito: a operação Eᵢ⁽ᵏ⁾ → Eᵢ⁽ᵏ⁻¹⁾ − mᵢₖEₖ⁽ᵏ⁻¹⁾ vale também para o termo independente. · (0; 8; 2) → Sinal do multiplicador trocado: para zerar o coeficiente, faça Eᵢ⁽ᵏ⁾ → Eᵢ⁽ᵏ⁻¹⁾ − mᵢₖEₖ⁽ᵏ⁻¹⁾, com mᵢₖ = aᵢₖ⁽ᵏ⁻¹⁾/aₖₖ⁽ᵏ⁻¹⁾.
 
 ### 66. Exponencial contra reta
 *Nível 1 · Matemática · id `nw09`*
@@ -1043,7 +1043,7 @@ f(x) = e<sup>x</sup> − 3·x
 
 **Gabarito:** Newton-Raphson — 1,512358146. Derivada fácil de obter e chute inicial bom: Newton-Raphson converge quadraticamente (as casas corretas quase dobram a cada passo).
 
-**Erros típicos reconhecidos:** 1,487641854 → Sinal trocado na fórmula: o passo de Newton é xₖ₊₁ = xₖ − f(xₖ)/f′(xₖ), com sinal de menos. · 0,0003436444 → Esse é o valor de f na aproximação, não a aproximação. A resposta é o próprio x.
+**Erros típicos reconhecidos:** 1,487641854 → Sinal trocado na fórmula: o passo de Newton é xᵢ₊₁ = xᵢ − f(xᵢ)/f′(xᵢ), com sinal de menos. · 0,0003436444 → Esse é o valor de f na aproximação, não a aproximação. A resposta é o próprio x.
 
 ### 67. Função de produção
 *Nível 2 · Economia · id `sc20`*
@@ -1058,7 +1058,7 @@ f(x) = x<sup>0,7</sup> + 2·x<sup>0,3</sup> − 10
 
 **Gabarito:** Secante — 11,10014874. Sem derivada disponível (ou cara de obter) e com dois palpites que não cercam a raiz: a Secante aproxima f′ pelos dois últimos pontos e converge rápido (ordem ≈ 1,6), com uma avaliação de f por passo. Sem troca de sinal, Bisseção e Falsa Posição nem começam.
 
-**Erros típicos reconhecidos:** 12,07015026 → Esse é o resultado de uma iteração a mais do que o pedido. · 0,8998512561 → Sinal trocado: xₖ₊₁ = xₖ − f(xₖ)·(xₖ − xₖ₋₁)/(f(xₖ) − f(xₖ₋₁)). · -0,490792031 → Esse é o valor de f na aproximação, não a aproximação. A resposta é o próprio x.
+**Erros típicos reconhecidos:** 12,07015026 → Esse é o resultado de uma iteração a mais do que o pedido. · 0,8998512561 → Sinal trocado: xᵢ₊₁ = xᵢ − f(xᵢ)·(xᵢ − xᵢ₋₁)/(f(xᵢ) − f(xᵢ₋₁)). · -0,490792031 → Esse é o valor de f na aproximação, não a aproximação. A resposta é o próprio x.
 
 ### 68. Corrida com oscilação
 *Nível 2 · Esportes · id `nw15`*
@@ -1073,7 +1073,7 @@ f(x) = 3·x + 2·sin(x) − 20
 
 **Gabarito:** Newton-Raphson — 6,514092709. Derivada fácil de obter e chute inicial bom: Newton-Raphson converge quadraticamente (as casas corretas quase dobram a cada passo).
 
-**Erros típicos reconhecidos:** 6,457773196 → Sinal trocado na fórmula: o passo de Newton é xₖ₊₁ = xₖ − f(xₖ)/f′(xₖ), com sinal de menos. · -1,7760·10<sup>−11</sup> → Esse é o valor de f na aproximação, não a aproximação. A resposta é o próprio x. · 6,590155685 → Sua calculadora estava em graus. Em métodos numéricos (e no Cálculo) os ângulos ficam em radianos.
+**Erros típicos reconhecidos:** 6,457773196 → Sinal trocado na fórmula: o passo de Newton é xᵢ₊₁ = xᵢ − f(xᵢ)/f′(xᵢ), com sinal de menos. · -1,7760·10<sup>−11</sup> → Esse é o valor de f na aproximação, não a aproximação. A resposta é o próprio x. · 6,590155685 → Sua calculadora estava em graus. Em métodos numéricos (e no Cálculo) os ângulos ficam em radianos.
 
 ### 69. Calibração de juntas
 *Nível 2 · Robótica · id `gs17`*
@@ -1118,7 +1118,7 @@ f(x) = x<sup>3</sup> − 2·x − 5
 
 **Gabarito:** Secante — 2,228915663. Sem derivada disponível (ou cara de obter) e com dois palpites que não cercam a raiz: a Secante aproxima f′ pelos dois últimos pontos e converge rápido (ordem ≈ 1,6), com uma avaliação de f por passo. Sem troca de sinal, Bisseção e Falsa Posição nem começam.
 
-**Erros típicos reconhecidos:** 2,142312451 → Esse é o resultado de uma iteração a mais do que o pedido. · 3,771084337 → Sinal trocado: xₖ₊₁ = xₖ − f(xₖ)·(xₖ − xₖ₋₁)/(f(xₖ) − f(xₖ₋₁)). · 1,615566636 → Esse é o valor de f na aproximação, não a aproximação. A resposta é o próprio x.
+**Erros típicos reconhecidos:** 2,142312451 → Esse é o resultado de uma iteração a mais do que o pedido. · 3,771084337 → Sinal trocado: xᵢ₊₁ = xᵢ − f(xᵢ)·(xᵢ − xᵢ₋₁)/(f(xᵢ) − f(xᵢ₋₁)). · 1,615566636 → Esse é o valor de f na aproximação, não a aproximação. A resposta é o próprio x.
 
 ### 72. Termistor de Steinhart-Hart
 *Nível 2 · Instrumentação · id `nw12`*
@@ -1133,7 +1133,7 @@ f(x) = 0,001129 + 0,0002341·x + 0,00000008775·x<sup>3</sup> − 1/310
 
 **Gabarito:** Newton-Raphson — 8,709261351. Derivada fácil de obter e chute inicial bom: Newton-Raphson converge quadraticamente (as casas corretas quase dobram a cada passo).
 
-**Erros típicos reconhecidos:** 9,867520463 → Sinal trocado na fórmula: o passo de Newton é xₖ₊₁ = xₖ − f(xₖ)/f′(xₖ), com sinal de menos. · 1,3794·10<sup>−12</sup> → Esse é o valor de f na aproximação, não a aproximação. A resposta é o próprio x.
+**Erros típicos reconhecidos:** 9,867520463 → Sinal trocado na fórmula: o passo de Newton é xᵢ₊₁ = xᵢ − f(xᵢ)/f′(xᵢ), com sinal de menos. · 1,3794·10<sup>−12</sup> → Esse é o valor de f na aproximação, não a aproximação. A resposta é o próprio x.
 
 ### 73. Cobrança de falta
 *Nível 2 · Esportes · id `fp11`*
@@ -1163,7 +1163,7 @@ Três alimentos (x, y e z porções) fornecem proteína, carboidrato e gordura n
 
 **Gabarito:** Eliminação de Gauss — x ≈ 2, y ≈ 3, z ≈ 4. Sistema pequeno, sem dominância diagonal e com pedido de solução exata: a Eliminação de Gauss resolve em um número finito de passos, sem depender de convergência.
 
-**Erros típicos reconhecidos:** (10,74; 8,32; -3,6) → Você atualizou os coeficientes, mas esqueceu o lado direito: a operação Lᵢ ← Lᵢ − m·Lₖ vale também para o termo independente. · (-2,623376623; 0,0909090909; 8,051948052) → Sinal do multiplicador trocado: para zerar o coeficiente, faça Lᵢ ← Lᵢ − m·Lₖ, com m = aᵢₖ/aₖₖ. · (4; 3; 2) → Os valores estão certos, mas na ordem trocada. Confira qual incógnita é qual.
+**Erros típicos reconhecidos:** (10,74; 8,32; -3,6) → Você atualizou os coeficientes, mas esqueceu o lado direito: a operação Eᵢ⁽ᵏ⁾ → Eᵢ⁽ᵏ⁻¹⁾ − mᵢₖEₖ⁽ᵏ⁻¹⁾ vale também para o termo independente. · (-2,623376623; 0,0909090909; 8,051948052) → Sinal do multiplicador trocado: para zerar o coeficiente, faça Eᵢ⁽ᵏ⁾ → Eᵢ⁽ᵏ⁻¹⁾ − mᵢₖEₖ⁽ᵏ⁻¹⁾, com mᵢₖ = aᵢₖ⁽ᵏ⁻¹⁾/aₖₖ⁽ᵏ⁻¹⁾. · (4; 3; 2) → Os valores estão certos, mas na ordem trocada. Confira qual incógnita é qual.
 
 ### 75. sen(x)/x = 1/2
 *Nível 2 · Óptica · id `sc15`*
@@ -1178,7 +1178,7 @@ f(x) = sin(x)/x − 0,5
 
 **Gabarito:** Secante — 1,895924026. Sem derivada disponível (ou cara de obter) e com dois palpites que não cercam a raiz: a Secante aproxima f′ pelos dois últimos pontos e converge rápido (ordem ≈ 1,6), com uma avaliação de f por passo. Sem troca de sinal, Bisseção e Falsa Posição nem começam.
 
-**Erros típicos reconhecidos:** 2,504075974 → Sinal trocado: xₖ₊₁ = xₖ − f(xₖ)·(xₖ − xₖ₋₁)/(f(xₖ) − f(xₖ₋₁)). · -0,0001856985 → Esse é o valor de f na aproximação, não a aproximação. A resposta é o próprio x. · -129.677,366 → Sua calculadora estava em graus. Em métodos numéricos (e no Cálculo) os ângulos ficam em radianos.
+**Erros típicos reconhecidos:** 2,504075974 → Sinal trocado: xᵢ₊₁ = xᵢ − f(xᵢ)·(xᵢ − xᵢ₋₁)/(f(xᵢ) − f(xᵢ₋₁)). · -0,0001856985 → Esse é o valor de f na aproximação, não a aproximação. A resposta é o próprio x. · -129.677,366 → Sua calculadora estava em graus. Em métodos numéricos (e no Cálculo) os ângulos ficam em radianos.
 
 ### 76. Cosseno encontra a reta
 *Nível 1 · Matemática · id `bi02`*
@@ -1206,7 +1206,7 @@ Resolva 2y = 6 e x + y = 5, nessa ordem. **O primeiro pivô (coeficiente de x na
 
 **Depois do diagnóstico:** Resolva o sistema por Eliminação de Gauss. Quais são os valores de x e y?
 
-**Gabarito:** Eliminação de Gauss — x ≈ 2, y ≈ 3. Com pivô nulo, Gauss com troca de linhas (pivotamento) resolve direto. Um método iterativo dividiria por zero.
+**Gabarito:** Eliminação de Gauss — x ≈ 2, y ≈ 3. Com pivô nulo, Gauss com troca de linhas (pivoteamento) resolve direto. Um método iterativo dividiria por zero.
 
 **Erros típicos reconhecidos:** (3; 2) → Os valores estão certos, mas na ordem trocada. Confira qual incógnita é qual.
 
@@ -1219,9 +1219,9 @@ x = (1361·(1 − (0,3 + 0,3/(1 + exp((x − 265)/5))))/(4·0,0000000567·0,61))
 
 **Pergunta (sem o método):** Partindo de x₀ = 288, encontre a solução com 3 casas decimais. Qual é ela?
 
-**Depois do diagnóstico:** Partindo de x₀ = 288, itere xₖ₊₁ = g(xₖ) até |xₖ₊₁ − xₖ| < 10<sup>−4</sup>. Qual é o ponto fixo, com 3 casas decimais?
+**Depois do diagnóstico:** Partindo de x₀ = 288, itere xᵢ₊₁ = g(xᵢ) até |xᵢ₊₁ − xᵢ| < 10<sup>−4</sup>. Qual é o ponto fixo, com 3 casas decimais?
 
-**Gabarito:** Ponto Fixo — 287,7449221 (tolerância 0,0006). A equação já aparece na forma x = g(x), com |g′(x)| < 1 perto da raiz (contração) e um único chute: basta repetir xₖ₊₁ = g(xₖ), sem derivada e sem intervalo.
+**Gabarito:** Ponto Fixo — 287,7449221 (tolerância 0,0006). A equação já aparece na forma x = g(x), com |g′(x)| < 1 perto da raiz (contração) e um único chute: basta repetir xᵢ₊₁ = g(xᵢ), sem derivada e sem intervalo.
 
 ### 79. Simulador de semáforo
 *Nível 3 · Engenharia de tráfego · id `sc08`*
@@ -1236,7 +1236,7 @@ f(x) = 30/(x − 2) + 0,5·x − 12
 
 **Gabarito:** Secante — 5,184210526. A Bisseção precisaria de sinais opostos e o Newton gastaria avaliações com f′. A Secante usa os dois resultados já pagos e só precisa de uma avaliação nova por passo.
 
-**Erros típicos reconhecidos:** 5,111111111 → Esse é o resultado de uma iteração a menos. Conte de novo: x₀ é o ponto de partida, e a 1ª iteração já produz x₁. · 4,608946609 → Sinal trocado: xₖ₊₁ = xₖ − f(xₖ)·(xₖ − xₖ₋₁)/(f(xₖ) − f(xₖ₋₁)). · 5,157024793 → Você manteve x₀ fixo em todas as iterações. Na Secante, os dois pontos mais recentes substituem os anteriores. · 0,0135928665 → Esse é o valor de f na aproximação, não a aproximação. A resposta é o próprio x.
+**Erros típicos reconhecidos:** 5,111111111 → Esse é o resultado de uma iteração a menos. Conte de novo: x₀ é o ponto de partida, e a 1ª iteração já produz x₁. · 4,608946609 → Sinal trocado: xᵢ₊₁ = xᵢ − f(xᵢ)·(xᵢ − xᵢ₋₁)/(f(xᵢ) − f(xᵢ₋₁)). · 5,157024793 → Você manteve x₀ fixo em todas as iterações. Na Secante, os dois pontos mais recentes substituem os anteriores. · 0,0135928665 → Esse é o valor de f na aproximação, não a aproximação. A resposta é o próprio x.
 
 ### 80. Caixa sem tampa de 500 cm³
 *Nível 1 · Geometria · id `nw14`*
@@ -1251,7 +1251,7 @@ f(x) = x·(20 − 2·x)<sup>2</sup> − 500
 
 **Gabarito:** Newton-Raphson — 1,90865949. Derivada fácil de obter e chute inicial bom: Newton-Raphson converge quadraticamente (as casas corretas quase dobram a cada passo).
 
-**Erros típicos reconhecidos:** 1,855614973 → Esse é o resultado de uma iteração a menos. Conte de novo: x₀ é o ponto de partida, e a 1ª iteração já produz x₁. · 0,5381418407 → Sinal trocado na fórmula: o passo de Newton é xₖ₊₁ = xₖ − f(xₖ)/f′(xₖ), com sinal de menos. · -0,1618464638 → Esse é o valor de f na aproximação, não a aproximação. A resposta é o próprio x.
+**Erros típicos reconhecidos:** 1,855614973 → Esse é o resultado de uma iteração a menos. Conte de novo: x₀ é o ponto de partida, e a 1ª iteração já produz x₁. · 0,5381418407 → Sinal trocado na fórmula: o passo de Newton é xᵢ₊₁ = xᵢ − f(xᵢ)/f′(xᵢ), com sinal de menos. · -0,1618464638 → Esse é o valor de f na aproximação, não a aproximação. A resposta é o próprio x.
 
 ### 81. Sensor com resposta em raiz
 *Nível 3 · Instrumentação · id `bi19`*
@@ -1281,7 +1281,7 @@ f(x) = 30·e<sup>−0,8·x</sup> + 10·e<sup>−0,1·x</sup> − 8
 
 **Gabarito:** Secante — 3,517615746. Sem derivada disponível (ou cara de obter) e com dois palpites que não cercam a raiz: a Secante aproxima f′ pelos dois últimos pontos e converge rápido (ordem ≈ 1,6), com uma avaliação de f por passo. Sem troca de sinal, Bisseção e Falsa Posição nem começam.
 
-**Erros típicos reconhecidos:** 3,850291486 → Esse é o resultado de uma iteração a mais do que o pedido. · 2,482384254 → Sinal trocado: xₖ₊₁ = xₖ − f(xₖ)·(xₖ − xₖ₋₁)/(f(xₖ) − f(xₖ₋₁)). · 0,8332512532 → Esse é o valor de f na aproximação, não a aproximação. A resposta é o próprio x.
+**Erros típicos reconhecidos:** 3,850291486 → Esse é o resultado de uma iteração a mais do que o pedido. · 2,482384254 → Sinal trocado: xᵢ₊₁ = xᵢ − f(xᵢ)·(xᵢ − xᵢ₋₁)/(f(xᵢ) − f(xᵢ₋₁)). · 0,8332512532 → Esse é o valor de f na aproximação, não a aproximação. A resposta é o próprio x.
 
 ### 83. Partícula no decantador
 *Nível 3 · Engenharia ambiental · id `pf19`*
@@ -1292,9 +1292,9 @@ x = √(0,6/(24/(50·x) + 0,4))
 
 **Pergunta (sem o método):** Partindo de x₀ = 0,5, encontre a solução com 4 casas decimais. Qual é ela?
 
-**Depois do diagnóstico:** Partindo de x₀ = 0,5, itere xₖ₊₁ = g(xₖ) até |xₖ₊₁ − xₖ| < 10<sup>−5</sup>. Qual é o ponto fixo, com 4 casas decimais?
+**Depois do diagnóstico:** Partindo de x₀ = 0,5, itere xᵢ₊₁ = g(xᵢ) até |xᵢ₊₁ − xᵢ| < 10<sup>−5</sup>. Qual é o ponto fixo, com 4 casas decimais?
 
-**Gabarito:** Ponto Fixo — 0,7638181697 (tolerância 0,00006). A equação já aparece na forma x = g(x), com |g′(x)| < 1 perto da raiz (contração) e um único chute: basta repetir xₖ₊₁ = g(xₖ), sem derivada e sem intervalo.
+**Gabarito:** Ponto Fixo — 0,7638181697 (tolerância 0,00006). A equação já aparece na forma x = g(x), com |g′(x)| < 1 perto da raiz (contração) e um único chute: basta repetir xᵢ₊₁ = g(xᵢ), sem derivada e sem intervalo.
 
 **Erros típicos reconhecidos:** 0,7310568702 → Você parou cedo demais: a variação entre dois valores seguidos ainda estava acima do limite pedido.
 
@@ -1341,7 +1341,7 @@ x + y + z = 7 ; x + 2y + 4z = 16 ; x + 3y + 9z = 29
 
 **Gabarito:** Eliminação de Gauss — x ≈ 2, y ≈ 3, z ≈ 2. Sistema pequeno, sem dominância diagonal e com pedido de solução exata: a Eliminação de Gauss resolve em um número finito de passos, sem depender de convergência.
 
-**Erros típicos reconhecidos:** (20; -27,5; 14,5) → Você atualizou os coeficientes, mas esqueceu o lado direito: a operação Lᵢ ← Lᵢ − m·Lₖ vale também para o termo independente. · (2; 1; 4) → Sinal do multiplicador trocado: para zerar o coeficiente, faça Lᵢ ← Lᵢ − m·Lₖ, com m = aᵢₖ/aₖₖ.
+**Erros típicos reconhecidos:** (20; -27,5; 14,5) → Você atualizou os coeficientes, mas esqueceu o lado direito: a operação Eᵢ⁽ᵏ⁾ → Eᵢ⁽ᵏ⁻¹⁾ − mᵢₖEₖ⁽ᵏ⁻¹⁾ vale também para o termo independente. · (2; 1; 4) → Sinal do multiplicador trocado: para zerar o coeficiente, faça Eᵢ⁽ᵏ⁾ → Eᵢ⁽ᵏ⁻¹⁾ − mᵢₖEₖ⁽ᵏ⁻¹⁾, com mᵢₖ = aᵢₖ⁽ᵏ⁻¹⁾/aₖₖ⁽ᵏ⁻¹⁾.
 
 ### 87. Gás de Van der Waals
 *Nível 3 · Química · id `sc04`*
@@ -1356,7 +1356,7 @@ f(x) = (1 + 3,59/x<sup>2</sup>)·(x − 0,0427) − 24,6
 
 **Gabarito:** Secante — 24,49640333. Sem derivada disponível (ou cara de obter) e com dois palpites que não cercam a raiz: a Secante aproxima f′ pelos dois últimos pontos e converge rápido (ordem ≈ 1,6), com uma avaliação de f por passo. Sem troca de sinal, Bisseção e Falsa Posição nem começam.
 
-**Erros típicos reconhecidos:** 24,71078592 → Sinal trocado: xₖ₊₁ = xₖ − f(xₖ)·(xₖ − xₖ₋₁)/(f(xₖ) − f(xₖ₋₁)). · 1,7518·10<sup>−11</sup> → Esse é o valor de f na aproximação, não a aproximação. A resposta é o próprio x.
+**Erros típicos reconhecidos:** 24,71078592 → Sinal trocado: xᵢ₊₁ = xᵢ − f(xᵢ)·(xᵢ − xᵢ₋₁)/(f(xᵢ) − f(xᵢ₋₁)). · 1,7518·10<sup>−11</sup> → Esse é o valor de f na aproximação, não a aproximação. A resposta é o próprio x.
 
 ### 88. Seno encontra a reta
 *Nível 2 · Física · id `nw08`*
@@ -1371,7 +1371,7 @@ f(x) = sin(x) − x/2
 
 **Gabarito:** Newton-Raphson — 1,895511645. Derivada fácil de obter e chute inicial bom: Newton-Raphson converge quadraticamente (as casas corretas quase dobram a cada passo).
 
-**Erros típicos reconhecidos:** 1,900995594 → Esse é o resultado de uma iteração a menos. Conte de novo: x₀ é o ponto de partida, e a 1ª iteração já produz x₁. · 2,284057344 → Sinal trocado na fórmula: o passo de Newton é xₖ₊₁ = xₖ − f(xₖ)/f′(xₖ), com sinal de menos. · -1,4233·10<sup>−5</sup> → Esse é o valor de f na aproximação, não a aproximação. A resposta é o próprio x. · 9,3104·10<sup>−20</sup> → Sua calculadora estava em graus. Em métodos numéricos (e no Cálculo) os ângulos ficam em radianos.
+**Erros típicos reconhecidos:** 1,900995594 → Esse é o resultado de uma iteração a menos. Conte de novo: x₀ é o ponto de partida, e a 1ª iteração já produz x₁. · 2,284057344 → Sinal trocado na fórmula: o passo de Newton é xᵢ₊₁ = xᵢ − f(xᵢ)/f′(xᵢ), com sinal de menos. · -1,4233·10<sup>−5</sup> → Esse é o valor de f na aproximação, não a aproximação. A resposta é o próprio x. · 9,3104·10<sup>−20</sup> → Sua calculadora estava em graus. Em métodos numéricos (e no Cálculo) os ângulos ficam em radianos.
 
 ### 89. Grade de pressão
 *Nível 3 · Meteorologia · id `gs19`*
@@ -1416,7 +1416,7 @@ f(x) = 0,002·x<sup>1,5</sup>·ln(x) − 60
 
 **Gabarito:** Secante — 302,1483587. Sem sinais opostos não há Bisseção, e cada avaliação custa uma execução. A Secante extrapola a partir das duas medições já feitas.
 
-**Erros típicos reconhecidos:** 303,6013789 → Esse é o resultado de uma iteração a menos. Conte de novo: x₀ é o ponto de partida, e a 1ª iteração já produz x₁. · 209,3832777 → Sinal trocado: xₖ₊₁ = xₖ − f(xₖ)·(xₖ − xₖ₋₁)/(f(xₖ) − f(xₖ₋₁)). · -0,0117364529 → Esse é o valor de f na aproximação, não a aproximação. A resposta é o próprio x.
+**Erros típicos reconhecidos:** 303,6013789 → Esse é o resultado de uma iteração a menos. Conte de novo: x₀ é o ponto de partida, e a 1ª iteração já produz x₁. · 209,3832777 → Sinal trocado: xᵢ₊₁ = xᵢ − f(xᵢ)·(xᵢ − xᵢ₋₁)/(f(xᵢ) − f(xᵢ₋₁)). · -0,0117364529 → Esse é o valor de f na aproximação, não a aproximação. A resposta é o próprio x.
 
 ### 92. Colônia com perdas
 *Nível 2 · Biologia · id `nw05`*
@@ -1431,7 +1431,7 @@ f(x) = 100·e<sup>0,3·x</sup> − 50·x − 500
 
 **Gabarito:** Newton-Raphson — 7,165936935. Derivada fácil de obter e chute inicial bom: Newton-Raphson converge quadraticamente (as casas corretas quase dobram a cada passo).
 
-**Erros típicos reconhecidos:** 6,469186295 → Sinal trocado na fórmula: o passo de Newton é xₖ₊₁ = xₖ − f(xₖ)/f′(xₖ), com sinal de menos. · 0,00107425 → Esse é o valor de f na aproximação, não a aproximação. A resposta é o próprio x.
+**Erros típicos reconhecidos:** 6,469186295 → Sinal trocado na fórmula: o passo de Newton é xᵢ₊₁ = xᵢ − f(xᵢ)/f′(xᵢ), com sinal de menos. · 0,00107425 → Esse é o valor de f na aproximação, não a aproximação. A resposta é o próprio x.
 
 ### 93. Fluxo nos cruzamentos
 *Nível 2 · Trânsito · id `ga07`*
@@ -1446,7 +1446,7 @@ x + y = 900 ; y − z = 200 ; x − z = 300
 
 **Gabarito:** Eliminação de Gauss — x ≈ 500, y ≈ 400, z ≈ 200. Sistema pequeno, sem dominância diagonal e com pedido de solução exata: a Eliminação de Gauss resolve em um número finito de passos, sem depender de convergência.
 
-**Erros típicos reconhecidos:** (850; 50; -150) → Você atualizou os coeficientes, mas esqueceu o lado direito: a operação Lᵢ ← Lᵢ − m·Lₖ vale também para o termo independente. · (1.400; -500; -700) → Sinal do multiplicador trocado: para zerar o coeficiente, faça Lᵢ ← Lᵢ − m·Lₖ, com m = aᵢₖ/aₖₖ. · (200; 400; 500) → Os valores estão certos, mas na ordem trocada. Confira qual incógnita é qual.
+**Erros típicos reconhecidos:** (850; 50; -150) → Você atualizou os coeficientes, mas esqueceu o lado direito: a operação Eᵢ⁽ᵏ⁾ → Eᵢ⁽ᵏ⁻¹⁾ − mᵢₖEₖ⁽ᵏ⁻¹⁾ vale também para o termo independente. · (1.400; -500; -700) → Sinal do multiplicador trocado: para zerar o coeficiente, faça Eᵢ⁽ᵏ⁾ → Eᵢ⁽ᵏ⁻¹⁾ − mᵢₖEₖ⁽ᵏ⁻¹⁾, com mᵢₖ = aᵢₖ⁽ᵏ⁻¹⁾/aₖₖ⁽ᵏ⁻¹⁾. · (200; 400; 500) → Os valores estão certos, mas na ordem trocada. Confira qual incógnita é qual.
 
 ### 94. Velocidade num tubo longo
 *Nível 2 · Hidráulica · id `pf14`*
@@ -1457,9 +1457,9 @@ x = √(98,1/(1 + 316·(50000·x)<sup>−0,25</sup>))
 
 **Pergunta (sem o método):** Partindo de x₀ = 2, encontre a solução com 4 casas decimais. Qual é ela?
 
-**Depois do diagnóstico:** Partindo de x₀ = 2, itere xₖ₊₁ = g(xₖ) até |xₖ₊₁ − xₖ| < 10<sup>−5</sup>. Qual é o ponto fixo, com 4 casas decimais?
+**Depois do diagnóstico:** Partindo de x₀ = 2, itere xᵢ₊₁ = g(xᵢ) até |xᵢ₊₁ − xᵢ| < 10<sup>−5</sup>. Qual é o ponto fixo, com 4 casas decimais?
 
-**Gabarito:** Ponto Fixo — 2,327492374 (tolerância 0,00006). A equação já aparece na forma x = g(x), com |g′(x)| < 1 perto da raiz (contração) e um único chute: basta repetir xₖ₊₁ = g(xₖ), sem derivada e sem intervalo.
+**Gabarito:** Ponto Fixo — 2,327492374 (tolerância 0,00006). A equação já aparece na forma x = g(x), com |g′(x)| < 1 perto da raiz (contração) e um único chute: basta repetir xᵢ₊₁ = g(xᵢ), sem derivada e sem intervalo.
 
 **Erros típicos reconhecidos:** 2,322569286 → Você parou cedo demais: a variação entre dois valores seguidos ainda estava acima do limite pedido.
 
@@ -1487,9 +1487,9 @@ x = 1 − e<sup>−2,5·x</sup>
 
 **Pergunta (sem o método):** Partindo de x₀ = 0,5, encontre a solução com 4 casas decimais. Qual é ela?
 
-**Depois do diagnóstico:** Partindo de x₀ = 0,5, itere xₖ₊₁ = g(xₖ) até |xₖ₊₁ − xₖ| < 10<sup>−5</sup>. Qual é o ponto fixo, com 4 casas decimais?
+**Depois do diagnóstico:** Partindo de x₀ = 0,5, itere xᵢ₊₁ = g(xᵢ) até |xᵢ₊₁ − xᵢ| < 10<sup>−5</sup>. Qual é o ponto fixo, com 4 casas decimais?
 
-**Gabarito:** Ponto Fixo — 0,8926447536 (tolerância 0,00006). A equação já aparece na forma x = g(x), com |g′(x)| < 1 perto da raiz (contração) e um único chute: basta repetir xₖ₊₁ = g(xₖ), sem derivada e sem intervalo.
+**Gabarito:** Ponto Fixo — 0,8926447536 (tolerância 0,00006). A equação já aparece na forma x = g(x), com |g′(x)| < 1 perto da raiz (contração) e um único chute: basta repetir xᵢ₊₁ = g(xᵢ), sem derivada e sem intervalo.
 
 **Erros típicos reconhecidos:** 0,8319910468 → Você parou cedo demais: a variação entre dois valores seguidos ainda estava acima do limite pedido.
 
@@ -1506,7 +1506,7 @@ x + y + z = 20000 ; 0,05x + 0,08y + 0,1z = 1640 ; −2x + z = 0
 
 **Gabarito:** Eliminação de Gauss — 8.000. Sistema pequeno, sem dominância diagonal e com pedido de solução exata: a Eliminação de Gauss resolve em um número finito de passos, sem depender de convergência.
 
-**Erros típicos reconhecidos:** 54.666,66667 → Você atualizou os coeficientes, mas esqueceu o lado direito: a operação Lᵢ ← Lᵢ − m·Lₖ vale também para o termo independente. · -7.813,953488 → Sinal do multiplicador trocado: para zerar o coeficiente, faça Lᵢ ← Lᵢ − m·Lₖ, com m = aᵢₖ/aₖₖ. · 4.000 → Esse é o valor de x, não de y.
+**Erros típicos reconhecidos:** 54.666,66667 → Você atualizou os coeficientes, mas esqueceu o lado direito: a operação Eᵢ⁽ᵏ⁾ → Eᵢ⁽ᵏ⁻¹⁾ − mᵢₖEₖ⁽ᵏ⁻¹⁾ vale também para o termo independente. · -7.813,953488 → Sinal do multiplicador trocado: para zerar o coeficiente, faça Eᵢ⁽ᵏ⁾ → Eᵢ⁽ᵏ⁻¹⁾ − mᵢₖEₖ⁽ᵏ⁻¹⁾, com mᵢₖ = aᵢₖ⁽ᵏ⁻¹⁾/aₖₖ⁽ᵏ⁻¹⁾. · 4.000 → Esse é o valor de x, não de y.
 
 ### 98. Ponto de equilíbrio da fábrica
 *Nível 2 · Administração · id `fp13`*
@@ -1515,9 +1515,9 @@ Uma fábrica tem lucro L(q) = 20q − 3000 − 0,5q<sup>1,2</sup>, com q em unid
 
 f(x) = 20·x − 3000 − 0,5·x<sup>1,2</sup>
 
-**Pergunta (sem o método):** Com o método mais indicado em [150; 400], quantas iterações são necessárias até |f(xₖ)| ≤ 0,001?
+**Pergunta (sem o método):** Com o método mais indicado em [150; 400], quantas iterações são necessárias até |f(xᵢ)| ≤ 0,001?
 
-**Depois do diagnóstico:** Com a Falsa Posição em [150; 400], quantas iterações são necessárias até |f(xₖ)| ≤ 0,001?
+**Depois do diagnóstico:** Com a Falsa Posição em [150; 400], quantas iterações são necessárias até |f(xᵢ)| ≤ 0,001?
 
 **Gabarito:** Falsa Posição — 3. Sinais opostos nas pontas e uma curva suave, quase reta no intervalo: a Falsa Posição mantém a raiz cercada como a Bisseção, mas corta onde a corda cruza o eixo e chega perto em bem menos passos, sem derivada.
 
@@ -1545,11 +1545,11 @@ x = 2,6·x·(1 − x)
 
 **Pergunta (sem o método):** Partindo de x₀ = 0,3, faça 3 iterações do método mais indicado. Qual é x₃?
 
-**Depois do diagnóstico:** Partindo de x₀ = 0,3, faça 3 iterações de Ponto Fixo, xₖ₊₁ = g(xₖ). Qual é x₃?
+**Depois do diagnóstico:** Partindo de x₀ = 0,3, faça 3 iterações de Ponto Fixo, xᵢ₊₁ = g(xᵢ). Qual é x₃?
 
-**Gabarito:** Ponto Fixo — 0,5957125522. A equação já aparece na forma x = g(x), com |g′(x)| < 1 perto da raiz (contração) e um único chute: basta repetir xₖ₊₁ = g(xₖ), sem derivada e sem intervalo.
+**Gabarito:** Ponto Fixo — 0,5957125522. A equação já aparece na forma x = g(x), com |g′(x)| < 1 perto da raiz (contração) e um único chute: basta repetir xᵢ₊₁ = g(xᵢ), sem derivada e sem intervalo.
 
-**Erros típicos reconhecidos:** 0,6444984 → Esse é o resultado de uma iteração a menos. Conte de novo: x₀ é o ponto de partida, e a 1ª iteração já produz x₁. · 0,6261816791 → Esse é o resultado de uma iteração a mais do que o pedido. · -0,0304691269 → Esse é o resíduo x − g(x), não a aproximação. A resposta é o próprio xₖ.
+**Erros típicos reconhecidos:** 0,6444984 → Esse é o resultado de uma iteração a menos. Conte de novo: x₀ é o ponto de partida, e a 1ª iteração já produz x₁. · 0,6261816791 → Esse é o resultado de uma iteração a mais do que o pedido. · -0,0304691269 → Esse é o resíduo x − g(x), não a aproximação. A resposta é o próprio xᵢ.
 
 ### 101. Três passos, nove casas
 *Nível 3 · Matemática · id `nw10`*
@@ -1564,7 +1564,7 @@ f(x) = x<sup>2</sup> − 2
 
 **Gabarito:** Newton-Raphson — 1,414215686. Derivada fácil de obter e chute inicial bom: Newton-Raphson converge quadraticamente (as casas corretas quase dobram a cada passo).
 
-**Erros típicos reconhecidos:** -1,075 → Sinal trocado na fórmula: o passo de Newton é xₖ₊₁ = xₖ − f(xₖ)/f′(xₖ), com sinal de menos. · 6,0073·10<sup>−6</sup> → Esse é o valor de f na aproximação, não a aproximação. A resposta é o próprio x.
+**Erros típicos reconhecidos:** -1,075 → Sinal trocado na fórmula: o passo de Newton é xᵢ₊₁ = xᵢ − f(xᵢ)/f′(xᵢ), com sinal de menos. · 6,0073·10<sup>−6</sup> → Esse é o valor de f na aproximação, não a aproximação. A resposta é o próprio x.
 
 ### 102. Rendimento de um título
 *Nível 2 · Finanças · id `sc07`*
@@ -1579,7 +1579,7 @@ f(x) = 50/(1 + x) + 50/(1 + x)<sup>2</sup> + 1050/(1 + x)<sup>3</sup> − 980
 
 **Gabarito:** Secante — 0,0573869907. Sem derivada disponível (ou cara de obter) e com dois palpites que não cercam a raiz: a Secante aproxima f′ pelos dois últimos pontos e converge rápido (ordem ≈ 1,6), com uma avaliação de f por passo. Sem troca de sinal, Bisseção e Falsa Posição nem começam.
 
-**Erros típicos reconhecidos:** 0,0826130094 → Sinal trocado: xₖ₊₁ = xₖ − f(xₖ)·(xₖ − xₖ₋₁)/(f(xₖ) − f(xₖ₋₁)). · 0,1586362275 → Esse é o valor de f na aproximação, não a aproximação. A resposta é o próprio x.
+**Erros típicos reconhecidos:** 0,0826130094 → Sinal trocado: xᵢ₊₁ = xᵢ − f(xᵢ)·(xᵢ − xᵢ₋₁)/(f(xᵢ) − f(xᵢ₋₁)). · 0,1586362275 → Esse é o valor de f na aproximação, não a aproximação. A resposta é o próprio x.
 
 ### 103. Auditoria da taxa de juros
 *Nível 2 · Finanças · id `bi04`*
@@ -1609,7 +1609,7 @@ x + 2y = 8 ; 3x − y = 3
 
 **Gabarito:** Eliminação de Gauss — x ≈ 2, y ≈ 3. Sistema pequeno, sem dominância diagonal e com pedido de solução exata: a Eliminação de Gauss resolve em um número finito de passos, sem depender de convergência.
 
-**Erros típicos reconhecidos:** (8,857142857; -0,4285714286) → Você atualizou os coeficientes, mas esqueceu o lado direito: a operação Lᵢ ← Lᵢ − m·Lₖ vale também para o termo independente. · (-2,8; 5,4) → Sinal do multiplicador trocado: para zerar o coeficiente, faça Lᵢ ← Lᵢ − m·Lₖ, com m = aᵢₖ/aₖₖ. · (3; 2) → Os valores estão certos, mas na ordem trocada. Confira qual incógnita é qual.
+**Erros típicos reconhecidos:** (8,857142857; -0,4285714286) → Você atualizou os coeficientes, mas esqueceu o lado direito: a operação Eᵢ⁽ᵏ⁾ → Eᵢ⁽ᵏ⁻¹⁾ − mᵢₖEₖ⁽ᵏ⁻¹⁾ vale também para o termo independente. · (-2,8; 5,4) → Sinal do multiplicador trocado: para zerar o coeficiente, faça Eᵢ⁽ᵏ⁾ → Eᵢ⁽ᵏ⁻¹⁾ − mᵢₖEₖ⁽ᵏ⁻¹⁾, com mᵢₖ = aᵢₖ⁽ᵏ⁻¹⁾/aₖₖ⁽ᵏ⁻¹⁾. · (3; 2) → Os valores estão certos, mas na ordem trocada. Confira qual incógnita é qual.
 
 ### 105. Pesca sustentável
 *Nível 3 · Pesca · id `pf17`*
@@ -1620,11 +1620,11 @@ x = 2·x/(1 + x/100) − 10
 
 **Pergunta (sem o método):** Partindo de x₀ = 90, faça 3 iterações do método mais indicado. Qual é x₃?
 
-**Depois do diagnóstico:** Partindo de x₀ = 90, faça 3 iterações de Ponto Fixo, xₖ₊₁ = g(xₖ). Qual é x₃?
+**Depois do diagnóstico:** Partindo de x₀ = 90, faça 3 iterações de Ponto Fixo, xᵢ₊₁ = g(xᵢ). Qual é x₃?
 
-**Gabarito:** Ponto Fixo — 79,95140304. A equação já aparece na forma x = g(x), com |g′(x)| < 1 perto da raiz (contração) e um único chute: basta repetir xₖ₊₁ = g(xₖ), sem derivada e sem intervalo.
+**Gabarito:** Ponto Fixo — 79,95140304. A equação já aparece na forma x = g(x), com |g′(x)| < 1 perto da raiz (contração) e um único chute: basta repetir xᵢ₊₁ = g(xᵢ), sem derivada e sem intervalo.
 
-**Erros típicos reconhecidos:** 81,73789174 → Esse é o resultado de uma iteração a menos. Conte de novo: x₀ é o ponto de partida, e a 1ª iteração já produz x₁. · 78,85888267 → Esse é o resultado de uma iteração a mais do que o pedido. · 1,092520376 → Esse é o resíduo x − g(x), não a aproximação. A resposta é o próprio xₖ.
+**Erros típicos reconhecidos:** 81,73789174 → Esse é o resultado de uma iteração a menos. Conte de novo: x₀ é o ponto de partida, e a 1ª iteração já produz x₁. · 78,85888267 → Esse é o resultado de uma iteração a mais do que o pedido. · 1,092520376 → Esse é o resíduo x − g(x), não a aproximação. A resposta é o próprio xᵢ.
 
 ### 106. Quatro produtos, quatro máquinas
 *Nível 3 · Produção · id `ga09`*
@@ -1639,7 +1639,7 @@ x + 2y + z + u = 70 ; 2x + y + 3z + u = 70 ; x + y + z + 3u = 80 ; 3x + y + z + 
 
 **Gabarito:** Eliminação de Gauss — x ≈ 10, y ≈ 20, z ≈ 5, u ≈ 15. Sistema pequeno, sem dominância diagonal e com pedido de solução exata: a Eliminação de Gauss resolve em um número finito de passos, sem depender de convergência.
 
-**Erros típicos reconhecidos:** (557,4666667; -110,1333333; -263,8; -3,4) → Você atualizou os coeficientes, mas esqueceu o lado direito: a operação Lᵢ ← Lᵢ − m·Lₖ vale também para o termo independente. · (-11,09289617; 17,30418944; -7,987249545; 54,47176685) → Sinal do multiplicador trocado: para zerar o coeficiente, faça Lᵢ ← Lᵢ − m·Lₖ, com m = aᵢₖ/aₖₖ. · (15; 5; 20; 10) → Os valores estão certos, mas na ordem trocada. Confira qual incógnita é qual.
+**Erros típicos reconhecidos:** (557,4666667; -110,1333333; -263,8; -3,4) → Você atualizou os coeficientes, mas esqueceu o lado direito: a operação Eᵢ⁽ᵏ⁾ → Eᵢ⁽ᵏ⁻¹⁾ − mᵢₖEₖ⁽ᵏ⁻¹⁾ vale também para o termo independente. · (-11,09289617; 17,30418944; -7,987249545; 54,47176685) → Sinal do multiplicador trocado: para zerar o coeficiente, faça Eᵢ⁽ᵏ⁾ → Eᵢ⁽ᵏ⁻¹⁾ − mᵢₖEₖ⁽ᵏ⁻¹⁾, com mᵢₖ = aᵢₖ⁽ᵏ⁻¹⁾/aₖₖ⁽ᵏ⁻¹⁾. · (15; 5; 20; 10) → Os valores estão certos, mas na ordem trocada. Confira qual incógnita é qual.
 
 ### 107. Onde e⁻ˣ cruza a reta
 *Nível 1 · Matemática · id `bi10`*
@@ -1712,7 +1712,7 @@ x + y + z = 4 ; 4x + 2y + z = 9 ; 9x + 3y + z = 16
 
 **Gabarito:** Eliminação de Gauss — x ≈ 1, y ≈ 2, z ≈ 1. Sistema pequeno, sem dominância diagonal e com pedido de solução exata: a Eliminação de Gauss resolve em um número finito de passos, sem depender de convergência.
 
-**Erros típicos reconhecidos:** (16,5; -28,5; 16) → Você atualizou os coeficientes, mas esqueceu o lado direito: a operação Lᵢ ← Lᵢ − m·Lₖ vale também para o termo independente. · (-1,016666667; -0,0833333333; 5,1) → Sinal do multiplicador trocado: para zerar o coeficiente, faça Lᵢ ← Lᵢ − m·Lₖ, com m = aᵢₖ/aₖₖ.
+**Erros típicos reconhecidos:** (16,5; -28,5; 16) → Você atualizou os coeficientes, mas esqueceu o lado direito: a operação Eᵢ⁽ᵏ⁾ → Eᵢ⁽ᵏ⁻¹⁾ − mᵢₖEₖ⁽ᵏ⁻¹⁾ vale também para o termo independente. · (-1,016666667; -0,0833333333; 5,1) → Sinal do multiplicador trocado: para zerar o coeficiente, faça Eᵢ⁽ᵏ⁾ → Eᵢ⁽ᵏ⁻¹⁾ − mᵢₖEₖ⁽ᵏ⁻¹⁾, com mᵢₖ = aᵢₖ⁽ᵏ⁻¹⁾/aₖₖ⁽ᵏ⁻¹⁾.
 
 ### 112. xˣ = 5
 *Nível 3 · Matemática · id `sc12`*
@@ -1727,7 +1727,7 @@ f(x) = x<sup>x</sup> − 5
 
 **Gabarito:** Secante — 2,13122936. Sem derivada disponível (ou cara de obter) e com dois palpites que não cercam a raiz: a Secante aproxima f′ pelos dois últimos pontos e converge rápido (ordem ≈ 1,6), com uma avaliação de f por passo. Sem troca de sinal, Bisseção e Falsa Posição nem começam.
 
-**Erros típicos reconhecidos:** 2,140734692 → Esse é o resultado de uma iteração a menos. Conte de novo: x₀ é o ponto de partida, e a 1ª iteração já produz x₁. · 2,739877204 → Sinal trocado: xₖ₊₁ = xₖ − f(xₖ)·(xₖ − xₖ₋₁)/(f(xₖ) − f(xₖ₋₁)). · 0,0163324442 → Esse é o valor de f na aproximação, não a aproximação. A resposta é o próprio x.
+**Erros típicos reconhecidos:** 2,140734692 → Esse é o resultado de uma iteração a menos. Conte de novo: x₀ é o ponto de partida, e a 1ª iteração já produz x₁. · 2,739877204 → Sinal trocado: xᵢ₊₁ = xᵢ − f(xᵢ)·(xᵢ − xᵢ₋₁)/(f(xᵢ) − f(xᵢ₋₁)). · 0,0163324442 → Esse é o valor de f na aproximação, não a aproximação. A resposta é o próprio x.
 
 ### 113. Onde a viga mais desce
 *Nível 3 · Estruturas · id `fp18`*
@@ -1736,9 +1736,9 @@ Numa viga de 6 m com carga distribuída crescente, a flecha máxima fica onde y�
 
 f(x) = −5·x<sup>4</sup> + 216·x<sup>2</sup> − 1296
 
-**Pergunta (sem o método):** Com o método mais indicado em [2; 4], quantas iterações são necessárias até |f(xₖ)| ≤ 1·10<sup>−6</sup>?
+**Pergunta (sem o método):** Com o método mais indicado em [2; 4], quantas iterações são necessárias até |f(xᵢ)| ≤ 1·10<sup>−6</sup>?
 
-**Depois do diagnóstico:** Com a Falsa Posição em [2; 4], quantas iterações são necessárias até |f(xₖ)| ≤ 1·10<sup>−6</sup>?
+**Depois do diagnóstico:** Com a Falsa Posição em [2; 4], quantas iterações são necessárias até |f(xᵢ)| ≤ 1·10<sup>−6</sup>?
 
 **Gabarito:** Falsa Posição — 4. Sinais opostos nas pontas e uma curva suave, quase reta no intervalo: a Falsa Posição mantém a raiz cercada como a Bisseção, mas corta onde a corda cruza o eixo e chega perto em bem menos passos, sem derivada.
 
@@ -1753,11 +1753,11 @@ x = (1,8 + 0,3/x)/(1 + 0,2/x)
 
 **Pergunta (sem o método):** Partindo de x₀ = 1,5, faça 2 iterações do método mais indicado. Qual é x₂?
 
-**Depois do diagnóstico:** Partindo de x₀ = 1,5, faça 2 iterações de Ponto Fixo, xₖ₊₁ = g(xₖ). Qual é x₂?
+**Depois do diagnóstico:** Partindo de x₀ = 1,5, faça 2 iterações de Ponto Fixo, xᵢ₊₁ = g(xᵢ). Qual é x₂?
 
 **Gabarito:** Ponto Fixo — 1,769461078. Bishop já vem como F = g(F) e g é uma contração fortíssima: o Ponto Fixo é exatamente o procedimento das planilhas de estabilidade de taludes. Sem derivada, sem intervalo, com um só chute.
 
-**Erros típicos reconhecidos:** 1,764705882 → Esse é o resultado de uma iteração a menos. Conte de novo: x₀ é o ponto de partida, e a 1ª iteração já produz x₁. · -7,3735·10<sup>−5</sup> → Esse é o resíduo x − g(x), não a aproximação. A resposta é o próprio xₖ.
+**Erros típicos reconhecidos:** 1,764705882 → Esse é o resultado de uma iteração a menos. Conte de novo: x₀ é o ponto de partida, e a 1ª iteração já produz x₁. · -7,3735·10<sup>−5</sup> → Esse é o resíduo x − g(x), não a aproximação. A resposta é o próprio xᵢ.
 
 ### 115. Reator contínuo
 *Nível 2 · Engenharia química · id `fp12`*
@@ -1787,7 +1787,7 @@ Três fertilizantes (x, y e z kg) têm teores diferentes de N, P e K, e a lavour
 
 **Gabarito:** Eliminação de Gauss — x ≈ 100, y ≈ 200, z ≈ 300. Sistema pequeno, sem dominância diagonal e com pedido de solução exata: a Eliminação de Gauss resolve em um número finito de passos, sem depender de convergência.
 
-**Erros típicos reconhecidos:** (2.300; -766,6666667; -233,3333333) → Você atualizou os coeficientes, mas esqueceu o lado direito: a operação Lᵢ ← Lᵢ − m·Lₖ vale também para o termo independente. · (540; -120; 700) → Sinal do multiplicador trocado: para zerar o coeficiente, faça Lᵢ ← Lᵢ − m·Lₖ, com m = aᵢₖ/aₖₖ. · (300; 200; 100) → Os valores estão certos, mas na ordem trocada. Confira qual incógnita é qual.
+**Erros típicos reconhecidos:** (2.300; -766,6666667; -233,3333333) → Você atualizou os coeficientes, mas esqueceu o lado direito: a operação Eᵢ⁽ᵏ⁾ → Eᵢ⁽ᵏ⁻¹⁾ − mᵢₖEₖ⁽ᵏ⁻¹⁾ vale também para o termo independente. · (540; -120; 700) → Sinal do multiplicador trocado: para zerar o coeficiente, faça Eᵢ⁽ᵏ⁾ → Eᵢ⁽ᵏ⁻¹⁾ − mᵢₖEₖ⁽ᵏ⁻¹⁾, com mᵢₖ = aᵢₖ⁽ᵏ⁻¹⁾/aₖₖ⁽ᵏ⁻¹⁾. · (300; 200; 100) → Os valores estão certos, mas na ordem trocada. Confira qual incógnita é qual.
 
 ### 117. A maré que libera o barco
 *Nível 1 · Navegação · id `fp04`*
@@ -1813,11 +1813,11 @@ x = 4000 + 0,275·x − 869,36
 
 **Pergunta (sem o método):** Partindo de x₀ = 4000, faça 3 iterações do método mais indicado. Qual é x₃?
 
-**Depois do diagnóstico:** Partindo de x₀ = 4000, faça 3 iterações de Ponto Fixo, xₖ₊₁ = g(xₖ). Qual é x₃?
+**Depois do diagnóstico:** Partindo de x₀ = 4000, faça 3 iterações de Ponto Fixo, xᵢ₊₁ = g(xᵢ). Qual é x₃?
 
-**Gabarito:** Ponto Fixo — 4.311,50815. A equação já aparece na forma x = g(x), com |g′(x)| < 1 perto da raiz (contração) e um único chute: basta repetir xₖ₊₁ = g(xₖ), sem derivada e sem intervalo.
+**Gabarito:** Ponto Fixo — 4.311,50815. A equação já aparece na forma x = g(x), com |g′(x)| < 1 perto da raiz (contração) e um único chute: basta repetir xᵢ₊₁ = g(xᵢ), sem derivada e sem intervalo.
 
-**Erros típicos reconhecidos:** 4.294,066 → Esse é o resultado de uma iteração a menos. Conte de novo: x₀ é o ponto de partida, e a 1ª iteração já produz x₁. · -4,79659125 → Esse é o resíduo x − g(x), não a aproximação. A resposta é o próprio xₖ.
+**Erros típicos reconhecidos:** 4.294,066 → Esse é o resultado de uma iteração a menos. Conte de novo: x₀ é o ponto de partida, e a 1ª iteração já produz x₁. · -4,79659125 → Esse é o resíduo x − g(x), não a aproximação. A resposta é o próprio xᵢ.
 
 ### 119. Raiz de 3 com duas casas
 *Nível 1 · Matemática · id `bi20`*
@@ -1877,7 +1877,7 @@ x + y + z = 6 ; 2x − y + z = 3 ; x + 2y − z = 2
 
 **Gabarito:** Eliminação de Gauss — x ≈ 1, y ≈ 2, z ≈ 3. Sistema pequeno, sem dominância diagonal e com pedido de solução exata: a Eliminação de Gauss resolve em um número finito de passos, sem depender de convergência.
 
-**Erros típicos reconhecidos:** (7,571428571; -0,7142857143; -0,8571428571) → Você atualizou os coeficientes, mas esqueceu o lado direito: a operação Lᵢ ← Lᵢ − m·Lₖ vale também para o termo independente. · (2,777777778; -2,666666667; 5,888888889) → Sinal do multiplicador trocado: para zerar o coeficiente, faça Lᵢ ← Lᵢ − m·Lₖ, com m = aᵢₖ/aₖₖ. · (3; 2; 1) → Os valores estão certos, mas na ordem trocada. Confira qual incógnita é qual.
+**Erros típicos reconhecidos:** (7,571428571; -0,7142857143; -0,8571428571) → Você atualizou os coeficientes, mas esqueceu o lado direito: a operação Eᵢ⁽ᵏ⁾ → Eᵢ⁽ᵏ⁻¹⁾ − mᵢₖEₖ⁽ᵏ⁻¹⁾ vale também para o termo independente. · (2,777777778; -2,666666667; 5,888888889) → Sinal do multiplicador trocado: para zerar o coeficiente, faça Eᵢ⁽ᵏ⁾ → Eᵢ⁽ᵏ⁻¹⁾ − mᵢₖEₖ⁽ᵏ⁻¹⁾, com mᵢₖ = aᵢₖ⁽ᵏ⁻¹⁾/aₖₖ⁽ᵏ⁻¹⁾. · (3; 2; 1) → Os valores estão certos, mas na ordem trocada. Confira qual incógnita é qual.
 
 ### 123. Ponto de operação do diodo
 *Nível 2 · Eletrônica · id `pf10`*
@@ -1888,11 +1888,11 @@ x = 5 − 0,02585·ln(1000000000·x + 1)
 
 **Pergunta (sem o método):** Partindo de x₀ = 5, faça 2 iterações do método mais indicado. Qual é x₂?
 
-**Depois do diagnóstico:** Partindo de x₀ = 5, faça 2 iterações de Ponto Fixo, xₖ₊₁ = g(xₖ). Qual é x₂?
+**Depois do diagnóstico:** Partindo de x₀ = 5, faça 2 iterações de Ponto Fixo, xᵢ₊₁ = g(xᵢ). Qual é x₂?
 
-**Gabarito:** Ponto Fixo — 4,425871083. A equação já aparece na forma x = g(x), com |g′(x)| < 1 perto da raiz (contração) e um único chute: basta repetir xₖ₊₁ = g(xₖ), sem derivada e sem intervalo.
+**Gabarito:** Ponto Fixo — 4,425871083. A equação já aparece na forma x = g(x), com |g′(x)| < 1 perto da raiz (contração) e um único chute: basta repetir xᵢ₊₁ = g(xᵢ), sem derivada e sem intervalo.
 
-**Erros típicos reconhecidos:** 1,8530·10<sup>−5</sup> → Esse é o resíduo x − g(x), não a aproximação. A resposta é o próprio xₖ.
+**Erros típicos reconhecidos:** 1,8530·10<sup>−5</sup> → Esse é o resíduo x − g(x), não a aproximação. A resposta é o próprio xᵢ.
 
 ### 124. Ingressos do show
 *Nível 1 · Comércio · id `ga02`*
@@ -1907,7 +1907,7 @@ x + y = 120 ; 15x + 25y = 2400
 
 **Gabarito:** Eliminação de Gauss — 60. Sistema pequeno, sem dominância diagonal e com pedido de solução exata: a Eliminação de Gauss resolve em um número finito de passos, sem depender de convergência.
 
-**Erros típicos reconhecidos:** 240 → Você atualizou os coeficientes, mas esqueceu o lado direito: a operação Lᵢ ← Lᵢ − m·Lₖ vale também para o termo independente. · 105 → Sinal do multiplicador trocado: para zerar o coeficiente, faça Lᵢ ← Lᵢ − m·Lₖ, com m = aᵢₖ/aₖₖ.
+**Erros típicos reconhecidos:** 240 → Você atualizou os coeficientes, mas esqueceu o lado direito: a operação Eᵢ⁽ᵏ⁾ → Eᵢ⁽ᵏ⁻¹⁾ − mᵢₖEₖ⁽ᵏ⁻¹⁾ vale também para o termo independente. · 105 → Sinal do multiplicador trocado: para zerar o coeficiente, faça Eᵢ⁽ᵏ⁾ → Eᵢ⁽ᵏ⁻¹⁾ − mᵢₖEₖ⁽ᵏ⁻¹⁾, com mᵢₖ = aᵢₖ⁽ᵏ⁻¹⁾/aₖₖ⁽ᵏ⁻¹⁾.
 
 ### 125. Modo de vibração de um prédio
 *Nível 3 · Engenharia civil · id `nw16`*
@@ -1937,7 +1937,7 @@ f(x) = 200·x<sup>−0,8</sup> − 15·x<sup>0,6</sup>
 
 **Gabarito:** Secante — 5,398370188. Sem derivada disponível (ou cara de obter) e com dois palpites que não cercam a raiz: a Secante aproxima f′ pelos dois últimos pontos e converge rápido (ordem ≈ 1,6), com uma avaliação de f por passo. Sem troca de sinal, Bisseção e Falsa Posição nem começam.
 
-**Erros típicos reconhecidos:** 6,112546973 → Esse é o resultado de uma iteração a mais do que o pedido. · 2,601629812 → Sinal trocado: xₖ₊₁ = xₖ − f(xₖ)·(xₖ − xₖ₋₁)/(f(xₖ) − f(xₖ₋₁)). · 10,65390982 → Esse é o valor de f na aproximação, não a aproximação. A resposta é o próprio x.
+**Erros típicos reconhecidos:** 6,112546973 → Esse é o resultado de uma iteração a mais do que o pedido. · 2,601629812 → Sinal trocado: xᵢ₊₁ = xᵢ − f(xᵢ)·(xᵢ − xᵢ₋₁)/(f(xᵢ) − f(xᵢ₋₁)). · 10,65390982 → Esse é o valor de f na aproximação, não a aproximação. A resposta é o próprio x.
 
 ### 127. Ganho do amplificador saturado
 *Nível 3 · Telecomunicações · id `pf18`*
@@ -1948,9 +1948,9 @@ x = 10/(1 + 0,5·x)
 
 **Pergunta (sem o método):** Partindo de x₀ = 2, encontre a solução com 3 casas decimais. Qual é ela?
 
-**Depois do diagnóstico:** Partindo de x₀ = 2, itere xₖ₊₁ = g(xₖ) até |xₖ₊₁ − xₖ| < 10<sup>−4</sup>. Qual é o ponto fixo, com 3 casas decimais?
+**Depois do diagnóstico:** Partindo de x₀ = 2, itere xᵢ₊₁ = g(xᵢ) até |xᵢ₊₁ − xᵢ| < 10<sup>−4</sup>. Qual é o ponto fixo, com 3 casas decimais?
 
-**Gabarito:** Ponto Fixo — 3,582575695 (tolerância 0,0006). A equação já aparece na forma x = g(x), com |g′(x)| < 1 perto da raiz (contração) e um único chute: basta repetir xₖ₊₁ = g(xₖ), sem derivada e sem intervalo.
+**Gabarito:** Ponto Fixo — 3,582575695 (tolerância 0,0006). A equação já aparece na forma x = g(x), com |g′(x)| < 1 perto da raiz (contração) e um único chute: basta repetir xᵢ₊₁ = g(xᵢ), sem derivada e sem intervalo.
 
 **Erros típicos reconhecidos:** 2,857142857 → Você parou cedo demais: a variação entre dois valores seguidos ainda estava acima do limite pedido.
 
@@ -1967,7 +1967,7 @@ Dois cadernos e três canetas custam R$ 18; cinco cadernos e duas canetas custam
 
 **Gabarito:** Eliminação de Gauss — x ≈ 3, y ≈ 4. Sistema pequeno, sem dominância diagonal e com pedido de solução exata: a Eliminação de Gauss resolve em um número finito de passos, sem depender de convergência.
 
-**Erros típicos reconhecidos:** (15,27272727; -4,181818182) → Você atualizou os coeficientes, mas esqueceu o lado direito: a operação Lᵢ ← Lᵢ − m·Lₖ vale também para o termo independente. · (-1,736842105; 7,157894737) → Sinal do multiplicador trocado: para zerar o coeficiente, faça Lᵢ ← Lᵢ − m·Lₖ, com m = aᵢₖ/aₖₖ. · (4; 3) → Os valores estão certos, mas na ordem trocada. Confira qual incógnita é qual.
+**Erros típicos reconhecidos:** (15,27272727; -4,181818182) → Você atualizou os coeficientes, mas esqueceu o lado direito: a operação Eᵢ⁽ᵏ⁾ → Eᵢ⁽ᵏ⁻¹⁾ − mᵢₖEₖ⁽ᵏ⁻¹⁾ vale também para o termo independente. · (-1,736842105; 7,157894737) → Sinal do multiplicador trocado: para zerar o coeficiente, faça Eᵢ⁽ᵏ⁾ → Eᵢ⁽ᵏ⁻¹⁾ − mᵢₖEₖ⁽ᵏ⁻¹⁾, com mᵢₖ = aᵢₖ⁽ᵏ⁻¹⁾/aₖₖ⁽ᵏ⁻¹⁾. · (4; 3) → Os valores estão certos, mas na ordem trocada. Confira qual incógnita é qual.
 
 ### 129. Ponto de bolha benzeno-tolueno
 *Nível 3 · Engenharia química · id `fp17`*
@@ -1978,7 +1978,7 @@ f(x) = 0,5·10<sup>6,90565 − 1211,033/(220,79 + x)</sup> + 0,5·10<sup>6,95464
 
 **Pergunta (sem o método):** Encontre a raiz em [80; 100] com 3 casas decimais, mantendo-a sempre cercada. Qual é ela?
 
-**Depois do diagnóstico:** Use a Falsa Posição em [80; 100] até |f(xₖ)| ≤ 0,001. Qual é a raiz, com 3 casas decimais?
+**Depois do diagnóstico:** Use a Falsa Posição em [80; 100] até |f(xᵢ)| ≤ 0,001. Qual é a raiz, com 3 casas decimais?
 
 **Gabarito:** Falsa Posição — 92,11171983 (tolerância 0,0006). Sinais opostos nas pontas e uma curva suave, quase reta no intervalo: a Falsa Posição mantém a raiz cercada como a Bisseção, mas corta onde a corda cruza o eixo e chega perto em bem menos passos, sem derivada.
 
@@ -1993,16 +1993,16 @@ x = 1 + 0,4·cos(x)
 
 **Pergunta (sem o método):** Partindo de x₀ = 1, faça 4 iterações do método mais indicado. Qual é x₄?
 
-**Depois do diagnóstico:** Partindo de x₀ = 1, faça 4 iterações de Ponto Fixo, xₖ₊₁ = g(xₖ). Qual é x₄?
+**Depois do diagnóstico:** Partindo de x₀ = 1, faça 4 iterações de Ponto Fixo, xᵢ₊₁ = g(xᵢ). Qual é x₄?
 
-**Gabarito:** Ponto Fixo — 1,157005854. A equação já aparece na forma x = g(x), com |g′(x)| < 1 perto da raiz (contração) e um único chute: basta repetir xₖ₊₁ = g(xₖ), sem derivada e sem intervalo.
+**Gabarito:** Ponto Fixo — 1,157005854. A equação já aparece na forma x = g(x), com |g′(x)| < 1 perto da raiz (contração) e um único chute: basta repetir xᵢ₊₁ = g(xᵢ), sem derivada e sem intervalo.
 
-**Erros típicos reconhecidos:** 1,167432269 → Esse é o resultado de uma iteração a menos. Conte de novo: x₀ é o ponto de partida, e a 1ª iteração já produz x₁. · 1,160833111 → Esse é o resultado de uma iteração a mais do que o pedido. · -0,003827257 → Esse é o resíduo x − g(x), não a aproximação. A resposta é o próprio xₖ. · 1,399880616 → Sua calculadora estava em graus. Em métodos numéricos (e no Cálculo) os ângulos ficam em radianos.
+**Erros típicos reconhecidos:** 1,167432269 → Esse é o resultado de uma iteração a menos. Conte de novo: x₀ é o ponto de partida, e a 1ª iteração já produz x₁. · 1,160833111 → Esse é o resultado de uma iteração a mais do que o pedido. · -0,003827257 → Esse é o resíduo x − g(x), não a aproximação. A resposta é o próprio xᵢ. · 1,399880616 → Sua calculadora estava em graus. Em métodos numéricos (e no Cálculo) os ângulos ficam em radianos.
 
 ### 131. Dividir sem dividir
 *Nível 1 · Computação · id `nw06`*
 
-Processadores calculam 1/7 sem dividir: resolvem 1/x − 7 = 0 por Newton. **A derivada −1/x² transforma a iteração em xₙ₊₁ = xₙ(2 − 7xₙ), só com multiplicações** e **0,1 é um bom chute para 1/7**.
+Processadores calculam 1/7 sem dividir: resolvem 1/x − 7 = 0 por Newton. **A derivada −1/x² transforma a iteração em xᵢ₊₁ = xᵢ(2 − 7xᵢ), só com multiplicações** e **0,1 é um bom chute para 1/7**.
 
 f(x) = 1/x − 7
 
@@ -2012,7 +2012,7 @@ f(x) = 1/x − 7
 
 **Gabarito:** Newton-Raphson — 0,1417. Derivada fácil de obter e chute inicial bom: Newton-Raphson converge quadraticamente (as casas corretas quase dobram a cada passo).
 
-**Erros típicos reconhecidos:** 0,13 → Esse é o resultado de uma iteração a menos. Conte de novo: x₀ é o ponto de partida, e a 1ª iteração já produz x₁. · 0,14284777 → Esse é o resultado de uma iteração a mais do que o pedido. · 0,0343 → Sinal trocado na fórmula: o passo de Newton é xₖ₊₁ = xₖ − f(xₖ)/f′(xₖ), com sinal de menos. · 0,0571630205 → Esse é o valor de f na aproximação, não a aproximação. A resposta é o próprio x.
+**Erros típicos reconhecidos:** 0,13 → Esse é o resultado de uma iteração a menos. Conte de novo: x₀ é o ponto de partida, e a 1ª iteração já produz x₁. · 0,14284777 → Esse é o resultado de uma iteração a mais do que o pedido. · 0,0343 → Sinal trocado na fórmula: o passo de Newton é xᵢ₊₁ = xᵢ − f(xᵢ)/f′(xᵢ), com sinal de menos. · 0,0571630205 → Esse é o valor de f na aproximação, não a aproximação. A resposta é o próprio x.
 
 ### 132. Reservatório em tronco de cone
 *Nível 3 · Engenharia civil · id `fp20`*
@@ -2023,7 +2023,7 @@ f(x) = π·x/3·(1 + (1 + x/5) + (1 + x/5)<sup>2</sup>) − 30
 
 **Pergunta (sem o método):** Encontre a raiz em [2; 5] com 4 casas decimais, mantendo-a sempre cercada. Qual é ela?
 
-**Depois do diagnóstico:** Use a Falsa Posição em [2; 5] até |f(xₖ)| ≤ 1·10<sup>−6</sup>. Qual é a raiz, com 4 casas decimais?
+**Depois do diagnóstico:** Use a Falsa Posição em [2; 5] até |f(xᵢ)| ≤ 1·10<sup>−6</sup>. Qual é a raiz, com 4 casas decimais?
 
 **Gabarito:** Falsa Posição — 4,439868555 (tolerância 0,00006). Sinais opostos nas pontas e uma curva suave, quase reta no intervalo: a Falsa Posição mantém a raiz cercada como a Bisseção, mas corta onde a corda cruza o eixo e chega perto em bem menos passos, sem derivada.
 
@@ -2042,7 +2042,7 @@ f(x) = x·e<sup>−x</sup> − 0,2
 
 **Gabarito:** Newton-Raphson — 0,2591660878. Derivada fácil de obter e chute inicial bom: Newton-Raphson converge quadraticamente (as casas corretas quase dobram a cada passo).
 
-**Erros típicos reconhecidos:** 0,2571025165 → Esse é o resultado de uma iteração a menos. Conte de novo: x₀ é o ponto de partida, e a 1ª iteração já produz x₁. · 0,4358702249 → Sinal trocado na fórmula: o passo de Newton é xₖ₊₁ = xₖ − f(xₖ)/f′(xₖ), com sinal de menos. · -2,8665·10<sup>−6</sup> → Esse é o valor de f na aproximação, não a aproximação. A resposta é o próprio x.
+**Erros típicos reconhecidos:** 0,2571025165 → Esse é o resultado de uma iteração a menos. Conte de novo: x₀ é o ponto de partida, e a 1ª iteração já produz x₁. · 0,4358702249 → Sinal trocado na fórmula: o passo de Newton é xᵢ₊₁ = xᵢ − f(xᵢ)/f′(xᵢ), com sinal de menos. · -2,8665·10<sup>−6</sup> → Esse é o valor de f na aproximação, não a aproximação. A resposta é o próprio x.
 
 ### 134. Suavizar pixels
 *Nível 2 · Processamento de imagem · id `gs10`*
@@ -2083,11 +2083,11 @@ x = 0,15 + 0,51·x
 
 **Pergunta (sem o método):** Partindo de x₀ = 1, faça 3 iterações do método mais indicado. Qual é x₃?
 
-**Depois do diagnóstico:** Partindo de x₀ = 1, faça 3 iterações de Ponto Fixo, xₖ₊₁ = g(xₖ). Qual é x₃?
+**Depois do diagnóstico:** Partindo de x₀ = 1, faça 3 iterações de Ponto Fixo, xᵢ₊₁ = g(xᵢ). Qual é x₃?
 
-**Gabarito:** Ponto Fixo — 0,398166. A equação já aparece na forma x = g(x), com |g′(x)| < 1 perto da raiz (contração) e um único chute: basta repetir xₖ₊₁ = g(xₖ), sem derivada e sem intervalo.
+**Gabarito:** Ponto Fixo — 0,398166. A equação já aparece na forma x = g(x), com |g′(x)| < 1 perto da raiz (contração) e um único chute: basta repetir xᵢ₊₁ = g(xᵢ), sem derivada e sem intervalo.
 
-**Erros típicos reconhecidos:** 0,4866 → Esse é o resultado de uma iteração a menos. Conte de novo: x₀ é o ponto de partida, e a 1ª iteração já produz x₁. · 0,35306466 → Esse é o resultado de uma iteração a mais do que o pedido. · 0,04510134 → Esse é o resíduo x − g(x), não a aproximação. A resposta é o próprio xₖ.
+**Erros típicos reconhecidos:** 0,4866 → Esse é o resultado de uma iteração a menos. Conte de novo: x₀ é o ponto de partida, e a 1ª iteração já produz x₁. · 0,35306466 → Esse é o resultado de uma iteração a mais do que o pedido. · 0,04510134 → Esse é o resíduo x − g(x), não a aproximação. A resposta é o próprio xᵢ.
 
 ### 137. Rede tridiagonal enorme
 *Nível 3 · Engenharia · id `gs03`*
@@ -2132,7 +2132,7 @@ Numa treliça com triângulos 3-4-5, as forças x, y e z (kN) satisfazem 0,8x �
 
 **Gabarito:** Eliminação de Gauss — x ≈ 60, y ≈ 80, z ≈ 60. Sistema pequeno, sem dominância diagonal e com pedido de solução exata: a Eliminação de Gauss resolve em um número finito de passos, sem depender de convergência.
 
-**Erros típicos reconhecidos:** (67,78378378; 90,37837838; 72,97297297) → Você atualizou os coeficientes, mas esqueceu o lado direito: a operação Lᵢ ← Lᵢ − m·Lₖ vale também para o termo independente. · (-444; -592; -247,2) → Sinal do multiplicador trocado: para zerar o coeficiente, faça Lᵢ ← Lᵢ − m·Lₖ, com m = aᵢₖ/aₖₖ.
+**Erros típicos reconhecidos:** (67,78378378; 90,37837838; 72,97297297) → Você atualizou os coeficientes, mas esqueceu o lado direito: a operação Eᵢ⁽ᵏ⁾ → Eᵢ⁽ᵏ⁻¹⁾ − mᵢₖEₖ⁽ᵏ⁻¹⁾ vale também para o termo independente. · (-444; -592; -247,2) → Sinal do multiplicador trocado: para zerar o coeficiente, faça Eᵢ⁽ᵏ⁾ → Eᵢ⁽ᵏ⁻¹⁾ − mᵢₖEₖ⁽ᵏ⁻¹⁾, com mᵢₖ = aᵢₖ⁽ᵏ⁻¹⁾/aₖₖ⁽ᵏ⁻¹⁾.
 
 ### 140. Ranking de três páginas
 *Nível 2 · Redes de computadores · id `gs20`*

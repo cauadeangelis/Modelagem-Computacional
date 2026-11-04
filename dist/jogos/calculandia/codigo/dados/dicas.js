@@ -77,7 +77,7 @@ export const HINTS = {
     fases: ['C2.1-F', 'C2.1-M', 'C2.1-D'],
     dica1: 'Zere os elementos abaixo da diagonal, coluna por coluna.',
     dica2: 'Multiplicador m = a_ij ÷ pivô; subtraia m vezes a linha do pivô.',
-    dica3: 'Depois, retrossubstituição de baixo para cima.',
+    dica3: 'Depois, substituição regressiva de baixo para cima.',
     fantasma: 'destaca_pivo',
     voz: { onda: 'sine', pitch: 200 },
   },

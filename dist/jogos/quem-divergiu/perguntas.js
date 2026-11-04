@@ -45,7 +45,7 @@
   const passosFalsa = (f, a, b, n) => { const r = []; for (let k = 1; k <= n; k++) { const x = (a * f(b) - b * f(a)) / (f(b) - f(a)), fx = f(x); r.push({ k, a, b, x, fx }); if (f(a) * fx < 0) b = x; else a = x; } return r; };
   const passosNewton = (f, df, x, n) => { const r = []; for (let k = 1; k <= n; k++) { const nx = x - f(x) / df(x); r.push({ k, x, fx: f(x), dfx: df(x), nx }); x = nx; } return r; };
   const passosSecante = (f, x0, x1, n) => { const r = []; for (let k = 1; k <= n; k++) { const x2 = x1 - f(x1) * (x1 - x0) / (f(x1) - f(x0)); r.push({ k, x0, x1, x2 }); x0 = x1; x1 = x2; } return r; };
-  function gauss(A, b) { // pivotamento parcial
+  function gauss(A, b) { // pivoteamento parcial
     const n = b.length, M = A.map((r, i) => [...r, b[i]]);
     for (let c = 0; c < n; c++) {
       let p = c; for (let r = c + 1; r < n; r++) if (Math.abs(M[r][c]) > Math.abs(M[p][c])) p = r;
@@ -101,7 +101,7 @@
     // Newton-Raphson
     { id: 'nw-raiz2', metodo: 'newton', nivel: 2, casas: 5,
       texto: '√2 pelo Newton: f(x) = x² − 2, partindo de x₀ = 1. Quanto vale x₂?',
-      dica: 'xₖ₊₁ = xₖ − f(xₖ)/f′(xₖ), com f′(x) = 2x.',
+      dica: 'xᵢ₊₁ = xᵢ − f(xᵢ)/f′(xᵢ), com f′(x) = 2x.',
       calc() { const r = passosNewton(x => x * x - 2, x => 2 * x, 1, 2); return { resposta: r[1].nx, passos: r.map(p => `x${sub(p.k)} = ${F(p.x, 6)} − (${F(p.fx, 6)})/(${F(p.dfx, 6)}) = ${F(p.nx, 6)}`) }; } },
     { id: 'nw-passos', metodo: 'newton', nivel: 2, casas: 0,
       texto: 'Quantos passos o Newton precisa, partindo de x₀ = 1, até |f(x)| < 10⁻¹⁰ em f(x) = x² − 2?',
@@ -116,7 +116,7 @@
       dica: 'f(x) = cos(x) − x. O gráfico de cos(x) cruza a reta y = x antes de 1.',
       calc() { const r = passosNewton(x => Math.cos(x) - x, x => -Math.sin(x) - 1, 1, 6); return { resposta: r[5].nx, passos: r.slice(0, 4).map(p => `x${sub(p.k)} = ${F(p.nx, 8)}`).concat([`Raiz ≈ ${F(r[5].nx, 6)} (o número de Dottie).`]) }; } },
     { id: 'nw-inverso', metodo: 'newton', nivel: 3, casas: 4,
-      texto: 'Newton calcula 1/3 sem dividir: em f(x) = 1/x − 3, o passo vira xₖ₊₁ = xₖ·(2 − 3xₖ). Partindo de x₀ = 0,3, quanto vale x₂?',
+      texto: 'Newton calcula 1/3 sem dividir: em f(x) = 1/x − 3, o passo vira xᵢ₊₁ = xᵢ·(2 − 3xᵢ). Partindo de x₀ = 0,3, quanto vale x₂?',
       dica: 'Só multiplicações: x₁ = 0,3·(2 − 0,9).',
       calc() { let x = 0.3; const lin = []; for (let k = 1; k <= 2; k++) { x = x * (2 - 3 * x); lin.push(`x${sub(k)} = ${F(x, 6)}`); } return { resposta: x, passos: lin.concat(['É assim que muitos processadores calculam divisões.']) }; } },
     { id: 'nw-erro', metodo: 'newton', nivel: 3, casas: 6,
@@ -139,20 +139,20 @@
     // Eliminação de Gauss
     { id: 'ga-x', metodo: 'gauss', nivel: 3, casas: 2,
       texto: 'Resolva o sistema 2x + y = 5 e x + 3y = 6. Quanto vale x?',
-      dica: 'Elimine x da segunda equação: L₂ ← L₂ − ½·L₁.',
-      calc() { const [x, y] = gauss([[2, 1], [1, 3]], [5, 6]); return { resposta: x, passos: ['L₂ ← L₂ − ½·L₁: 2,5y = 3,5 ⇒ y = 1,4', `Retrossubstituição: 2x = 5 − 1,4 ⇒ x = ${F(x, 2)}`, `Solução: (${F(x, 2)}; ${F(y, 2)})`] }; } },
+      dica: 'Elimine x da segunda equação: m₂₁ = ½ e E₂⁽¹⁾ → E₂⁽⁰⁾ − ½E₁⁽⁰⁾.',
+      calc() { const [x, y] = gauss([[2, 1], [1, 3]], [5, 6]); return { resposta: x, passos: ['E₂⁽¹⁾ → E₂⁽⁰⁾ − ½E₁⁽⁰⁾: 2,5y = 3,5 ⇒ y = 1,4', `Substituição regressiva: 2x = 5 − 1,4 ⇒ x = ${F(x, 2)}`, `Solução: (${F(x, 2)}; ${F(y, 2)})`] }; } },
     { id: 'ga-z', metodo: 'gauss', nivel: 3, casas: 4,
       texto: 'Sistema: x + y + z = 6, 2x − y + z = 3 e x + 2y − z = 2. Quanto vale z?',
       dica: 'Elimine x das duas últimas linhas; depois, y da última.',
-      calc() { const A = [[1, 1, 1], [2, -1, 1], [1, 2, -1]], b = [6, 3, 2], x = gauss(A, b); return { resposta: x[2], passos: [`Com pivotamento parcial: x = ${F(x[0], 4)}, y = ${F(x[1], 4)}, z = ${F(x[2], 4)}`, `Resíduo máximo ≈ ${F(residuo(A, b, x), 2)}`] }; } },
+      calc() { const A = [[1, 1, 1], [2, -1, 1], [1, 2, -1]], b = [6, 3, 2], x = gauss(A, b); return { resposta: x[2], passos: [`Com pivoteamento parcial: x = ${F(x[0], 4)}, y = ${F(x[1], 4)}, z = ${F(x[2], 4)}`, `Resíduo máximo ≈ ${F(residuo(A, b, x), 2)}`] }; } },
     { id: 'ga-custo', metodo: 'gauss', nivel: 3, casas: 0,
       texto: 'A Eliminação de Gauss faz cerca de 2n³/3 operações. Quantas, num sistema 30 × 30?',
       dica: '30³ = 27.000.',
       calc() { return { resposta: 2 * 30 ** 3 / 3, passos: ['2·30³/3 = 2·27.000/3', `= ${F(2 * 30 ** 3 / 3, 0)} operações`] }; } },
     { id: 'ga-pivo', metodo: 'gauss', nivel: 3, casas: 2,
-      texto: 'Pivotamento parcial na matriz [[1, 2], [4, 1]]: depois de trocar as linhas, qual multiplicador zera o elemento abaixo do pivô?',
+      texto: 'Pivoteamento parcial na matriz [[1, 2], [4, 1]]: depois de trocar as linhas, qual multiplicador zera o elemento abaixo do pivô?',
       dica: 'O pivô passa a ser o maior da coluna em módulo: 4.',
-      calc() { return { resposta: 1 / 4, passos: ['Troca: o pivô vira 4 (linha [4, 1]).', 'm = 1/4 = 0,25; L₂ ← L₂ − 0,25·L₁.', 'Multiplicadores ≤ 1 evitam ampliar erros de arredondamento.'] }; } },
+      calc() { return { resposta: 1 / 4, passos: ['Troca: o pivô vira 4 (linha [4, 1]).', 'm₂₁ = 1/4 = 0,25; E₂⁽¹⁾ → E₂⁽⁰⁾ − 0,25E₁⁽⁰⁾.', 'Multiplicadores ≤ 1 evitam ampliar erros de arredondamento.'] }; } },
     // Gauss-Seidel
     { id: 'gs-y1', metodo: 'seidel', nivel: 3, casas: 2,
       texto: 'Gauss-Seidel em 10x − y = 9 e −x + 10y = 19, partindo de (0, 0). Depois de 1 iteração, quanto vale y?',

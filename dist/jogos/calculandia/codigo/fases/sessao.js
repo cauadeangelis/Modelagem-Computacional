@@ -167,17 +167,17 @@ export class Session {
       else { s.a = x; s.wa = 1; s.wb = s.illinois && s.lastSide === 'a' ? s.wb / 2 : 1; s.lastSide = 'a'; }
       s.stationary = this.history.at(-1)?.state.lastSide === s.lastSide ? (s.stationary || 0) + 1 : 0;
       if (s.stationary >= 3 && !s.illinois && s.tool === 'falsaPosicao') flags.push('estagnacao');
-      formula = s.tool === 'bissecao' ? 'c=(a+b)/2; descarte a metade sem troca de sinal.' : 'c=(a·f(b)−b·f(a))/(f(b)−f(a)); mantenha a troca de sinal.';
+      formula = s.tool === 'bissecao' ? 'xᵢ=(a+b)/2; se f(a)·f(xᵢ)<0, b=xᵢ; senão a=xᵢ.' : 'xᵢ=(a·f(b)−b·f(a))/(f(b)−f(a)); se f(a)·f(xᵢ)<0, b=xᵢ; senão a=xᵢ.';
     } else if (s.tool === 'newton') {
       cost = 3; const d = l.df?.(old);
       if (!finite(d) || Math.abs(d) < 1e-12) return { cost, flags: ['derivadaNula'], formula: 'Derivada nula: a tangente está horizontal. Mova a mira.', damage: 25 };
-      x = old - s.multiplicity * l.f(old) / d; formula = `xₖ₊₁=xₖ−${s.multiplicity}·f(xₖ)/f′(xₖ)`;
+      x = old - s.multiplicity * l.f(old) / d; formula = `xᵢ₊₁=xᵢ−${s.multiplicity}·f(xᵢ)/f′(xᵢ)`;
     } else if (s.tool === 'secante') {
       cost = 2; const d = l.f(old) - l.f(s.prev);
       if (Math.abs(d) < 1e-12) return { cost, flags: ['sondasGemeas'], formula: 'Sondas gêmeas: f(x₁)−f(x₀)=0. Reposicione ou use bisseção.', damage: 50 };
-      x = old - l.f(old) * (old - s.prev) / d; s.prev = old; formula = 'x₂=x₁−f(x₁)(x₁−x₀)/(f(x₁)−f(x₀))';
+      x = old - l.f(old) * (old - s.prev) / d; s.prev = old; formula = 'xᵢ₊₁=xᵢ−f(xᵢ)(xᵢ−xᵢ₋₁)/(f(xᵢ)−f(xᵢ₋₁))';
     } else {
-      cost = 1; x = (1 - s.lambda) * old + s.lambda * l.gs[s.gIndex](old); formula = `xₖ₊₁=(1−λ)xₖ+λg(xₖ), λ=${s.lambda}`;
+      cost = 1; x = (1 - s.lambda) * old + s.lambda * l.gs[s.gIndex](old); formula = `xᵢ₊₁=(1−λ)xᵢ+λg(xᵢ), λ=${s.lambda}`;
     }
     const twoBack = this.traces.at(-2)?.x;
     if (finite(twoBack) && Math.abs(x - twoBack) < 1e-9 && Math.abs(x - old) > 1e-6) flags.push('ciclo');
@@ -222,19 +222,19 @@ export class Session {
       if (s.tool === 'pivoteamento' && action !== 'eliminate' && !s.pivoted?.includes(pivot)) {
         let p = pivot; for (let i = pivot + 1; i < n; i++) if (Math.abs(s.A[i][pivot]) > Math.abs(s.A[p][pivot])) p = i;
         (s.pivoted ||= []).push(pivot);
-        if (p !== pivot) { [s.A[p], s.A[pivot]] = [s.A[pivot], s.A[p]]; [s.bvec[p], s.bvec[pivot]] = [s.bvec[pivot], s.bvec[p]]; return { cost: 1, formula: `Pivoteamento parcial: L${pivot + 1} ↔ L${p + 1}.`, iteration: false }; }
+        if (p !== pivot) { [s.A[p], s.A[pivot]] = [s.A[pivot], s.A[p]]; [s.bvec[p], s.bvec[pivot]] = [s.bvec[pivot], s.bvec[p]]; return { cost: 1, formula: `Pivoteamento parcial: E${pivot + 1} ↔ E${p + 1} (maior |aᵢₖ| da coluna vira o pivô).`, iteration: false }; }
       }
       if (Math.abs(s.A[pivot][pivot]) < 1e-15) return { cost: 1, flags: ['pivoZero'], damage: 50, formula: 'Pivô zero: troque linhas antes de dividir.' };
       const m = action === 'eliminate' ? args.multiplier : q(s.A[row][pivot] / s.A[pivot][pivot]);
       const small = Math.abs(s.A[pivot][pivot]) < 1e-3 * Math.max(...s.A.map(r => Math.abs(r[pivot])));
       s.A[row] = s.A[row].map((v, j) => q(v - q(m * s.A[pivot][j]))); s.bvec[row] = q(s.bvec[row] - q(m * s.bvec[pivot]));
       const growth = norm(s.A.flat()) / norm(l.A.flat()); s.growth = growth;
-      return { cost: 1, flags: small ? ['pivoMinusculo'] : growth > 8 ? ['crescimento'] : [], formula: `L${row + 1} ← L${row + 1} − (${m})·L${pivot + 1}; crescimento=${growth.toPrecision(4)}.` };
+      return { cost: 1, flags: small ? ['pivoMinusculo'] : growth > 8 ? ['crescimento'] : [], formula: `E${row + 1} → E${row + 1} − m·E${pivot + 1}, m${row + 1}${pivot + 1} = ${m}; crescimento=${growth.toPrecision(4)}.` };
     }
-    const x = Array(n).fill(0); for (let i = n - 1; i >= 0; i--) { if (Math.abs(s.A[i][i]) < 1e-15) throw new Error('Sistema singular: pivô zero na retrossubstituição.'); x[i] = q((s.bvec[i] - s.A[i].slice(i + 1).reduce((sum, v, j) => q(sum + q(v * x[i + j + 1])), 0)) / s.A[i][i]); }
+    const x = Array(n).fill(0); for (let i = n - 1; i >= 0; i--) { if (Math.abs(s.A[i][i]) < 1e-15) throw new Error('Sistema singular: pivô zero na substituição regressiva.'); x[i] = q((s.bvec[i] - s.A[i].slice(i + 1).reduce((sum, v, j) => q(sum + q(v * x[i + j + 1])), 0)) / s.A[i][i]); }
     x.forEach((v, i) => { s.x[s.colPerm[i]] = v; }); this.linearError();
     if (l.solutions && s.error <= l.tau) { s.solved.push(s.x.slice()); s.rhsIndex++; if (s.rhsIndex < l.solutions.length) { s.A = copy(l.A); s.bvec = mv(l.A, l.solutions[s.rhsIndex]); s.colPerm = s.rows.map((_, i) => i); s.rows = s.colPerm.slice(); s.pivoted = []; s.error = Infinity; } }
-    return { cost: 1, formula: 'Retrossubstituição de baixo para cima; desfaça a permutação das incógnitas.' };
+    return { cost: 1, formula: 'Substituição regressiva de baixo para cima; desfaça a permutação das incógnitas.' };
   }
   linearError() {
     const s = this.s, l = this.level, target = l.solutions?.[Math.min(s.rhsIndex, l.solutions.length - 1)] || l.solution;

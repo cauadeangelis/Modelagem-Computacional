@@ -1,5 +1,37 @@
 # Histórico de versões
 
+## v13 — Conteúdo no formato dos slides, banco de questões em SQL e telas mais limpas
+
+**Conteúdo de acordo com os slides da professora (Cap. 2 e Cap. 3)**
+- Lições, fórmulas, exemplos e critérios de parada reescritos na notação dos slides: xᵢ = (aᵢ + bᵢ)/2, εₐ = |(x_novo − x_velho)/x_novo|, k > (log(b₀ − a₀) − log ε)/log 2, Eᵢ⁽ᵏ⁾ → Eᵢ⁽ᵏ⁻¹⁾ − mᵢₖEₖ⁽ᵏ⁻¹⁾, pivô, equação pivô, substituição regressiva e pivoteamento parcial.
+- Tela nova na lição, **"Como a professora resolve"**, com a tabela do exemplo dos slides; a simulação usa os mesmos exemplos (Exemplos 05, 06, 5, 7 e 1).
+- Terminal com a aba **Slides**: a tabela no formato da professora, o critério de parada escolhido e, nos sistemas, as etapas do Gauss e os critérios das linhas e de Sassenfeld.
+- O Ponto Fixo continua escondido, como a professora pediu, mas já com o conteúdo no formato dela.
+
+**Banco de questões em SQL** (`banco-de-questoes/questoes.sql`)
+- 334 questões: Listas 1 a 10 (UERJ), 4ª e 5ª Listas da Profa. Danielle, perguntas dos slides e perguntas rápidas de conceito, com as versões "1º passo" das questões longas.
+- Cada resposta é refeita pelo resolvedor do site (`js/motor/resolver-questoes.js`) a partir dos parâmetros da questão; o teste `tests/banco/conferir-banco.cjs` confere todas.
+- 17 gabaritos das listas não conferem com a conta (por exemplo, Lista 1, 12ª: o gabarito é o 5º ponto médio, não o 4º; Lista 3, 27ª: x = 1, não 3). Cada um tem uma observação explicando, e o site mostra junto da resolução.
+- Toda questão tem 4 alternativas; cada alternativa errada diz qual erro leva a ela (método trocado, uma iteração a menos, calculadora em graus, sinal trocado na fórmula, fração invertida, ordem da soma em ponto flutuante…).
+- `npm run banco` gera `dist/dados/banco-de-questoes.js`, que o site e os jogos leem.
+
+**Site**
+- Página nova **Listas**: filtro por lista e por assunto, resposta digitada (ou alternativas), resolução no formato dos slides e o gabarito impresso com a observação quando ele não confere.
+- **Revisão**: questão errada nas Listas ou no Relâmpago vai para o caderno, com o mesmo intervalo de 1, 3, 7 e 14 dias.
+- **Relâmpago** (na página Jogos): 10 perguntas rápidas de múltipla escolha, com cronômetro, combo de até ×3 e recorde. Atalhos 1–4 e Enter.
+
+**Calculândia**
+- **Casa verde = pergunta de múltipla escolha**, direto ao entrar: uma questão do banco do método da cidade (ou, para Spline e Ponto Fixo, as perguntas da própria cidade). No topo, os **dispositivos**: sementes dos baús, Conceito (grátis), Dica (1 🌰), Lupa (2 🌰, risca uma alternativa errada), Escudo (com uma relíquia, perdoa o primeiro erro) e Inventário. Estrelas: 3 de primeira sem ajuda paga.
+- **Casas azul e vermelha com a tela mais limpa**: os dispositivos foram para o topo; a missão virou uma linha que abre o contexto completo; o gráfico ocupa a largura toda; embaixo ficam só Executar e Concluir.
+
+**Quem Divergiu?**
+- As questões numéricas das listas entram no sorteio (com o passo a passo do resolvedor) e dois temas novos: Interpolação e ajuste; Integração e EDO. Dá para desligar nos ajustes.
+
+**Organização**
+- O site e a Calculândia em pastas com nomes em português: `js/motor`, `js/conteudo`, `js/paginas`, `js/site`, `js/personagens`, `css/`, `dados/`, `imagens/`; na Calculândia, `codigo/dados`, `codigo/fases`, `codigo/interface`, `codigo/personagens`, `codigo/mundo`, `codigo/sistemas`. O `app.js` virou um arquivo por página.
+- [MAPA-DO-PROJETO.md](MAPA-DO-PROJETO.md): onde fica cada arquivo e a tabela dos nomes antigos para os novos.
+- `docs organizacionais/` foi para `docs/organizacionais/`.
+
 ## Em andamento — Calculândia: personagem, pet e dicas de controle
 
 - **Criação do personagem:** antes da aventura, o jogador escolhe o boneco **masculino** ou **feminino** (com cabelo, marias-chiquinhas e cílios) e digita o nome dele, com prévias 3D em cada cartão. O nome aparece nas falas, no menu e no final; as falas também mudam conforme o gênero (engenheiro/engenheira, patrão/patroa).

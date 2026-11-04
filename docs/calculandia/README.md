@@ -1,5 +1,7 @@
 # Calculândia — Caçadores de Raízes
 
+> **v13:** o código foi reorganizado em pastas com nomes em português (`codigo/dados`, `codigo/fases`, `codigo/interface`, `codigo/personagens`, `codigo/mundo`, `codigo/sistemas`; antes `src/`), e `vendor/`, `fonts/` e `style.css` viraram `bibliotecas/`, `fontes/` e `estilo.css`. Os nomes de arquivo citados nos documentos mais antigos desta pasta (auditorias e decisões) são os da versão anterior: a correspondência está no [Mapa do projeto](../../MAPA-DO-PROJETO.md#nomes-antigos--nomes-novos-v13). A casa verde agora abre uma pergunta de múltipla escolha do banco de questões do site (`codigo/fases/pergunta-rapida.js`).
+
 > **v12:** o jogo agora faz parte do site Numera Academy, no lugar da antiga Arena: o código está em `dist/jogos/calculandia/`, os testes em `tests/calculandia/` e esta documentação em `docs/calculandia/`. Three.js 0.160.0 e a fonte Fredoka são servidos pelo próprio site (`vendor/` e `fonts/`), sem CDN, e o jogo funciona offline depois da primeira visita.
 
 Overworld 3D do jogo de Cálculo Numérico, feito a partir do *Documento do Mundo Animado*. Three.js, tudo gerado por código (primitivas, animação procedural, áudio sintetizado), sem etapa de build.
@@ -48,12 +50,12 @@ Detalhes, critérios e ajustes de balanceamento: [IMPLEMENTACAO_REGRAS.md](IMPLE
 
 - Ilha de 240×240 com 6 regiões + Usina, rios, pontes, praias, vegetação instanciada e Névoa do Erro nos portões.
 - 28 assentamentos (21 cidades/acampamentos, 5 arenas de chefão, Usina), cada um com marco animado, 3 prédios-fase, placa, fogueira, sino e moradores.
-- Tela de criação: herói masculino ou feminino, nome digitado pelo jogador e pet (Raizinha ou as gatas Lina e Nina), com prévias 3D (`src/ui/creator.js`). As falas trocam `{nome}`, `{o}`, `{patrão}` e `{pet}` conforme a escolha (`src/data/dialogs.js`).
-- Mestres históricos (`src/data/historicos.js`, `src/systems/mestres.js`): recepção na Base e um mestre por região, com missão, etiqueta de nome e Menu → Mestres.
-- Cores e símbolos de dificuldade em `NIVEIS` (`src/data/settlements.js`); Casas de Dúvidas em cinco cidades (`duvidas: true`), com conteúdo em `src/data/conhecimento.js`.
-- Inventário (`src/ui/inventario.js`, tecla I) com ferramentas, cartas e relíquias; ícones em `src/ui/icones.js`. Contextos práticos das missões em `src/data/contextos.js`.
-- Herói com todas as animações da seção 6.3, pet que segue o herói (`src/entities/companion.js` e `src/entities/gatas.js`), 22 bichos guias com 3 níveis de dica.
-- 21 métodos numéricos jogáveis em 3 dificuldades + 5 chefões + final (`src/fases/`).
+- Tela de criação: herói masculino ou feminino, nome digitado pelo jogador e pet (Raizinha ou as gatas Lina e Nina), com prévias 3D (`codigo/interface/criacao-de-personagem.js`). As falas trocam `{nome}`, `{o}`, `{patrão}` e `{pet}` conforme a escolha (`codigo/dados/falas.js`).
+- Mestres históricos (`codigo/dados/mestres-historicos.js`, `codigo/sistemas/dicas-dos-mestres.js`): recepção na Base e um mestre por região, com missão, etiqueta de nome e Menu → Mestres.
+- Cores e símbolos de dificuldade em `NIVEIS` (`codigo/dados/regioes-e-cidades.js`); Casas de Dúvidas em cinco cidades (`duvidas: true`), com conteúdo em `codigo/dados/conhecimento.js`.
+- Inventário (`codigo/interface/inventario.js`, tecla I) com ferramentas, cartas e relíquias; ícones em `codigo/interface/icones.js`. Contextos práticos das missões em `codigo/dados/contextos.js`.
+- Herói com todas as animações da seção 6.3, pet que segue o herói (`codigo/personagens/companheiro.js` e `codigo/personagens/gatas-lina-e-nina.js`), 22 bichos guias com 3 níveis de dica.
+- 21 métodos numéricos jogáveis em 3 dificuldades + 5 chefões + final (`codigo/fases/`).
 - 40 Raízes Fugitivas (6 tipos), Raizdex com cosméticos, baús, árvores, flores, pássaros, borboletas, peixes, nuvens, lama e interações por região.
 - Cinemática de abertura (pule segurando Espaço), tutorial guiado, tutorial de comandos passo a passo na primeira vez no mundo (um comando por vez, só avança quando o jogador faz; dá para pular; Menu → Controles mostra tudo e refaz o tutorial), mapa com viagem rápida, minimapa, salvamento em `localStorage`.
 

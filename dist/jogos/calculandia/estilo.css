@@ -606,3 +606,80 @@ details.hint-log summary { cursor: pointer; font-weight: 600; }
   .tq-submit { flex: 1 1 28%; display: contents; }
   .tq-why { flex-basis: 100%; order: 9; font-size: 14px; }
 }
+
+/* ===== v13: tela das questões mais limpa (simulador das casas azul e vermelha) ===== */
+.tq-limpa { gap: 10px; }
+.tq-topo { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.tq-topo .tq-id { flex: 1 1 150px; }
+.tq-dispositivos { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; padding: 4px; border-radius: 14px; background: #efe4c9; box-shadow: inset 0 0 0 2px #d4c4a0; }
+.tq-dispositivos .btn { min-height: 40px; font-size: 15px; padding: 4px 12px; box-shadow: 0 3px 0 #b8a676; border-width: 2px; }
+.tq-dispositivos kbd { font-size: 11px; padding: 0 4px; margin-left: 2px; opacity: .7; }
+.tq-sementes { display: inline-flex; align-items: center; gap: 4px; padding: 6px 12px; border-radius: 999px; background: #fff; font-weight: 700; font-size: 16px; box-shadow: inset 0 0 0 2px #d4c4a0; }
+.tq-limpa .t-hud { padding: 6px 40px 6px 10px; gap: 6px 14px; background: #2b3a52; border-radius: 12px; }
+.tq-limpa .hud-i small { display: none; }
+.tq-limpa .hud-i.t-signal small { display: block; }
+.tq-limpa .hud-i b { font-size: 16px; }
+.tq-missao { flex: none; background: #fffaf0; border-radius: 12px; box-shadow: inset 0 0 0 2px #e3d4b4; }
+.tq-missao > summary { list-style: none; cursor: pointer; display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; padding: 8px 12px; font-size: 16px; line-height: 1.35; }
+.tq-missao > summary::-webkit-details-marker { display: none; }
+.tq-alvo { flex: 1 1 320px; font-weight: 600; }
+.tq-chips { display: flex; gap: 6px; flex-wrap: wrap; }
+.tq-chip { padding: 2px 10px; border-radius: 999px; background: #fff; box-shadow: inset 0 0 0 2px #e3d4b4; font-size: 14px; white-space: nowrap; }
+.tq-chip.mono { font-family: "JetBrains Mono", ui-monospace, monospace; }
+.tq-chip.tol { background: #fff1b8; }
+.tq-regra { flex-basis: 100%; color: #6d3a12; font-size: 15px; }
+.tq-abrir { margin-left: auto; font-size: 14px; color: #1f5fbf; font-weight: 700; }
+.tq-missao[open] .tq-abrir { visibility: hidden; }
+.tq-missao .tq-brief { background: transparent; padding: 0 14px 10px; max-height: 40vh; overflow: auto; border-top: 2px dashed #e3d4b4; }
+.tq-limpa .tq-work { flex: 1; min-height: 0; overflow: auto; }
+.tq-limpa .tq-hotbar { background: transparent; border: 0; padding: 0; gap: 6px; }
+.tq-limpa .tq-slot { min-height: 42px; border-width: 2px; background: #fbf5e6; }
+.tq-limpa .tq-slot svg { width: 30px; height: 30px; }
+.tq-limpa .tq-tool { border: 0; background: transparent; padding: 0 2px; gap: 8px; }
+.tq-limpa .tq-tool svg { width: 28px; height: 28px; }
+.tq-limpa .tq-tool small { font-size: 14px; }
+.tq-limpa .tq-more { border-width: 0; box-shadow: inset 0 0 0 2px #eadfc6; }
+.tq-nota { font-size: 14px; color: #6d5a3a; margin: 4px 0; }
+.tq-limpa .tq-actions { border-top: 0; padding-top: 4px; }
+@media (max-width: 760px) {
+  .tq-dispositivos { order: 3; width: 100%; }
+  .tq-dispositivos .btn { flex: 1 1 auto; }
+  .tq-limpa .t-hud { grid-template-columns: 1fr 1fr; }
+}
+
+/* ===== v13: casa verde — pergunta de múltipla escolha ===== */
+#fase .pq { width: min(880px, 100%); max-height: calc(100dvh - 28px); overflow: auto; padding: 16px 20px 20px; display: flex; flex-direction: column; gap: 14px; position: relative; }
+.pq-topo { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.pq-id { flex: 1 1 140px; min-width: 0; }
+.pq-id small { display: block; font-size: 15px; color: #6d5a3a; }
+.pq-id h2 { margin: 0; font-size: 21px; line-height: 1.2; }
+.pq-verde { border: 3px solid var(--ink); border-radius: 999px; padding: 2px 12px; font-weight: 700; color: #fff; background: #2e8b3a; white-space: nowrap; }
+.pq-disp { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding: 8px; border-radius: 16px; background: #efe4c9; box-shadow: inset 0 0 0 2px #d4c4a0; }
+.pq-disp .btn { min-height: 42px; font-size: 15px; padding: 4px 12px; border-width: 2px; box-shadow: 0 3px 0 #b8a676; }
+.pq-disp .btn small { display: inline; font-size: 13px; font-weight: 600; opacity: .8; margin-left: 4px; }
+.pq-disp .btn.usado { background: #d5eee4; }
+.pq-pergunta { background: #fffdf6; border-radius: 16px; padding: 18px 20px; box-shadow: inset 0 0 0 2px #e3d4b4; }
+.pq-fonte { display: block; font-size: 13px; letter-spacing: .04em; text-transform: uppercase; color: #6d5a3a; font-weight: 700; margin-bottom: 6px; }
+.pq-enunciado { font-size: 19px; line-height: 1.5; margin: 0; overflow-wrap: anywhere; }
+.pq-alts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.pq-alt { display: flex; align-items: flex-start; gap: 10px; text-align: left; padding: 12px 14px; min-height: 56px; border: 3px solid var(--ink); border-radius: 14px; background: #fff; font: inherit; font-size: 17px; line-height: 1.4; color: var(--ink); cursor: pointer; box-shadow: 0 4px 0 var(--ink); overflow-wrap: anywhere; }
+.pq-alt:hover:not(:disabled) { background: #fff8de; }
+.pq-alt:focus-visible { outline: 3px solid #8554b7; outline-offset: 3px; }
+.pq-alt b { flex: none; display: inline-grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: #efe4c9; font-size: 15px; }
+.pq-alt.certa { background: #d5eee4; border-color: #2e8b3a; box-shadow: 0 4px 0 #2e8b3a; }
+.pq-alt.certa b { background: #2e8b3a; color: #fff; }
+.pq-alt.errada { background: #fde3df; border-color: #c0352b; box-shadow: 0 4px 0 #c0352b; }
+.pq-alt.errada b { background: #c0352b; color: #fff; }
+.pq-alt.riscada { opacity: .35; text-decoration: line-through; }
+.pq-alt:disabled { cursor: default; }
+.pq-msg { border-radius: 14px; padding: 12px 16px; font-size: 16px; line-height: 1.45; }
+.pq-msg.ok { background: #d5eee4; } .pq-msg.no { background: #fde3df; } .pq-msg.dica { background: #fff1b8; }
+.pq-msg:empty { display: none; }
+.pq-acoes { display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
+.pq-acoes .btn { min-height: 48px; font-size: 17px; }
+.pq-estrelas { font-size: 28px; letter-spacing: 4px; }
+@media (max-width: 640px) {
+  #fase .pq { padding: 10px; max-height: calc(100dvh - 10px); }
+  .pq-alts { grid-template-columns: minmax(0, 1fr); }
+  .pq-enunciado { font-size: 17px; }
+}

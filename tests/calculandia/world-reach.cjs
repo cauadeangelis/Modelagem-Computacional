@@ -1,14 +1,14 @@
 // Verifica, sem pulos, se todas as portas de fase são alcançáveis a pé a partir do oeste do riacho inicial,
 // com portões e névoas abertos (estado de fim de jogo). Usa Playwright como tests/browser-smoke.cjs.
 const assert = require('node:assert/strict'), path = require('node:path');
-const ROOT = path.join(__dirname, '../../dist/jogos/calculandia');
+const ROOT = path.join(__dirname, '../../dist/jogos/calculandia'), DIST = path.join(__dirname, '../../dist'), fsLocal = require('node:fs');
 let playwright; try { playwright = require(process.env.PLAYWRIGHT_MODULE || 'playwright'); } catch { playwright = require(path.join(__dirname, '../e2e/node_modules/playwright')); }
 const CHROME = process.env.CHROMIUM_EXECUTABLE || (process.platform === 'win32' ? 'C:/Program Files/Google/Chrome/Application/chrome.exe' : undefined);
 (async () => {
   const browser = await playwright.chromium.launch({ executablePath: CHROME, headless: true });
   const page = await (await browser.newContext({ viewport: { width: 1200, height: 800 } })).newPage(), errors = [];
   page.on('pageerror', (e) => errors.push(String(e)));
-  await page.route('http://localhost:8080/**', async (route) => { let p = new URL(route.request().url()).pathname; if (p === '/') p = '/index.html'; await route.fulfill({ path: path.join(ROOT, decodeURIComponent(p)), contentType: ({ html: 'text/html', js: 'text/javascript', css: 'text/css', woff2: 'font/woff2' })[p.split('.').pop()] || 'text/plain' }); });
+  await page.route('http://localhost:8080/**', async (route) => { let p = new URL(route.request().url()).pathname; if (p === '/') p = '/index.html'; const local = path.join(ROOT, decodeURIComponent(p)); await route.fulfill({ path: fsLocal.existsSync(local) ? local : path.join(DIST, decodeURIComponent(p)), contentType: ({ html: 'text/html', js: 'text/javascript', css: 'text/css', woff2: 'font/woff2' })[p.split('.').pop()] || 'text/plain' }); });
   await page.goto('http://localhost:8080/?debug=1');
   await page.waitForFunction(() => window.G?.mode === 'title', null, { timeout: 120000 });
   const res = await page.evaluate(async () => {

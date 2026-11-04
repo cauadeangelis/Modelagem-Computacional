@@ -89,28 +89,34 @@ export function runFase({ s: settlement, nivel, animalId, freeHint = false }) {
   function mount() {
     const l = game.level, stage = battle ? ` · ${esc(battle.spec.name)} ${battle.index + 1}/${battle.spec.levels.length}` : '';
     const board = `<canvas id="t-board" tabindex="0" aria-label="Campo gráfico; os controles equivalentes estão abaixo" data-maxh="${Math.round(Math.max(220, Math.min(470, innerHeight * 0.4)))}"></canvas>`;
-    root.innerHTML = `<section class="fase-box tactical tq">
-      <header class="tq-head"><div class="tq-id"><small>${esc(REGIONS[regiao]?.nome || '')} · ${esc(settlement.nome)}</small><h2>${esc(l.name)}</h2></div>
+    // v13: tela limpa. No topo, os dispositivos (sementes dos baús, Conceito, Dica, Inventário, Desfazer);
+    // a missão vira uma linha que abre o contexto completo; o campo gráfico ocupa a largura toda; embaixo,
+    // só Executar e Concluir. Histórico, telemetria e sobrecarga ficam juntos em "Mais opções".
+    const c = contextoDe(l), regra = l.mission && !/^Estabilize /.test(l.mission) ? l.mission : '';
+    root.innerHTML = `<section class="fase-box tactical tq tq-limpa">
+      <header class="tq-topo">
+        <div class="tq-id"><small>${esc(REGIONS[regiao]?.nome || '')} · ${esc(settlement.nome)}</small><h2>${esc(l.name)}</h2></div>
+        <div class="tq-dispositivos" role="toolbar" aria-label="Dispositivos">
+          <span class="tq-sementes" title="Sementes: você ganha nos baús e gasta nas dicas">🌰 <b id="tq-seeds">${G.progress.seeds}</b></span>
+          ${button('concept', '📘 Conceito', 'title="Explicações, erros comuns e exemplos da região (grátis)"')}
+          ${button('hint', '💡 Dica <kbd>H</kbd>')}${button('moreHint', 'Mais dica', 'id="t-more-hint"')}
+          <button class="btn" data-action="inventory" title="Inventário: ferramentas, cartas e relíquias">🎒 Inventário <kbd>I</kbd></button>
+          ${button('undo', '↶ Desfazer · 2 ⚡', 'id="tq-undo"')}
+        </div>
         <span class="tq-diff" style="--c:${dif.cor}" title="Dificuldade">${dif.simbolo} ${dif.dificuldade}${stage}</span>${button('quit', 'Sair', 'id="fz-quit"')}</header>
       <div id="t-hud" class="t-hud" aria-live="polite"></div>
-      <div class="tq-body">
-        <aside class="tq-brief" aria-label="Missão">${brief()}</aside>
-        <main class="tq-work">
-          <div class="tq-toolbar">${hotbar()}<button class="btn secondary tq-inv" data-action="inventory" title="Inventário: ferramentas, cartas e relíquias"><kbd>I</kbd>🎒 Inventário</button></div>
-          <div id="tq-tool" class="tq-tool"></div>
-          ${l.kind === 'float' ? `<div id="tq-computer" class="tq-computer" aria-live="polite"></div><details class="tq-more"><summary>Visor gráfico</summary>${board}</details>` : board}
-          ${controls()}
-          <div id="t-feedback" class="t-feedback" role="status"></div>
-          <div id="t-hint" class="t-hint"></div>
-          <details class="tq-more" id="tq-hist"><summary>Histórico e telemetria</summary><div class="tq-row">${l.difficulty === 'D' ? button('telemetry', 'Ativar telemetria completa · 1 ⚡') : ''}${button('professor', '<kbd>D</kbd> Modo professor')}</div><div id="t-telemetry" class="t-telemetry"></div></details>
-          <details class="tq-more"><summary>Modo avançado: sobrecarga manual</summary><p>Com a sobrecarga, o tempo conta pontos de XP, mas a integridade cai devagar enquanto ela estiver ligada.</p>${button('manual', 'Sobrecarga Manual')}<div id="t-clock"></div></details>
-        </main>
-      </div>
+      <details class="tq-missao"><summary><span class="tq-alvo">🎯 ${esc(c?.obj || l.mission)}</span><span class="tq-chips"><span class="tq-chip mono">${esc(l.formula || c?.modelo || '')}</span><span class="tq-chip tol">${esc(l.metric)} ≤ ${number(l.tau)}</span></span>${regra ? `<span class="tq-regra">${esc(regra)}</span>` : ''}<span class="tq-abrir">Ver situação e dados</span></summary><div class="tq-brief">${brief()}</div></details>
+      <main class="tq-work">
+        <div class="tq-toolbar">${hotbar()}</div>
+        <div id="tq-tool" class="tq-tool"></div>
+        ${l.kind === 'float' ? `<div id="tq-computer" class="tq-computer" aria-live="polite"></div><details class="tq-more"><summary>Visor gráfico</summary>${board}</details>` : board}
+        ${controls()}
+        <div id="t-feedback" class="t-feedback" role="status"></div>
+        <div id="t-hint" class="t-hint"></div>
+        <details class="tq-more" id="tq-hist"><summary>Mais opções: histórico, telemetria e modo professor</summary><div class="tq-row">${l.difficulty === 'D' ? button('telemetry', 'Ativar telemetria completa · 1 ⚡') : ''}${button('professor', '<kbd>D</kbd> Modo professor')}${button('manual', 'Sobrecarga Manual')}</div><p class="tq-nota">Com a sobrecarga, o tempo conta pontos de XP, mas a integridade cai devagar enquanto ela estiver ligada.</p><div id="t-clock"></div><div id="t-telemetry" class="t-telemetry"></div></details>
+      </main>
       <footer class="t-actions tq-actions">
         <button class="btn tq-main" data-action="step" id="t-step">▶ Executar passo <small id="tq-cost"></small></button>
-        ${button('concept', '📘 Conceito <small>grátis</small>', 'title="Explicações, erros comuns e exemplos da região (não gasta nada)"')}
-        ${button('hint', '<kbd>H</kbd> 💡 Dica')}${button('moreHint', 'Mais dica', 'id="t-more-hint"')}
-        ${button('undo', '↶ Desfazer · 2 ⚡', 'id="tq-undo"')}
         <span class="tq-submit">${button('submit', '✓ Concluir', 'id="t-submit"')}<span id="tq-why" class="tq-why" role="note"></span></span>
       </footer>
       <div id="t-result"></div>
@@ -195,6 +201,7 @@ export function runFase({ s: settlement, nivel, animalId, freeHint = false }) {
     const f = FERRAMENTAS[s.tool], sim = simular();
     $('tq-tool').innerHTML = `${icone(s.tool)}<div><b>Ferramenta: ${esc(f?.nome || LABELS[s.tool] || s.tool)}</b><small>${esc(f?.funcao || '')}</small><small>Custo: ${esc(costs[s.tool] || f?.custo || 'operação numérica')} · trocar: ${custoTroca(game) ? '2 ⚡' : 'grátis antes de agir'}</small></div>`;
     $('tq-cost').textContent = sim ? `· ${number(sim.cost)} ⚡` : '';
+    if ($('tq-seeds')) $('tq-seeds').textContent = G.progress.seeds;
     $('t-step').disabled = finished || !sim;
     const pend = game.pendencias();
     $('t-submit').disabled = finished || !game.ready;

@@ -1,5 +1,5 @@
 const assert=require('node:assert/strict'),path=require('node:path');
-const ROOT = path.join(__dirname, '../../dist/jogos/calculandia');
+const ROOT = path.join(__dirname, '../../dist/jogos/calculandia'), DIST = path.join(__dirname, '../../dist'), fs = require('node:fs');
 let playwright; try { playwright = require(process.env.PLAYWRIGHT_MODULE || 'playwright'); } catch { playwright = require(path.join(__dirname, '../e2e/node_modules/playwright')); }
 const CHROME = process.env.CHROMIUM_EXECUTABLE || (process.platform === 'win32' ? 'C:/Program Files/Google/Chrome/Application/chrome.exe' : undefined);
 const {chromium}=playwright;
@@ -7,7 +7,7 @@ const {chromium}=playwright;
  const browser=await chromium.launch({executablePath:CHROME,headless:true});
  const context=await browser.newContext({viewport:{width:1400,height:1000}}),page=await context.newPage(),errors=[];
  page.on('pageerror',e=>errors.push(String(e)));
- await page.route('http://localhost:8080/**',async route=>{let p=new URL(route.request().url()).pathname;if(p==='/')p='/index.html';await route.fulfill({path:path.join(ROOT,decodeURIComponent(p)),contentType:({html:'text/html',js:'text/javascript',css:'text/css',woff2:'font/woff2'})[p.split('.').pop()]||'text/plain'});});
+ await page.route('http://localhost:8080/**',async route=>{let p=new URL(route.request().url()).pathname;if(p==='/')p='/index.html';const local=path.join(ROOT,decodeURIComponent(p));await route.fulfill({path:fs.existsSync(local)?local:path.join(DIST,decodeURIComponent(p)),contentType:({html:'text/html',js:'text/javascript',css:'text/css',woff2:'font/woff2'})[p.split('.').pop()]||'text/plain'});});
  await page.goto('http://localhost:8080/?debug=1');await page.waitForFunction(()=>window.G?.mode==='title');
  await page.evaluate(async()=>{const {Progress}=await import('/codigo/sistemas/progresso.js'),{freshSave}=await import('/codigo/sistemas/salvamento.js');G.progress=new Progress(freshSave());G.mode='fase';document.getElementById('title').classList.add('hidden');});
  async function launch(method,n='F') {await page.evaluate(async({method,n})=>{const{runFase}=await import('/codigo/fases/tela-da-questao.js'),{SETTLEMENTS}=await import('/codigo/dados/regioes-e-cidades.js');window.auditSettlement=SETTLEMENTS.find(s=>s.metodo===method);window.auditLevel=n;window.auditPromise=runFase({s:auditSettlement,nivel:n,animalId:auditSettlement.bicho});},{method,n});}
@@ -24,6 +24,13 @@ const {chromium}=playwright;
  await launch('overflow','D');await page.locator('#t-step').click();await page.locator('#fz-back').click();const loss=await page.evaluate(async()=>{const r=await auditPromise;G.progress.applyResult(auditSettlement,auditLevel,r);return r;});assert.equal(loss.vitoria,false);assert.ok(loss.diary.graph.startsWith('data:image/png'));
  await launch('newton','D');await page.setViewportSize({width:390,height:844});await page.waitForTimeout(250);const width=await page.locator('.tactical').evaluate(el=>({client:el.clientWidth,scroll:el.scrollWidth}));assert.ok(width.scroll<=width.client+2,JSON.stringify(width));await page.screenshot({path:process.env.TACTICAL_SCREENSHOT||path.join(__dirname,'tactical-mobile.png'),fullPage:true});await quit();
  await page.evaluate(()=>{G.mode='play';G.ui.menu.show('engineer');});assert.ok((await page.locator('#menu').innerText()).includes('Diário de Campo'));await page.locator('[data-study]').click();
- await page.setViewportSize({width:1400,height:1000});await page.evaluate(()=>{G.ui.menu.close();G.progress.d.tutorial=6;G.progress.d.cine=true;G.locks=0;G.mode='play';G.events.emit('phaseDoor',{s:G.settlements.find(s=>s.def.id==='C0.1'),nivel:'F'});});await page.waitForSelector('#t-step');for(let i=0;i<10;i++)await page.locator('[data-action="batch"]').click();await page.locator('#t-submit').click();await page.locator('#fz-back').click();await page.waitForFunction(()=>G.mode==='play'&&G.progress.won('C0.1-F'));assert.ok(await page.evaluate(()=>G.progress.d.rpg.xp>925));
- assert.deepEqual(errors,[]);console.log(JSON.stringify({mounts:69,win:win.r,xpSaved:win.saved.xp,diary:true,mobile:width,errors},null,2));await browser.close();
+ await page.setViewportSize({width:1400,height:1000});
+ // v13: toda casa verde abre uma pergunta de múltipla escolha (banco de questões ou, na falta, as perguntas da cidade)
+ for(const method of methods){await page.evaluate(async(method)=>{const{launchLevel}=await import('/codigo/fases/abrir-fase.js'),{SETTLEMENTS}=await import('/codigo/dados/regioes-e-cidades.js');const s=SETTLEMENTS.find(x=>x.metodo===method);window.auditPromise=launchLevel({id:s.id,metodo:method,nivel:'F'});},method);assert.equal(await page.locator('.pq-alt').count(),4,method);assert.equal(await page.locator('#t-board').count(),0);await page.locator('#fz-quit').click();await page.evaluate(()=>auditPromise);}
+ assert.ok(await page.evaluate(()=>window.NumeraBanco&&NumeraBanco.questoes.length>300),'banco de questões carregado na Calculândia');
+ const xpAntes=await page.evaluate(()=>G.progress.d.rpg.xp);
+ await page.evaluate(()=>{G.ui.menu.close();G.progress.d.tutorial=6;G.progress.d.cine=true;G.locks=0;G.mode='play';G.events.emit('phaseDoor',{s:G.settlements.find(s=>s.def.id==='C0.1'),nivel:'F'});});await page.waitForSelector('.pq-alt');
+ const certa=await page.evaluate(()=>{const t=document.querySelector('.pq-enunciado').textContent,q=NumeraBanco.questoes.find(x=>x.enunciado===t);return q.alternativas.findIndex(a=>a.correta);});
+ await page.locator(`.pq-alt[data-alt="${certa}"]`).click();await page.locator('#fz-back').click();await page.waitForFunction(()=>G.mode==='play'&&G.progress.won('C0.1-F'));assert.ok(await page.evaluate(x=>G.progress.d.rpg.xp>=x+30,xpAntes));
+ assert.deepEqual(errors,[]);console.log(JSON.stringify({mounts:69,casasVerdes:methods.length,win:win.r,xpSaved:win.saved.xp,diary:true,mobile:width,errors},null,2));await browser.close();
 })().catch(e=>{console.error(e);process.exit(1)});

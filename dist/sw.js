@@ -5,16 +5,18 @@
    v12: o Quem Divergiu? entra no cache inicial (é leve e precisa abrir sem internet na sala). A Calculândia (≈ 1,5 MB, 3D)
    não pesa no primeiro acesso: cada arquivo dela é guardado na primeira vez que o jogo abre e, daí em diante, ele também
    funciona offline. Uma versão nova do site apaga esse cache junto com o resto. */
-const VERSION = 'numera-v13-ce82b6eea3';
+const VERSION = 'numera-v13-5153fe381e';
 const ASSETS = [
   './',
   'index.html',
   'css/fontes.css',
   'css/grafico-de-convergencia.css',
+  'css/listas.css',
   'css/personagens.css',
   'css/site.css',
   'css/terminal.css',
   'css/treino.css',
+  'dados/banco-de-questoes.js',
   'dados/treino-exercicios.js',
   'fontes/figtree-latin-ext-wght-normal.woff2',
   'fontes/figtree-latin-wght-normal.woff2',
@@ -36,12 +38,15 @@ const ASSETS = [
   'js/conteudo/conteudo.js',
   'js/motor/motor-numerico.js',
   'js/motor/passo-a-passo.js',
+  'js/motor/resolver-questoes.js',
   'js/offline/registrar-offline.js',
   'js/paginas/aulas-em-video.js',
   'js/paginas/inicio.js',
   'js/paginas/jogos.js',
   'js/paginas/licao.js',
+  'js/paginas/listas.js',
   'js/paginas/missoes.js',
+  'js/paginas/relampago.js',
   'js/paginas/revisao-e-progresso.js',
   'js/paginas/terminal.js',
   'js/paginas/trilhas.js',

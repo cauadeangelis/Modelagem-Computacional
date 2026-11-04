@@ -18,7 +18,7 @@ for (const f of [...walkDir(path.join(dist, 'js')), ...walkDir(path.join(dist, '
   for (const [re, nome] of PROIBIDO_JS) ok(!re.test(src), `${f}: sem ${nome}`);
 }
 // CSS: recursos recentes permitidos apenas nas regras listadas (melhorias progressivas).
-const PROGRESSIVO = { ':has(': ['terminal.css'], 'text-wrap': ['site.css'], 'aspect-ratio': ['treino.css', 'site.css'] };
+const PROGRESSIVO = { ':has(': ['terminal.css'], 'text-wrap': ['site.css'], 'aspect-ratio': ['treino.css', 'site.css', 'listas.css'] };
 const PROIBIDO_CSS = ['@container', 'color-mix(', '@layer', 'subgrid', '@scope', 'anchor-name'];
 for (const f of fs.readdirSync(path.join(dist, 'css')).filter(f => f.endsWith('.css'))) {
   const css = fs.readFileSync(path.join(dist, 'css', f), 'utf8');

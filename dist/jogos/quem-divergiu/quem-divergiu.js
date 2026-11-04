@@ -33,7 +33,7 @@
           tempo: [0, 30, 60, 90].includes(c.tempo) ? c.tempo : 60,
           temas: Array.isArray(c.temas) ? c.temas.filter(t => Q.TEMAS.some(([id]) => id === t)) : null,
           niveis: Array.isArray(c.niveis) ? c.niveis.filter(v => [1, 2, 3].includes(v)) : null,
-          relampago: c.relampago !== false, som: c.som !== false,
+          relampago: c.relampago !== false, listas: c.listas !== false, som: c.som !== false,
         },
         stats: { games: n(st.games), rounds: n(st.rounds) },
       };
@@ -48,7 +48,7 @@
   const S = {
     fase: 'montar',
     jogadores: [], seq: 0,
-    cfg: { modo: 'telao', rodadas: 8, tempo: 60, temas: Q.TEMAS.map(([id]) => id), niveis: [1, 2, 3], relampago: true, som: true },
+    cfg: { modo: 'telao', rodadas: 8, tempo: 60, temas: Q.TEMAS.map(([id]) => id), niveis: [1, 2, 3], relampago: true, listas: true, som: true },
     stats: { games: 0, rounds: 0 },
     perguntas: [], r: 0, palpites: {}, votos: {}, vez: 0, segredoAberto: false, dica: false,
     placar: {}, rodadas: [], ap: null, revAnim: false, passos: false, confirmarSair: false, erro: '',
@@ -187,7 +187,7 @@
   }
   function chips() {
     const p = pergunta(); if (!p) return '';
-    return `<div class="quadro-chips"><span class="giz-chip">${esc(nomeTema(p.metodo))}</span><span class="giz-chip">${NIVEL[p.nivel]} ${'★'.repeat(p.nivel)}<span class="apagado">${'★'.repeat(3 - p.nivel)}</span></span>${p.relampago ? '<span class="giz-chip amarelo">⚡ relâmpago</span>' : ''}</div>`;
+    return `<div class="quadro-chips"><span class="giz-chip">${esc(nomeTema(p.metodo))}</span><span class="giz-chip">${NIVEL[p.nivel]} ${'★'.repeat(p.nivel)}<span class="apagado">${'★'.repeat(3 - p.nivel)}</span></span>${p.relampago ? '<span class="giz-chip amarelo">⚡ relâmpago</span>' : ''}${p.lista ? `<span class="giz-chip">📄 ${esc(p.dica.replace(/\.$/, ''))}</span>` : ''}</div>`;
   }
 
   // ---------- Quadro (o que muda a cada fase) ----------
@@ -333,7 +333,7 @@
 
   // ---------- Montar a turma ----------
   function montar() {
-    const temas = Q.TEMAS, n = Q.TODAS.filter(q => S.cfg.temas.includes(q.metodo) && S.cfg.niveis.includes(q.nivel) && (S.cfg.relampago || !q.relampago)).length;
+    const temas = Q.TEMAS, n = Q.TODAS.filter(q => S.cfg.temas.includes(q.metodo) && S.cfg.niveis.includes(q.nivel) && (S.cfg.relampago || !q.relampago) && (S.cfg.listas !== false || !q.lista)).length;
     const pronto = S.jogadores.length >= MIN && n > 0;
     const chip = (grupo, val, rot, on) => `<button type="button" class="chip" data-a="${grupo}" data-v="${val}" aria-pressed="${on}">${rot}</button>`;
     return `<section class="montar" aria-labelledby="montar-t">
@@ -355,6 +355,7 @@
         <fieldset><legend>Temas que a turma já viu</legend><div class="chips">${temas.map(([id, rot]) => chip('tema', id, rot, S.cfg.temas.includes(id))).join('')}</div></fieldset>
         <fieldset><legend>Dificuldade</legend><div class="chips">${[1, 2, 3].map(v => chip('nivel', v, `${NIVEL[v]} ${'★'.repeat(v)}`, S.cfg.niveis.includes(v))).join('')}</div></fieldset>
         <label class="troca"><input type="checkbox" data-a="relampago" ${S.cfg.relampago ? 'checked' : ''}> Incluir desafios relâmpago (contas rápidas da antiga Arena)</label>
+        <label class="troca"><input type="checkbox" data-a="listas" ${S.cfg.listas !== false ? 'checked' : ''}> Incluir as questões numéricas das listas da disciplina (banco de questões)</label>
         <p class="dica-peq">${n} ${n === 1 ? 'pergunta disponível' : 'perguntas disponíveis'} com essa escolha.${n && n < S.cfg.rodadas ? ` A partida terá ${n} ${n === 1 ? 'rodada' : 'rodadas'}.` : ''}</p>
         ${btn('Começar a aula ▶', 'comecar', 'prim grande', pronto ? '' : 'disabled')}
         ${!pronto ? `<p class="dica-peq">${S.jogadores.length < MIN ? `Faltam ${MIN - S.jogadores.length} ${MIN - S.jogadores.length === 1 ? 'nome' : 'nomes'} na turma.` : 'Escolha pelo menos um tema e uma dificuldade.'}</p>` : ''}
@@ -396,7 +397,7 @@
 
   // ---------- Fluxo da partida ----------
   function comecar() {
-    S.perguntas = Q.sortear({ temas: S.cfg.temas, niveis: S.cfg.niveis, rodadas: S.cfg.rodadas, relampago: S.cfg.relampago, semente: Date.now() });
+    S.perguntas = Q.sortear({ temas: S.cfg.temas, niveis: S.cfg.niveis, rodadas: S.cfg.rodadas, relampago: S.cfg.relampago, listas: S.cfg.listas !== false, semente: Date.now() });
     if (!S.perguntas.length) return;
     S.r = 0; S.placar = Object.fromEntries(S.jogadores.map(j => [j.id, 0])); S.rodadas = [];
     salvar(); novaRodada();
@@ -506,7 +507,7 @@
     if (t.classList.contains('palpite') && t.dataset.id) { S.rascunho[t.dataset.id] = t.value; const l = document.getElementById('lido-' + t.dataset.id), v = Q.lerNumero(t.value); if (l) l.textContent = t.value === '' ? 'sem palpite' : v === null ? 'não entendi' : '= ' + fmt(v); }
     if (t.id === 'seg-in') { const l = document.getElementById('seg-lido'), v = Q.lerNumero(t.value); if (l) l.textContent = t.value === '' ? 'Vale vírgula ou ponto, 5/3 e 1e-6.' : v === null ? 'Não entendi esse número.' : 'Vou ler como ' + fmt(v); }
   });
-  app.addEventListener('change', e => { if (e.target.dataset.a === 'relampago') { S.cfg.relampago = e.target.checked; salvar(); render(); } });
+  app.addEventListener('change', e => { if (e.target.dataset.a === 'relampago') { S.cfg.relampago = e.target.checked; salvar(); render(); } if (e.target.dataset.a === 'listas') { S.cfg.listas = e.target.checked; salvar(); render(); } });
   app.addEventListener('keydown', e => {
     // Enter num palpite da carteira pula para o próximo; no último, revela.
     if (e.key === 'Enter' && e.target.classList.contains('palpite') && e.target.dataset.id) { e.preventDefault(); const ins = [...app.querySelectorAll('.palpite[data-id]')], i = ins.indexOf(e.target); if (i < ins.length - 1) ins[i + 1].focus(); else app.querySelector('[data-a="revelar"]')?.focus(); }

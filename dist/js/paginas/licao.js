@@ -10,7 +10,7 @@ function introScreens(){const m=method(s.method),d=C.DEEP[m.id];return [
  {eyebrow:'Critério de parada',title:'Quando parar?',body:`<p class="lead">${d.stop}</p>`},
  ...(d.professora?[{eyebrow:'Como a professora resolve',title:d.professora.titulo,body:professorExample(d)}]:[]),
  {eyebrow:'Olhar crítico',title:'O que pode dar errado?',body:`<p class="lead">${d.trap}</p><div class="example-box"><span class="eyebrow">Exemplo</span><p>${safe(m.example)}</p></div>`},
- {eyebrow:'Do raciocínio ao algoritmo',title:'Em pseudocódigo',body:`<pre class="pseudocode">${safe(d.pseudo)}</pre>`},
+ {eyebrow:'Do raciocínio ao algoritmo',title:'Em pseudocódigo',body:`<pre class="pseudocode" tabindex="0" aria-label="Pseudocódigo">${safe(d.pseudo)}</pre>`},
  {eyebrow:'Aulas em vídeo',title:'Quer ouvir alguém explicando?',body:`<p class="lead">Escolhemos aulas de ${m.title} de professores de Cálculo Numérico. Assista e depois volte para a simulação: ver o método rodando passo a passo ajuda a fixar o que a aula explicou.</p>${videoList(m.id,'in-player')}`}];}
 /* Exemplo dos slides da professora, refeito pelo passo-a-passo.js: mesma tabela, mesmas colunas e o mesmo critério de parada. */
 function professorRun(d){const PP=window.NumeraPassos,c=d.professora.chamada;return c.metodo==='gauss'?PP.gauss(c):c.metodo==='seidel'?PP.seidel(c):PP[c.metodo](c);}

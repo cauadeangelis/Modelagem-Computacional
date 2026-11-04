@@ -27,7 +27,7 @@ ok(await page.isVisible('.journey-why') && await page.isVisible('[data-act=free-
 await shot(page, 'v11-jornada');
 await page.click('[data-act=course][data-id=falseposition]');
 ok(await page.isVisible('.lock-note'), 'Mundo 2 fechado: aviso na trilha');
-await page.click('[data-act=start-node][data-id=intro]'); for (let i = 0; i < 7; i++) await page.click('[data-act=intro-next]');
+await page.click('[data-act=start-node][data-id=intro]'); for (let i = 0; i < 8; i++) await page.click('[data-act=intro-next]');
 ok((await page.textContent('[data-act=sim-done]')).includes('Voltar à trilha'), 'Mundo fechado: leitura e simulação liberadas, desafios não');
 await page.click('[data-act=sim-done]'); ok(await page.isVisible('.lock-note') && !(await page.isVisible('#quiz-form')), 'Fim da simulação no mundo fechado volta à trilha');
 
@@ -42,7 +42,7 @@ const responder = async (m, i, certo = true) => {
   await page.click('#quiz-form button[type=submit]');
 };
 await go('academy'); await page.click('[data-act=course][data-id=bisection]');
-await page.click('[data-act=start-node][data-id=intro]'); for (let i = 0; i < 7; i++) await page.click('[data-act=intro-next]');
+await page.click('[data-act=start-node][data-id=intro]'); for (let i = 0; i < 8; i++) await page.click('[data-act=intro-next]');
 await page.click('[data-act=sim-done]');
 ok(await page.isVisible('#mascotes') && await page.evaluate(() => document.body.classList.contains('has-mascots')), 'Raiz e Pivô aparecem no desafio');
 ok(await page.$eval('#mascotes', e => e.getAttribute('aria-hidden') === 'true'), 'Mascotes são decorativos para o leitor de tela');
@@ -78,7 +78,7 @@ await page.click('[data-act=free-toggle]'); ok(await page.$$eval('.journey .worl
 // ---------- v12: Jogos (no lugar da Arena)
 await go('arena'); ok((await page.evaluate(() => location.hash)) === '#jogos' && await page.isVisible('.games'), 'Link antigo #arena abre a página Jogos');
 ok(!(await page.textContent('.topbar')).includes('Arena') && (await page.textContent('.topbar')).includes('Jogos'), 'Menu: Jogos no lugar da Arena');
-ok(await page.$$eval('.game-card', c => c.length) === 2 && await page.isVisible('a.btn[href="jogos/calculandia/index.html"]') && await page.isVisible('a.btn[href="jogos/quem-divergiu/index.html"]'), 'Jogos: Calculândia e Quem Divergiu?');
+ok(await page.$$eval('.game-card', c => c.length) === 3 && await page.isVisible('.game-rl') && await page.isVisible('a.btn[href="jogos/calculandia/index.html"]') && await page.isVisible('a.btn[href="jogos/quem-divergiu/index.html"]'), 'Jogos: Calculândia, Quem Divergiu? e Relâmpago');
 await page.$$eval('.game-cover img', imgs => Promise.all(imgs.map(i => i.decode().catch(() => {}))));
 ok(await page.$$eval('.game-cover img', imgs => imgs.every(i => i.complete && i.naturalWidth === 1200)), 'Capas dos jogos carregadas');
 await shot(page, 'v12-jogos');
@@ -278,7 +278,7 @@ await page.click('.course-videos [data-act=video-toggle] >> nth=0');
 ok(await page.$eval('.course-videos iframe', f => f.src.startsWith('https://www.youtube-nocookie.com/embed/') && !!f.title), 'Assistir aqui abre o player do youtube-nocookie, com título');
 await page.click('.course-videos [data-act=video-toggle] >> nth=0'); ok((await page.$$('.course-videos iframe')).length === 0, 'Fechar o vídeo remove o player');
 await page.evaluate(() => document.querySelector('.course-videos').scrollIntoView()); await shot(page, 'v10-aulas-em-video');
-await page.click('[data-act=start-node][data-id=intro]'); for (let i = 0; i < 6; i++) await page.click('[data-act=intro-next]');
+await page.click('[data-act=start-node][data-id=intro]'); for (let i = 0; i < 7; i++) await page.click('[data-act=intro-next]');
 ok(await page.isVisible('.player .videos.in-player'), 'Leitura guiada: última tela com as aulas');
 // Treino: "visto com ajuda" e prova encerrada pelo tempo.
 await go('treino'); await page.click('[data-act=tr-view][data-id=ex]'); await page.click('[data-act=tr-open][data-index="5"]'); await page.click('[data-act=tr-key]');
@@ -327,6 +327,19 @@ const semCircunflexo = () => page.evaluate(() => { const w = document.createTree
 await go('lab'); await page.click('[data-act=help]'); ok(await semCircunflexo() === 0 && (await page.$$('.help-panel sup')).length > 0, 'Terminal e ajuda: expoentes elevados, sem ^');
 await go('cases'); await page.click('[data-act=case][data-id=loan]'); await page.click('details summary'); ok(await semCircunflexo() === 0 && await page.isVisible('sup'), 'Missão do carnê: (1+i) com −12 elevado');
 await go('treino'); await page.click('[data-act=tr-view][data-id=key]'); await page.waitForTimeout(300); ok(await semCircunflexo() === 0, 'Gabarito completo do Treino: nenhum ^ à vista');
+// ---------- v13: Listas (banco de questões), Revisão e Relâmpago
+await go('listas'); ok(await page.locator('.bq-card').count() === 12 && await page.isVisible('#bq-lista'), 'Listas: 12 questões por vez e filtros');
+await page.selectOption('#bq-lista', 'lista-01'); await page.selectOption('#bq-tema', 'newton'); await page.click('[data-act=bq-abrir][data-id=l01-zeros-03]');
+await page.fill('#bq-in-l01-zeros-03', '2,1'); await page.press('#bq-in-l01-zeros-03', 'Enter'); ok((await page.textContent('#bq-l01-zeros-03 .bq-feedback')).includes('Revisão'), 'Listas: erro manda a questão para a Revisão');
+await page.fill('#bq-in-l01-zeros-03', '2,00076'); await page.press('#bq-in-l01-zeros-03', 'Enter'); ok((await page.textContent('#bq-l01-zeros-03 .bq-feedback')).includes('Certo') && await page.isVisible('#bq-l01-zeros-03 .pp-table'), 'Listas: acerto com a tabela no formato dos slides');
+await page.selectOption('#bq-tema', 'bissecao'); await page.click('[data-act=bq-abrir][data-id=l01-zeros-12]'); await page.click('[data-act=bq-mc][data-id=l01-zeros-12]'); await page.locator('#bq-l01-zeros-12 [data-act=bq-alt]').first().click();
+ok(await page.isVisible('#bq-l01-zeros-12 .bq-obs.diverge'), 'Listas: gabarito da lista divergente explicado');
+ok(await semCircunflexo() === 0, 'Listas: nenhum ^ à vista');
+await go('review'); ok(await page.locator('.review-row h3', { hasText: 'Lista 1' }).count() >= 1, 'Revisão: questão das listas no caderno');
+await go('relampago'); await page.click('[data-act=rl-grupo][data-id=raizes]'); await page.click('[data-act=rl-comecar]'); ok(await page.locator('[data-act=rl-alt]').count() === 4 && await page.isVisible('#rl-barra'), 'Relâmpago: pergunta com 4 alternativas e cronômetro');
+for (let i = 0; i < 10; i++) { await page.keyboard.press('1'); await page.click('[data-act=rl-proxima]'); }
+ok(await page.isVisible('[data-act=rl-comecar]') && (await page.textContent('.stat-row')).includes('Pontos'), 'Relâmpago: rodada de 10 perguntas pelo teclado até o resultado');
+await go('jogos'); ok(await page.isVisible('.game-rl'), 'Jogos: cartão do Relâmpago');
 await page.goto(BASE + 'jogos/quem-divergiu/index.html'); await page.click('[data-a=comecar]').catch(() => {});
 ok(await page.evaluate(() => document.documentElement.scrollWidth - innerWidth) <= 0, 'Celular: Quem Divergiu? sem rolagem lateral');
 await browser.close(); fim('Fluxos (v12)');

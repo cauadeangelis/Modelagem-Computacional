@@ -201,18 +201,36 @@
     .map(({ t, i }) => ({ id: 'arena-' + i, metodo: t.method, nivel: NIVEL_DO[t.method] || 2, casas: 4, relampago: true,
       texto: t.q, dica: 'Desafio relâmpago: resolva de cabeça ou no caderno.', calc: () => ({ resposta: t.value, passos: [t.explain] }) }));
 
-  const TODAS = P.concat(arena).filter(q => !HIDDEN.includes(q.metodo));
+  // v13: as questões numéricas das listas (banco de questões do site), quando o banco está carregado.
+  // A resposta é a do banco, que os testes refazem com o resolvedor; o passo a passo vem do mesmo resolvedor.
+  const B = global.NumeraBanco || null, RS = global.NumeraResolver || null;
+  const TEMA_QD = { bissecao: 'bisection', 'falsa-posicao': 'falseposition', newton: 'newton', secante: 'secant', gauss: 'gauss', pivoteamento: 'gauss', lu: 'gauss', cholesky: 'gauss', markov: 'gauss', jacobi: 'seidel', seidel: 'seidel', criterios: 'seidel', 'erro-vetor': 'seidel', 'ponto-flutuante': 'erro', series: 'erro', interpolacao: 'ajuste', 'minimos-quadrados': 'ajuste', trapezios: 'integral', retangulos: 'integral', simpson13: 'integral', simpson38: 'integral', euler: 'integral', taylor: 'integral' };
+  const doBanco = !B ? [] : B.questoes.filter(q => q.tipo === 'numero' && Number.isFinite(q.valor) && q.valor !== 0 && !q.origem && TEMA_QD[q.tema]).map(q => {
+    const L = B.listas.find(l => l.id === q.lista);
+    return { id: 'lista-' + q.id, metodo: TEMA_QD[q.tema], nivel: q.dificuldade, casas: q.casas ?? 4, lista: true, texto: q.enunciado,
+      dica: `${L ? L.titulo : 'Lista'}${q.numero ? ', ' + q.numero : ''}.`,
+      calc() {
+        let passos = [`Resposta: ${q.resposta}`];
+        try { if (RS) { const r = RS.resolver(q.parametros); passos = String(r.resumo || '').replace(/\.\s+(?=[A-ZÁÉÍÓÚ])/g, '.\n').split('\n').filter(Boolean); } } catch (e) { /* fica a resposta */ }
+        if (q.observacao) passos.push('Sobre o gabarito da lista: ' + q.observacao);
+        // o quadro do jogo não eleva expoentes: e^(…) vira exp(…) e 10^(…) vira 10 elevado a (…)
+        passos = passos.map(t => t.replace(/e\^\(([^)]*)\)/g, 'exp($1)').replace(/(\d)\^\(([^)]*)\)/g, '$1 elevado a ($2)'));
+        return { resposta: q.valor, passos };
+      } };
+  });
+
+  const TODAS = P.concat(arena, doBanco).filter(q => !HIDDEN.includes(q.metodo));
   const cache = new Map();
   function resolver(q) { if (!cache.has(q.id)) cache.set(q.id, q.calc()); return cache.get(q.id); }
 
-  const TEMAS = [['bisection', 'Bisseção'], ['falseposition', 'Falsa Posição'], ['fixedpoint', 'Ponto Fixo'], ['newton', 'Newton-Raphson'], ['secant', 'Secante'], ['gauss', 'Eliminação de Gauss'], ['seidel', 'Gauss-Seidel'], ['erro', 'Erro e convergência']]
+  const TEMAS = [['bisection', 'Bisseção'], ['falseposition', 'Falsa Posição'], ['fixedpoint', 'Ponto Fixo'], ['newton', 'Newton-Raphson'], ['secant', 'Secante'], ['gauss', 'Eliminação de Gauss'], ['seidel', 'Gauss-Seidel'], ['erro', 'Erro e convergência'], ['ajuste', 'Interpolação e ajuste'], ['integral', 'Integração e EDO']]
     .filter(([id]) => !HIDDEN.includes(id) && TODAS.some(q => q.metodo === id));
 
   // Sorteio com semente (a partida pode ser repetida igual) e sem pergunta repetida.
   function rng(seed) { let a = seed >>> 0; return () => { a = (a + 0x6D2B79F5) >>> 0; let t = a; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
-  function sortear({ temas, niveis = [1, 2, 3], rodadas = 8, relampago = true, semente = Date.now() }) {
+  function sortear({ temas, niveis = [1, 2, 3], rodadas = 8, relampago = true, listas = true, semente = Date.now() }) {
     const r = rng(semente);
-    const pool = TODAS.filter(q => (!temas || temas.includes(q.metodo)) && niveis.includes(q.nivel) && (relampago || !q.relampago));
+    const pool = TODAS.filter(q => (!temas || temas.includes(q.metodo)) && niveis.includes(q.nivel) && (relampago || !q.relampago) && (listas || !q.lista));
     const proprias = pool.filter(q => !q.relampago), extras = pool.filter(q => q.relampago);
     const mix = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(r() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
     // As perguntas próprias vêm primeiro (têm passo a passo completo); a Arena completa o que faltar.

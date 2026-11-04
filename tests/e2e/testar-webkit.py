@@ -36,8 +36,11 @@ ua = js('return navigator.userAgent')
 ok('AppleWebKit' in ua and 'Chrome' not in ua, 'motor WebKit: ' + ua)
 # Todos os scripts carregaram (um erro de sintaxe em qualquer arquivo derrubaria o objeto correspondente).
 ok(js('return !!(window.NumeraMath && window.NumeraContent && window.NumeraProgress && window.NumeraConv && window.NumeraTreino && window.NumeraTreinoUI && window.NumeraCalc)'), 'todos os scripts carregaram no WebKit')
-for h in ['home', 'academy', 'cases', 'jogos', 'treino', 'lab', 'review', 'progress']:
+ok(js('return !!(window.NumeraBanco && window.NumeraResolver && NumeraBanco.questoes.length > 300)'), 'banco de questões e resolvedor carregados no WebKit')
+for h in ['home', 'academy', 'cases', 'listas', 'relampago', 'jogos', 'treino', 'lab', 'review', 'progress']:
     go(h); ok(len(js("return document.querySelector('#app').innerHTML")) > 1000, 'página #' + h)
+go('listas'); click('[data-act=bq-abrir]'); ok(len(d.find_elements(By.CSS_SELECTOR, '.bq-card.aberta .bq-form, .bq-card.aberta .bq-alts')) >= 1, 'Listas: questão abre no WebKit')
+go('relampago'); click('[data-act=rl-comecar]'); time.sleep(0.4); ok(len(d.find_elements(By.CSS_SELECTOR, '[data-act=rl-alt]')) == 4, 'Relâmpago: pergunta no WebKit')
 
 # Terminal com o teclado científico (calculator.js) e a aba Convergência
 go('lab')

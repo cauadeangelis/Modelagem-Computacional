@@ -649,6 +649,7 @@ details.hint-log summary { cursor: pointer; font-weight: 600; }
 
 /* ===== v13: casa verde — pergunta de múltipla escolha (v14: base da tela única) ===== */
 #fase .pq { width: min(880px, 100%); max-height: calc(100dvh - 28px); overflow: auto; padding: 16px 20px 20px; display: flex; flex-direction: column; gap: 14px; position: relative; }
+#fase .pq > * { flex-shrink: 0; }
 .pq-topo { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 .pq-id { flex: 1 1 140px; min-width: 0; }
 .pq-id small { display: block; font-size: 15px; color: #6d5a3a; }

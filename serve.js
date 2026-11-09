@@ -25,4 +25,4 @@ http.createServer((req, res) => {
     res.writeHead(200, { 'Content-Type': types[path.extname(file).toLowerCase()] || 'application/octet-stream', 'Cache-Control': 'no-cache', 'X-Content-Type-Options': 'nosniff' });
     res.end(data);
   });
-}).listen(port, () => console.log(`Numera Academy em http://localhost:${port}  ·  Calculândia: /jogos/calculandia/  ·  Quem Divergiu?: /jogos/quem-divergiu/`));
+}).listen(port, () => console.log(`Numera Academy em http://localhost:${port}  ·  Calculândia: /jogos/calculandia/  ·  Bobo da Corte: /jogos/bobo-da-corte/`));

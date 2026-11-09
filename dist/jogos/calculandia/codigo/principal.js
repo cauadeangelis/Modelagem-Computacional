@@ -33,6 +33,7 @@ import { Audio } from './sistemas/audio.js';
 import { Progress } from './sistemas/progresso.js';
 import { loadSave, freshSave, clearSave } from './sistemas/salvamento.js';
 import { playCinematic, landingPoint } from './sistemas/cinematica.js';
+import { playFinale } from './sistemas/final-da-usina.js';
 import { Tutorial, TutorialComandos } from './sistemas/tutorial.js';
 import { HUD, phasePreviewInfo } from './interface/painel-do-jogador.js';
 import { Bubbles, Dialog } from './interface/dialogos.js';
@@ -381,6 +382,7 @@ function applySettlement(S, animate = false, justNivel = null) {
     S.gate.want = open ? 1 : 0;
     S.finalMode = open;
     if (!animate) S.gate.open = S.gate.want;
+    if (p.won('F')) S.landmark?.salvar?.();
   }
 }
 
@@ -524,13 +526,34 @@ function handleResult(S, nivel, res) {
   }
 }
 
+// Final (v14): o Grande Erro se despede, o núcleo da Usina explode (final-da-usina.js), a ilha comemora e
+// aparece a tela de fim com os números da aventura.
 async function ending() {
+  lock();
   const portrait = { kind: 'vilao' };
-  await G.ui.dialog.show({ name: 'Grande Erro', portrait, voice: { pitch: 110, wave: 'sawtooth' }, lines: ['Nããão! Meu erro relativo... zerou!', 'Eu volto... no próximo arredondamento...'] });
+  await G.ui.dialog.show({ name: 'Grande Erro', portrait, voice: { pitch: 110, wave: 'sawtooth' }, lines: ['Bisseção, Gauss E Newton?! Ninguém resolve os três reatores!', 'Meu núcleo... está... convergindo! NÃÃÃO!'] });
+  await playFinale();
   const pet = G.pet;
   await G.ui.dialog.show({ name: pet.nome, portrait: pet.portrait, voice: pet.voice, lines: ['Conseguimos, {nome}! A Usina voltou a funcionar.', 'Erro: zero. Orgulho: infinito. Calculândia está salva!'] });
   for (const S of G.settlements) { S.fireworks = 8; for (const n of S.npcs) n.party = 10; }
   G.ui.hud.banner('Calculândia salva! 🎉', 'region');
+  unlock();
+  telaDeFim();
+}
+function telaDeFim() {
+  const p = G.progress, el = document.createElement('div');
+  el.id = 'fim'; el.className = 'overlay fim';
+  el.innerHTML = `<div class="sheet fim-box" role="dialog" aria-modal="true" aria-labelledby="fim-t">
+    <p class="fim-sobre">Fim da aventura</p><h2 id="fim-t">Calculândia salva! 🎉</h2>
+    <p>A Usina Central explodiu o Grande Erro para longe: a fumaça verde virou vapor e as turbinas voltaram a girar.</p>
+    <ul class="fim-num"><li><b>${p.totalStars()}</b><span>estrelas</span></li><li><b>${p.rootsCaught()}</b><span>raízes fugitivas</span></li><li><b>${Math.round(p.d.rpg?.xp || 0)}</b><span>XP</span></li></ul>
+    <p class="fim-cred">Numera Academy · Modelagem Computacional (Ibmec). Questões dos Testes, das listas e dos slides da disciplina.</p>
+    <button class="btn" id="fim-ok">Continuar explorando</button></div>`;
+  document.getElementById('ui').appendChild(el);
+  const fechar = () => { el.remove(); };
+  el.querySelector('#fim-ok').addEventListener('click', fechar);
+  el.addEventListener('keydown', (e) => { if (e.key === 'Escape') { e.stopPropagation(); fechar(); } });
+  requestAnimationFrame(() => el.querySelector('#fim-ok').focus());
 }
 
 // ======================================================================

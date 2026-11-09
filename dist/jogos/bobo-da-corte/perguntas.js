@@ -1,4 +1,4 @@
-/* Quem Divergiu? — banco de perguntas (v12).
+/* Bobo da Corte (antigo Quem Divergiu?) — banco de perguntas, pontuação e eventos especiais (v14).
    Toda resposta é CALCULADA aqui (nada digitado à mão) e conferida em tests/verify.cjs contra o motor do site
    (NumeraMath). Cada pergunta traz o passo a passo, para a professora explicar depois da revelação.
    Além das perguntas próprias, entram os desafios numéricos da antiga Arena (NumeraContent.ARENA) como
@@ -249,7 +249,8 @@
   ];
   const erroRelativo = (palpite, resposta) => Math.abs(palpite - resposta) / Math.abs(resposta);
   const faixa = e => FAIXAS.find(f => e <= f.ate + 1e-12);
-  const BONUS = { detetive: 30, injusticado: 20, raiz: 20 };
+  const BONUS = { detetive: 30, injusticado: 20, raiz: 20, mosca: 25 };
+  const BOLAO_MULT = 1.5;
 
   // Uma rodada: palpites {id: número|null}, votos {votante: votado}. Devolve tudo o que a revelação mostra.
   function apurar({ jogadores, palpites, votos, resposta }) {
@@ -270,11 +271,79 @@
     for (const [votante, alvo] of Object.entries(votos || {})) if (by[votante] && divergiram.includes(alvo)) { by[votante].pontos += BONUS.detetive; by[votante].bonus.push(['detetive', BONUS.detetive]); }
     for (const id of maisVotados) if (!divergiram.includes(id) && by[id].palpite !== null) { by[id].pontos += BONUS.injusticado; by[id].bonus.push(['injusticado', BONUS.injusticado]); }
     for (const id of raizes) { by[id].pontos += BONUS.raiz; by[id].bonus.push(['raiz', BONUS.raiz]); }
+    // v14 "Na mosca": os 4 primeiros decimais iguais aos da resposta do motor → carimbo de giz dourado e bônus
+    const mosca = resp.filter(l => l.palpite.toFixed(4) === resposta.toFixed(4)).map(l => l.id);
+    for (const id of mosca) { by[id].pontos += BONUS.mosca; by[id].bonus.push(['mosca', BONUS.mosca]); }
     const acertouTurma = maisVotados.some(id => divergiram.includes(id));
-    return { linhas, divergiram, raizes, maisVotados, acertouTurma, resposta };
+    return { linhas, divergiram, raizes, maisVotados, acertouTurma, resposta, mosca, bobo: boboDaRodada({ linhas, divergiram, maisVotados, votos }) };
   }
 
-  global.QDPerguntas = { TODAS, TEMAS, FAIXAS, BONUS, resolver, sortear, apurar, erroRelativo, faixa, fmt, lerNumero, rng,
+  // ---------- v14: o Bobo da Corte da rodada ----------
+  // É o mais votado. Empate: quem chutou mais longe entre eles (sem palpite conta como o mais longe); se ainda
+  // empatar, o primeiro da lista. Sem votos: quem divergiu. Ninguém votou nem divergiu: a rodada fica sem bobo.
+  function boboDaRodada({ linhas, divergiram, maisVotados, votos }) {
+    const by = Object.fromEntries(linhas.map(l => [l.id, l]));
+    let id = null;
+    if (maisVotados.length) id = maisVotados.slice().sort((a, b) => (by[b].erro === by[a].erro ? 0 : by[b].erro > by[a].erro ? 1 : -1))[0];
+    else if (divergiram.length) id = divergiram[0];
+    if (!id) return null;
+    const votantes = Object.entries(votos || {}).filter(([, alvo]) => alvo === id).map(([v]) => v);
+    return { id, injusticado: maisVotados.length > 0 && !divergiram.includes(id), votantes, porVoto: maisVotados.length > 0 };
+  }
+  // Prendas leves, de sala de aula (ninguém passa vergonha de verdade)
+  const PRENDAS = [
+    'Explicar o método da rodada em 30 segundos, como narrador de futebol.',
+    'Imitar a Bisseção: andar até a metade da sala, depois até a metade da metade… três vezes.',
+    'Cantar a fórmula de Newton, xₖ₊₁ = xₖ − f(xₖ)/f′(xₖ), no ritmo de uma música famosa.',
+    'Fazer a dança do bobo por 10 segundos.',
+    'Dizer “erro relativo” de três jeitos: sussurrando, com voz de robô e cantando.',
+    'Desenhar no quadro o gráfico de f(x) = x² − 2 e marcar a raiz, de olhos fechados.',
+    'Fazer um comercial de TV de 20 segundos do método favorito da turma.',
+    'Contar até 8 em binário: 1, 10, 11, 100…',
+    'Responder a próxima pergunta em pé, com a coroa de bobo (imaginária).',
+    'Dar a notícia urgente: “Atenção, Brasil: dividir por zero continua proibido”.',
+    'Fazer a pose da Falsa Posição: um pé parado e o outro andando.',
+    'Dizer três coisas que convergem na vida real (fila do bandejão vale).',
+  ];
+  // ---------- v14: Bolão da Convergência (quem gasta menos iterações: Bisseção ou Falsa Posição?) ----------
+  const BOLAO = [
+    { id: 'b-cubica', texto: 'f(x) = x³ − x − 2 em [1; 2]', f: x => x ** 3 - x - 2, a: 1, b: 2 },
+    { id: 'b-x10', texto: 'f(x) = x¹⁰ − 1 em [0; 1,3]', f: x => x ** 10 - 1, a: 0, b: 1.3 },
+    { id: 'b-cos', texto: 'f(x) = cos x − x em [0; 1]', f: x => Math.cos(x) - x, a: 0, b: 1 },
+    { id: 'b-x4', texto: 'f(x) = x⁴ − 2 em [0; 2]', f: x => x ** 4 - 2, a: 0, b: 2 },
+    { id: 'b-raiz2', texto: 'f(x) = x² − 2 em [1; 2]', f: x => x * x - 2, a: 1, b: 2 },
+    { id: 'b-x5', texto: 'f(x) = x⁵ − x − 1 em [1; 2]', f: x => x ** 5 - x - 1, a: 1, b: 2 },
+    { id: 'b-ln', texto: 'f(x) = ln x + x − 2 em [1; 2]', f: x => Math.log(x) + x - 2, a: 1, b: 2 },
+    { id: 'b-exp', texto: 'f(x) = eˣ − 2 em [0; 2]', f: x => Math.exp(x) - 2, a: 0, b: 2 },
+    { id: 'b-expneg', texto: 'f(x) = e⁻ˣ − x em [0; 1]', f: x => Math.exp(-x) - x, a: 0, b: 1 },
+  ];
+  // Iterações até a tolerância 10⁻⁶: Bisseção até (b − a)/2 < 10⁻⁶; Falsa Posição até |f(x)| < 10⁻⁶ ou |Δx| < 10⁻⁶.
+  function bolaoContar(item, tol = 1e-6) {
+    const f = item.f; let a = item.a, b = item.b, bis = 0;
+    while ((b - a) / 2 >= tol && bis < 200) { const m = (a + b) / 2; if (f(a) * f(m) < 0) b = m; else a = m; bis++; }
+    let A = item.a, B = item.b, x = null, fp = 0;
+    while (fp < 500) { const xn = (A * f(B) - B * f(A)) / (f(B) - f(A)); fp++; const fx = f(xn); if (Math.abs(fx) < tol || (x !== null && Math.abs(xn - x) < tol)) break; if (f(A) * fx < 0) B = xn; else A = xn; x = xn; }
+    return { bis, fp, vencedor: bis < fp ? 'bis' : fp < bis ? 'fp' : 'empate' };
+  }
+  // ---------- v14: Perturbação da Épsilon (b₁ + 0,01: a solução quase não muda ou muda tudo?) ----------
+  const PERTURBACOES = [
+    { id: 'p-bom', texto: '4x + y = 5; x + 3y = 4', A: [[4, 1], [1, 3]], b: [5, 4] },
+    { id: 'p-quase', texto: 'x + y = 2; x + 1,001y = 2,001', A: [[1, 1], [1, 1.001]], b: [2, 2.001] },
+    { id: 'p-wilson', texto: '10x + 7y = 17; 7x + 5y = 12', A: [[10, 7], [7, 5]], b: [17, 12] },
+    { id: 'p-diag', texto: '10x + y + z = 12; x + 10y + z = 12; x + y + 10z = 12', A: [[10, 1, 1], [1, 10, 1], [1, 1, 10]], b: [12, 12, 12] },
+    { id: 'p-hilbert', texto: 'x + y/2 + z/3 = 11/6; x/2 + y/3 + z/4 = 13/12; x/3 + y/4 + z/5 = 47/60', A: [[1, 1 / 2, 1 / 3], [1 / 2, 1 / 3, 1 / 4], [1 / 3, 1 / 4, 1 / 5]], b: [11 / 6, 13 / 12, 47 / 60] },
+  ];
+  function inversa(A) { const n = A.length; return A.map((_, j) => gauss(A, A.map((__, i) => (i === j ? 1 : 0)))).reduce((M, col, j) => { col.forEach((v, i) => { (M[i] = M[i] || [])[j] = v; }); return M; }, []); }
+  const normaInf = M => Math.max(...M.map(r => r.reduce((s, v) => s + Math.abs(v), 0)));
+  function perturbar(item, delta = 0.01) {
+    const x = gauss(item.A, item.b), b2 = item.b.slice(); b2[0] += delta;
+    const x2 = gauss(item.A, b2), dx = Math.max(...x.map((v, i) => Math.abs(x2[i] - v))) / Math.max(...x.map(Math.abs));
+    const kappa = normaInf(item.A) * normaInf(inversa(item.A)), db = delta / Math.max(...item.b.map(Math.abs));
+    return { x, x2, variacao: dx, variacaoB: db, kappa, mudaTudo: dx > 0.05 };
+  }
+
+  global.BCPerguntas = { TODAS, TEMAS, FAIXAS, BONUS, BOLAO_MULT, resolver, sortear, apurar, erroRelativo, faixa, fmt, lerNumero, rng,
+    PRENDAS, BOLAO, bolaoContar, PERTURBACOES, perturbar, boboDaRodada,
     // expostos para os testes conferirem contra o motor do site
     _metodos: { passosBissecao, raizBissecao, passosFalsa, passosNewton, passosSecante, gauss, seidel, jacobi, residuo } };
 })(typeof window !== 'undefined' ? window : globalThis);

@@ -11,7 +11,7 @@ Modelagem-Computacional/
 ├── serve.js                  servidor local sem dependências (http://localhost:8000)
 ├── banco-de-questoes/        AS QUESTÕES DAS LISTAS, em SQL (separado de todo o resto)
 ├── dist/                     o site publicado (tudo o que o navegador abre)
-├── docs/                     relatório técnico, apresentação, qualidade, documentação do jogo 3D
+├── docs/                     relatório técnico, apresentação, qualidade, documentação do jogo 3D e o vídeo-resumo
 ├── previews/                 capturas de tela das versões
 └── tests/                    testes automáticos
 ```
@@ -29,9 +29,14 @@ Modelagem-Computacional/
 | o modo Relâmpago | `dist/js/paginas/relampago.js` |
 | os bonecos Raiz e Pivô (site) | `dist/js/personagens/raiz-e-pivo.js` e `dist/css/personagens.css` |
 | o herói, a Raizinha, as gatas e os bichos (Calculândia) | `dist/jogos/calculandia/codigo/personagens/` |
-| a pergunta da casa verde (Calculândia) | `dist/jogos/calculandia/codigo/fases/pergunta-rapida.js` |
-| a tela das casas azul e vermelha (Calculândia) | `dist/jogos/calculandia/codigo/fases/tela-da-questao.js` |
-| as perguntas do Quem Divergiu? | `dist/jogos/quem-divergiu/perguntas.js` |
+| a tela de perguntas das casas e dos chefões (Calculândia) | `dist/jogos/calculandia/codigo/fases/pergunta.js` |
+| a fase final da Usina (três reatores) e a explosão | `dist/jogos/calculandia/codigo/fases/usina-final.js` e `codigo/sistemas/final-da-usina.js` |
+| em que casa cada questão entra (verde, azul, vermelha) | coluna `casa` do `banco-de-questoes/questoes.sql` |
+| o simulador antigo (botão 🧪 Laboratório das casas) | `dist/jogos/calculandia/codigo/fases/tela-da-questao.js` |
+| o Bobo da Corte (jogo de sala) | `dist/jogos/bobo-da-corte/bobo-da-corte.js`; perguntas, prendas e eventos em `perguntas.js` |
+| o Laboratório (tátil, troca de linhas, fenômenos) | `dist/js/paginas/laboratorio.js` e `dist/css/terminal.css` |
+| a Caça ao Bug Numérico (Relâmpago e Calculândia) | `dist/js/motor/caca-ao-bug.js` |
+| o Modo Lousa e o destaque do pivô | `dist/js/site/modo-lousa.js` |
 | o menu do topo, o rodapé e o menu do celular | `dist/js/site/moldura.js` |
 | cores, fontes e espaçamentos do site | `dist/css/site.css` |
 | os exercícios do Treino | `dist/dados/treino-exercicios.js` (gerado por `tests/treino/gerar-treino.py`) |
@@ -41,7 +46,7 @@ Modelagem-Computacional/
 
 | Arquivo | O que é |
 |---|---|
-| `questoes.sql` | **a fonte das questões.** Banco SQLite com as tabelas `listas`, `temas`, `questoes` e `alternativas`: as Listas 1 a 10 (UERJ), a 4ª e a 5ª Listas da Profa. Danielle (Ibmec), perguntas dos slides e perguntas rápidas de conceito |
+| `questoes.sql` | **a fonte das questões.** Banco SQLite com as tabelas `listas`, `temas`, `questoes` e `alternativas`: os Testes 1 a 6 e a 4ª e a 5ª Listas da Profa. Danielle (Ibmec), as Listas 1 a 10 (UERJ), perguntas dos slides, perguntas rápidas de conceito e as perguntas básicas de cada método. A coluna `casa` diz em que casa da Calculândia cada questão entra |
 | `gerar-arquivo-do-site.cjs` | lê o `questoes.sql` e gera `dist/dados/banco-de-questoes.js`, que o site e os jogos usam |
 | `README.md` | como editar, conferir e abrir o banco |
 
@@ -54,7 +59,7 @@ Modelagem-Computacional/
 | `css/` | estilos: `site.css` (geral), `listas.css` (Listas e Relâmpago), `terminal.css`, `treino.css`, `grafico-de-convergencia.css`, `personagens.css`, `fontes.css` |
 | `dados/` | dados gerados: `banco-de-questoes.js` (do SQL) e `treino-exercicios.js` |
 | `fontes/`, `imagens/` | fontes e ícones do próprio site (nada vem de fora) |
-| `jogos/` | os dois jogos e as capas da página Jogos |
+| `jogos/` | os dois jogos (Calculândia e Bobo da Corte) e as capas da página Jogos; `jogos/quem-divergiu/` só redireciona para o Bobo da Corte |
 
 ### `dist/js/` — JavaScript do site
 
@@ -63,6 +68,7 @@ Modelagem-Computacional/
 | `motor/` | `motor-numerico.js` | métodos numéricos do Terminal e leitor de expressões |
 | | `passo-a-passo.js` | os métodos no formato dos slides da professora (tabelas, etapas, notação Eᵢ⁽ᵏ⁾) |
 | | `resolver-questoes.js` | refaz a conta de cada questão do banco e confere respostas |
+| | `caca-ao-bug.js` | gera as tabelas da Caça ao Bug Numérico (uma célula errada em cada) |
 | `conteudo/` | `conteudo.js` | textos das lições, exemplos dos slides, missões, glossário, métodos escondidos |
 | `progresso/` | `progresso.js` | XP, estrelas, revisão espaçada e backup |
 | `personagens/` | `raiz-e-pivo.js` | o casal de mascotes Raiz e Pivô |
@@ -73,8 +79,9 @@ Modelagem-Computacional/
 | | `jornada-e-backup.js` | jornada do fácil ao difícil, backup e navegação |
 | | `moldura.js` | barra do topo, menu do celular e rodapé |
 | | `ilustracoes.js`, `demonstracoes.js`, `visuais-das-secoes.js`, `graficos.js` | desenhos e animações em SVG |
-| | `eventos-e-inicializacao.js` | cliques, teclado, desenho da página e abertura (carrega por último) |
-| `paginas/` | `inicio.js`, `trilhas.js`, `licao.js`, `missoes.js`, `jogos.js`, `listas.js`, `relampago.js`, `revisao-e-progresso.js`, `terminal.js`, `aulas-em-video.js` | uma página do site por arquivo |
+| | `eventos-e-inicializacao.js` | cliques, teclado, desenho da página e abertura |
+| | `modo-lousa.js` | Modo Lousa (tabela construída célula por célula) e destaque do pivô no Gauss |
+| `paginas/` | `inicio.js`, `trilhas.js`, `licao.js`, `missoes.js`, `jogos.js`, `listas.js`, `relampago.js`, `revisao-e-progresso.js`, `terminal.js`, `laboratorio.js`, `aulas-em-video.js` | uma página do site por arquivo |
 
 Os arquivos de `js/site/` e `js/paginas/` são scripts comuns que compartilham as mesmas variáveis; por isso a ordem do `index.html` importa.
 
@@ -88,30 +95,30 @@ Os arquivos de `js/site/` e `js/paginas/` são scripts comuns que compartilham a
 | `codigo/principal.js` | início do jogo, laço principal e entrada nas casas |
 | `codigo/jogo.js`, `codigo/configuracao.js` | estado compartilhado e números de ajuste |
 | `codigo/dados/` | tabelas: regiões e cidades, bichos guias, dicas, falas, conhecimento (cartas), contextos das missões, mestres |
-| `codigo/fases/` | as fases: `abrir-fase.js` (escolhe a tela), `pergunta-rapida.js` (casa verde), `tela-da-questao.js` (casas azul e vermelha), `catalogo-de-fases.js`, `sessao.js`, `quadro.js`, `grafico.js`, `metodos-numericos.js`, `numeros.js` |
+| `codigo/fases/` | as fases: `abrir-fase.js` (escolhe a tela), `pergunta.js` (a tela única: casas verde, azul e vermelha e chefões, com terminal, Caça ao Bug e Método Híbrido), `usina-final.js` (os três reatores), `tela-da-questao.js` (o simulador antigo, no botão 🧪 Laboratório), `catalogo-de-fases.js`, `sessao.js`, `quadro.js`, `grafico.js`, `metodos-numericos.js`, `numeros.js` |
 | `codigo/interface/` | telas e painéis: inventário, Casa de Dúvidas, menu, mapa, minimapa, diálogos, criação do personagem |
 | `codigo/personagens/` | herói, Raizinha, Lina e Nina, bichos, moradores, mestres, animações |
 | `codigo/mundo/` | ilha: terreno, água, céu, cidades, pontes, estradas, baús |
-| `codigo/sistemas/` | áudio, câmera, controles, colisão, progresso, salvamento, tutorial |
+| `codigo/sistemas/` | áudio, câmera, controles, colisão, progresso, salvamento, tutorial, cinemática de abertura e `final-da-usina.js` (a explosão do final) |
 | `codigo/motor/numerico.js` | matemática das fases |
 | `codigo/utilitarios/` | geometria e matemática auxiliar |
 
-### `dist/jogos/quem-divergiu/` — o jogo de sala
+### `dist/jogos/bobo-da-corte/` — o jogo de sala (antigo Quem Divergiu?)
 
 | Arquivo | O que faz |
 |---|---|
-| `index.html`, `quem-divergiu.css` | página e estilos |
-| `quem-divergiu.js` | telas do jogo (turma, palpites, votos, revelação) |
-| `perguntas.js` | perguntas próprias, desafios da Arena e as questões numéricas do banco de questões |
+| `index.html`, `bobo-da-corte.css` | página e estilos (sala de aula, quadro, show do bobo, roleta) |
+| `bobo-da-corte.js` | telas do jogo (turma, palpites, votos, revelação, Bobo da Corte, Bolão, Perturbação) e os desenhos da Épsilon e do bobo |
+| `perguntas.js` | perguntas próprias, desafios da Arena, questões do banco, pontuação, prendas, Bolão da Convergência e Perturbação |
 
 ## `tests/`
 
 | Pasta ou arquivo | O que confere |
 |---|---|
-| `verify.cjs` | motor, conteúdo, interface, Treino, PWA e Quem Divergiu? (milhares de verificações no Node) |
+| `verify.cjs` | motor, conteúdo, interface, Treino, Laboratório, Caça ao Bug, PWA e Bobo da Corte (milhares de verificações no Node) |
 | `atualizar.cjs` | acerta o número de verificações mostrado no site e a versão do cache offline |
 | `banco/conferir-banco.cjs` | refaz todas as questões do banco e confere respostas, alternativas e observações |
-| `calculandia/` | regras das fases, fumaça no navegador (inclui as casas verdes) e alcance do mapa |
+| `calculandia/` | regras das fases, fumaça no navegador (todas as casas, terminal, chefões, Método Híbrido e Usina) e alcance do mapa |
 | `e2e/` | navegador: fluxos, offline, acessibilidade, compatibilidade, WebKit e capturas |
 | `treino/` | gerador e conferência do Treino |
 | `terminal/`, `pwa/`, `a11y/`, `rendered/` | Terminal, cache offline, resultado do axe e páginas renderizadas |
@@ -122,9 +129,14 @@ Os arquivos de `js/site/` e `js/paginas/` são scripts comuns que compartilham a
 |---|---|
 | `RELATORIO-TECNICO.md`, `APRESENTACAO.md`, `QUALIDADE.md`, `LIMITES-NUMERICOS.md`, `TREINO.md`, `TESTES-TERMINAL.md` | documentação do site |
 | `calculandia/` | documentação do jogo 3D (regras, decisões, auditorias) |
+| `video/` | o vídeo-resumo da Calculândia para a apresentação (`calculandia-resumo.mp4`) |
 | `organizacionais/` | documentos de organização do grupo (5W2H e diagrama) |
 
-## Nomes antigos → nomes novos (v13)
+## Nomes antigos → nomes novos
+
+**v14:** `jogos/quem-divergiu/` virou `jogos/bobo-da-corte/` (`quem-divergiu.js` → `bobo-da-corte.js`, `quem-divergiu.css` → `bobo-da-corte.css`; o endereço antigo redireciona). Na Calculândia, `fases/pergunta-rapida.js` virou `fases/pergunta.js`.
+
+**v13:**
 
 Para quem tinha o projeto antes da reorganização.
 

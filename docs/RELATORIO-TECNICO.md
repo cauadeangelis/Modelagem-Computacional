@@ -6,7 +6,7 @@ Rio de Janeiro, 26 de outubro de 2026
 
 A Numera Academy (versão 12) é um jogo web para aprender métodos numéricos de Modelagem Computacional, organizado como uma jornada do método mais fácil ao mais difícil, com dois jogos: uma aventura 3D e um jogo de sala para o telão. Sua correção é sustentada por 1.994 verificações automáticas, 140 gabaritos calculados de forma independente, uma auditoria externa cujas falhas foram corrigidas e auditoria de acessibilidade sem violações.
 
-**Autor:** Cauã De Angelis · Engenharia de Computação, UVA · Modelagem Computacional
+**Autor:** Cauã De Angelis · Engenharia de Computação, Ibmec · Modelagem Computacional
 
 ## Resumo
 

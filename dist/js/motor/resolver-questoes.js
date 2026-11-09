@@ -63,7 +63,7 @@
     if (['bissecao', 'falsaPosicao', 'newton', 'secante', 'pontoFixo'].includes(c)) {
       const r = P[c](Object.assign({ criterio: 'relativo' }, p));
       const t = P.tabela(r, p.casas != null ? Math.max(p.casas, 4) : 6);
-      return { valor: r.raiz, tabela: t, resumo: `${r.metodo}: ${r.iteracoes} ${r.iteracoes === 1 ? 'iteração' : 'iterações'}; x = ${F(r.raiz, p.casas != null ? p.casas : 6)}. ${r.parada}`, run: r };
+      return { valor: r.raiz, tabela: t, resumo: `${r.metodo}: ${r.inicio > 1 ? `da ${r.inicio}ª à ${r.inicio + r.iteracoes - 1}ª iteração` : `${r.iteracoes} ${r.iteracoes === 1 ? 'iteração' : 'iterações'}`}; x = ${F(r.raiz, p.casas != null ? p.casas : 6)}. ${r.parada}`, run: r };
     }
     if (c === 'iteracoesBissecao') { const k = P.iteracoesBissecao(p.a, p.b, p.eps); return { valor: k.k, resumo: `k > (log(${F(p.b - p.a)}) − log(${F(p.eps)}))/log 2 = ${F(k.limite, 4)}, então k = ${k.k}.` }; }
     if (c === 'gauss') { const g = P.gauss(p); return { vetor: g.solucao, resumo: `Solução: X* = ${vet(g.solucao, p.casas)}. ` + g.substituicao.map((s) => s.texto).join('; '), gauss: g }; }

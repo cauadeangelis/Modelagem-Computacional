@@ -298,7 +298,7 @@ C.VIDEOS={
 // O motor, o conteúdo, o Treino e o progresso do Ponto Fixo continuam guardados: o método só some das telas.
 C.HIDDEN=['fixedpoint'];
 // v12: a Arena saiu do site (no lugar dela, a página Jogos). C.ARENA continua aqui por dois motivos: os desafios numéricos
-// viraram as perguntas "relâmpago" do Quem Divergiu? e os ids a:* de backups antigos continuam válidos.
+// viraram as perguntas "relâmpago" do Bobo da Corte (antigo Quem Divergiu?) e os ids a:* de backups antigos continuam válidos.
 C.isHidden=id=>C.HIDDEN.includes(id);
 C.ALL_METHODS=C.METHODS.slice();C.ALL_CASES=C.CASES.slice();
 C.METHODS=C.METHODS.filter(m=>!C.isHidden(m.id));

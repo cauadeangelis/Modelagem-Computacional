@@ -2,7 +2,7 @@
    Parte da interface (antes, app.js). Os arquivos de js/site e js/paginas são scripts clássicos que
    compartilham as mesmas variáveis; a ordem de carregamento está no index.html. */
 'use strict';
-/* Numera Academy v12 — interface. v12: a Arena deu lugar à página Jogos, com a Calculândia (aventura 3D, em jogos/calculandia) e o Quem Divergiu? (jogo de sala para o telão, em jogos/quem-divergiu). v11: v11: jornada do Fácil ao Difícil (mundos travados por nível), moedas, sequência de acertos, camarim e o casal Raiz e Pivô torcendo nos desafios; Ponto Fixo escondido por enquanto (C.HIDDEN, reversível). v10.1: intervalo [a, b] à vista no Terminal, usado por todos os métodos. v10: raízes certificadas (troca de sinal, raiz múltipla provável ou quase-raiz), sistemas com escala equilibrada, backup único, foco e anúncios para leitor de tela, aulas em vídeo. Treino e modo prova em treino.js/treino-data.js; gráfico de convergência em convergencia.js. Conteúdo (content.js) e progresso (progress.js) são os mesmos da v4; a busca de raízes (smartRoot em math-engine.js) foi reforçada na v7 e o teclado científico do terminal fica em calculator.js. */
+/* Numera Academy v12 — interface. v12: a Arena deu lugar à página Jogos, com a Calculândia (aventura 3D, em jogos/calculandia) e o Bobo da Corte (antigo Quem Divergiu?; jogo de sala para o telão, em jogos/bobo-da-corte). v11: v11: jornada do Fácil ao Difícil (mundos travados por nível), moedas, sequência de acertos, camarim e o casal Raiz e Pivô torcendo nos desafios; Ponto Fixo escondido por enquanto (C.HIDDEN, reversível). v10.1: intervalo [a, b] à vista no Terminal, usado por todos os métodos. v10: raízes certificadas (troca de sinal, raiz múltipla provável ou quase-raiz), sistemas com escala equilibrada, backup único, foco e anúncios para leitor de tela, aulas em vídeo. Treino e modo prova em treino.js/treino-data.js; gráfico de convergência em convergencia.js. Conteúdo (content.js) e progresso (progress.js) são os mesmos da v4; a busca de raízes (smartRoot em math-engine.js) foi reforçada na v7 e o teclado científico do terminal fica em calculator.js. */
 const M=window.NumeraMath,C=window.NumeraContent,P=window.NumeraProgress;
 const $=sel=>document.querySelector(sel),safe=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const num=n=>typeof n==='number'&&Number.isFinite(n)?(n!==0&&(Math.abs(n)<1e-5||Math.abs(n)>1e8)?n.toExponential(5):Number(n.toPrecision(10)).toLocaleString('pt-BR',{maximumFractionDigits:10})):String(n??'—');
@@ -23,7 +23,7 @@ const method=id=>(C.ALL_METHODS||C.METHODS).find(m=>m.id===id); // inclui os esc
 const ROOTS=()=>C.METHODS.filter(m=>m.category!=='Sistemas lineares'),SYSTEMS=()=>C.METHODS.filter(m=>m.category==='Sistemas lineares'),isSysMethod=id=>id==='gauss'||id==='seidel';
 const WORDS={3:'três',4:'quatro',5:'cinco',6:'seis',7:'sete',8:'oito',9:'nove',10:'dez'},words=n=>WORDS[n]||String(n),cap=t=>t.charAt(0).toUpperCase()+t.slice(1);
 /* Número de verificações automáticas de tests/verify.cjs (o próprio teste confere este valor). */
-const VERIFY_COUNT=2827;
+const VERIFY_COUNT=3215;
 const doneCount=id=>C.TASKS[id].filter((_,i)=>p.completed[`c:${id}:${i}`]).length;
 // v11: só conta o que está à vista (o Ponto Fixo escondido guarda o progresso, mas não entra nos totais).
 const visibleIds=()=>[...C.METHODS.flatMap(m=>C.TASKS[m.id].map((_,i)=>`c:${m.id}:${i}`)),...C.CASES.flatMap(c=>c.tasks.map((_,i)=>`p:${c.id}:${i}`))];

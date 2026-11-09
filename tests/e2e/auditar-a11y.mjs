@@ -43,17 +43,19 @@ const TELAS = [
   ['progresso e camarim', async p => go(p, 'progress')],
   ['trilhas: modo livre', async p => { await go(p, 'academy'); await p.click('[data-act=free-toggle]'); }],
   // v12: o jogo de sala, tela por tela
-  ['quem divergiu: montar a turma', async p => { await p.goto(BASE + 'jogos/quem-divergiu/index.html'); await p.click('[data-a=exemplo]'); }],
-  ['quem divergiu: pergunta (com dica)', async p => { await p.click('[data-a=comecar]'); await p.click('[data-a=dica]'); }],
-  ['quem divergiu: votação', async p => { await p.click('[data-a=ir-voto]'); }],
-  ['quem divergiu: votos revelados', async p => { const ids = await p.evaluate(() => window.__qd.S.jogadores.map(j => j.id)); for (let i = 0; i < ids.length; i++) await p.click(`[data-a=votar][data-id=${ids[(i + 1) % ids.length]}]`); await p.click('[data-a=revelar-votos]'); }],
-  ['quem divergiu: anotar palpites', async p => { await p.click('[data-a=ir-anotar]'); const ids = await p.evaluate(() => window.__qd.S.jogadores.map(j => j.id)); for (let i = 0; i < ids.length; i++) await p.fill(`#pal-${ids[i]}`, String(i + 1)); }],
-  ['quem divergiu: revelação na reta', async p => { await p.click('[data-a=revelar]'); await p.waitForSelector('[data-a=placar]:not([disabled])', { timeout: 20000 }); await p.click('[data-a=passos]'); }],
-  ['quem divergiu: placar', async p => { await p.click('[data-a=placar]'); }],
-  ['quem divergiu: pódio', async p => { await p.click('[data-a=sair]'); await p.click('[data-a=sair]'); }],
+  ['bobo da corte: montar a turma', async p => { await p.goto(BASE + 'jogos/bobo-da-corte/index.html'); await p.click('[data-a=exemplo]'); }],
+  ['bobo da corte: pergunta (com dica)', async p => { await p.click('[data-a=comecar]'); await p.click('[data-a=dica]'); }],
+  ['bobo da corte: votação', async p => { await p.click('[data-a=ir-voto]'); }],
+  ['bobo da corte: votos revelados', async p => { const ids = await p.evaluate(() => window.__bc.S.jogadores.map(j => j.id)); for (let i = 0; i < ids.length; i++) await p.click(`[data-a=votar][data-id=${ids[(i + 1) % ids.length]}]`); await p.click('[data-a=revelar-votos]'); }],
+  ['bobo da corte: anotar palpites', async p => { await p.click('[data-a=ir-anotar]'); const ids = await p.evaluate(() => window.__bc.S.jogadores.map(j => j.id)); for (let i = 0; i < ids.length; i++) await p.fill(`#pal-${ids[i]}`, String(i + 1)); }],
+  ['bobo da corte: revelação na reta', async p => { await p.click('[data-a=revelar]'); await p.waitForSelector('[data-a=pos-revelar]:not([disabled]), [data-a=ir-perturbacao]:not([disabled])', { timeout: 20000 }); await p.click('[data-a=passos]'); }],
+  ['bobo da corte: show do bobo', async p => { if (await p.$('[data-a=ir-perturbacao]')) { await p.click('[data-a=ir-perturbacao]'); await p.click('[data-a=perturb][data-v=muda]'); } await p.click('[data-a=pos-revelar]'); await p.click('[data-a=bobo-pular]').catch(() => {}); await p.waitForSelector('.bobo-palco.etapa-danca'); }],
+  ['bobo da corte: roleta de prendas', async p => { await p.click('[data-a=bobo-roleta]'); await p.waitForSelector('.prenda-txt', { timeout: 8000 }); }],
+  ['bobo da corte: placar', async p => { await p.click('[data-a=bobo-fechar]'); }],
+  ['bobo da corte: pódio', async p => { await p.click('[data-a=sair]'); await p.click('[data-a=sair]'); }],
   ['calculândia: tela inicial', async p => { await p.goto(BASE + 'jogos/calculandia/index.html'); await p.waitForFunction(() => window.G?.mode === 'title', null, { timeout: 120000 }); }],
-  ['quem divergiu: passa o aparelho', async p => { await p.goto(BASE + 'jogos/quem-divergiu/index.html'); }],
-  ['quem divergiu: segredo', async p => { await p.click('[data-a=limpar]'); await p.click('[data-a=exemplo]'); await p.click('[data-a=modo][data-v=passa]'); await p.click('[data-a=comecar]'); await p.click('[data-a=abrir-segredo]'); await p.click('[data-a=seg-abrir]'); }]
+  ['bobo da corte: passa o aparelho', async p => { await p.goto(BASE + 'jogos/bobo-da-corte/index.html'); }],
+  ['bobo da corte: segredo', async p => { await p.click('[data-a=limpar]'); await p.click('[data-a=exemplo]'); await p.click('[data-a=modo][data-v=passa]'); await p.click('[data-a=comecar]'); await p.click('[data-a=abrir-segredo]'); await p.click('[data-a=seg-abrir]'); }]
 ];
 async function go(p, hash) { await p.goto(BASE + 'index.html#' + hash); await p.waitForTimeout(120); }
 const relatorio = {};

@@ -2,8 +2,8 @@
 const fs=require('fs'),vm=require('vm'),path=require('path');
 const dir=path.join(__dirname,'../dist'),read=f=>fs.readFileSync(path.join(dir,f),'utf8');
 // Arquivos do site na ordem do index.html: base (motor, conteúdo, dados) e as partes da interface (js/site e js/paginas).
-const BASE=['js/motor/motor-numerico.js','js/motor/passo-a-passo.js','js/motor/resolver-questoes.js','js/conteudo/conteudo.js','dados/banco-de-questoes.js','js/progresso/progresso.js','js/terminal/grafico-de-convergencia.js','dados/treino-exercicios.js','js/treino/treino.js','js/personagens/raiz-e-pivo.js'];
-const SITE=["js/site/estado-e-utilitarios.js", "js/site/jornada-e-backup.js", "js/site/ilustracoes.js", "js/site/moldura.js", "js/site/demonstracoes.js", "js/site/visuais-das-secoes.js", "js/paginas/inicio.js", "js/paginas/trilhas.js", "js/paginas/aulas-em-video.js", "js/paginas/licao.js", "js/paginas/missoes.js", "js/paginas/jogos.js", "js/paginas/revisao-e-progresso.js", "js/paginas/listas.js", "js/paginas/relampago.js", "js/site/graficos.js", "js/paginas/terminal.js", "js/site/eventos-e-inicializacao.js"];
+const BASE=['js/motor/motor-numerico.js','js/motor/passo-a-passo.js','js/motor/resolver-questoes.js','js/motor/caca-ao-bug.js','js/conteudo/conteudo.js','dados/banco-de-questoes.js','js/progresso/progresso.js','js/terminal/grafico-de-convergencia.js','dados/treino-exercicios.js','js/treino/treino.js','js/personagens/raiz-e-pivo.js'];
+const SITE=["js/site/estado-e-utilitarios.js", "js/site/jornada-e-backup.js", "js/site/ilustracoes.js", "js/site/moldura.js", "js/site/demonstracoes.js", "js/site/visuais-das-secoes.js", "js/paginas/inicio.js", "js/paginas/trilhas.js", "js/paginas/aulas-em-video.js", "js/paginas/licao.js", "js/paginas/missoes.js", "js/paginas/jogos.js", "js/paginas/revisao-e-progresso.js", "js/paginas/listas.js", "js/paginas/relampago.js", "js/site/graficos.js", "js/paginas/terminal.js", "js/paginas/laboratorio.js", "js/site/eventos-e-inicializacao.js", "js/site/modo-lousa.js"];
 const loadSite=c=>{c.__NUMERA_TESTE__=true;for(const f of SITE)vm.runInContext(read(f),c,{filename:f});};
 let count=0;const groups={};let group='Parser';
 function ok(cond,msg){if(!cond)throw Error(`[${group}] ${msg}`);count++;groups[group]=(groups[group]||0)+1;}
@@ -399,10 +399,10 @@ else{ok(C.HIDDEN.includes('fixedpoint')&&!C.METHODS.some(m=>m.id==='fixedpoint')
  ok(P.validate({version:4,xp:0,completed:{}}).coins===0,'Backup antigo começa com 0 moedas');
  t.navigate('progress');ok((elements['#app'].innerHTML.match(/class="card badge /g)||[]).length===12,'12 conquistas, com Combo, Desbravador, Estilo próprio, Caçador de Raízes e Turma reunida');}
 group='Jogos (v12)';
-// A Arena saiu: no lugar dela, a página Jogos com a Calculândia (3D) e o Quem Divergiu? (jogo de sala).
+// A Arena saiu: no lugar dela, a página Jogos com a Calculândia (3D) e o Bobo da Corte (jogo de sala).
 {const store={},LS=ctx.localStorage,oldGet=LS.getItem;LS.getItem=k=>Object.prototype.hasOwnProperty.call(store,k)?store[k]:null;
  t.setP(P.fresh());t.navigate('jogos');let h=elements['#app'].innerHTML;
- ok(h.includes('href="jogos/calculandia/index.html"')&&h.includes('href="jogos/quem-divergiu/index.html"'),'Jogos: links para os dois jogos');
+ ok(h.includes('href="jogos/calculandia/index.html"')&&h.includes('href="jogos/bobo-da-corte/index.html"'),'Jogos: links para os dois jogos');
  ok(h.includes('Ainda não começou')&&h.includes('Nenhuma partida ainda'),'Jogos: sem progresso, convida a começar');
  ok(h.includes('alt=""')&&h.includes('aria-labelledby="calc-t"')&&h.includes('aria-labelledby="qd-t"'),'Capas decorativas, cartões com título acessível');
  for(const pg of ['home','jogos','progress']){t.navigate(pg);ok(!elements['#app'].innerHTML.includes('data-page="arena"')&&!/Arena/.test(elements['#app'].innerHTML),'Sem Arena à vista: '+pg);}
@@ -413,15 +413,15 @@ group='Jogos (v12)';
  t.navigate('jogos');h=elements['#app'].innerHTML;ok(h.includes('⭐ 8 de 189 estrelas')&&h.includes('4 fases vencidas')&&h.includes('2 de 40 Raízes Fugitivas'),'Jogos mostram o progresso salvo da Calculândia');
  store['calculandia-save-v1']='{quebrado';ok(t.calcSummary()===null,'Save da Calculândia quebrado não derruba a página');
  store['calculandia-save-v1']=JSON.stringify([1,2]);cs=t.calcSummary();ok(cs&&cs.stars===0&&cs.wins===0&&cs.roots===0,'Save com formato estranho vira zero');
- store['numera-quem-divergiu-v1']=JSON.stringify({stats:{games:2.7,rounds:-3}});let qd=t.qdSummary();ok(qd.games===2&&qd.rounds===0,'Resumo do Quem Divergiu? conferido');
- t.navigate('jogos');ok(elements['#app'].innerHTML.includes('2 partidas jogadas'),'Jogos mostram as partidas do Quem Divergiu?');
+ store['numera-bobo-da-corte-v1']=JSON.stringify({stats:{games:2.7,rounds:-3}});let qd=t.qdSummary();ok(qd.games===2&&qd.rounds===0,'Resumo do Bobo da Corte conferido');
+ t.navigate('jogos');ok(elements['#app'].innerHTML.includes('2 partidas jogadas'),'Jogos mostram as partidas do Bobo da Corte');
  store['calculandia-save-v1']=JSON.stringify({phases:{'C0.1-F':{stars:1,wins:1}}});t.navigate('progress');h=elements['#app'].innerHTML;
  ok(/badge earned[^"]*"[^>]*>[\s\S]{0,200}Caçador de Raízes/.test(h)||h.includes('Caçador de Raízes'),'Conquista Caçador de Raízes');
  ok(!h.includes('+3 por desafio novo da Arena'),'Regras de moedas sem a Arena');
  LS.getItem=oldGet;}
-group='Quem Divergiu? (v12)';
+group='Bobo da Corte (v14; antes Quem Divergiu?)';
 // O jogo de sala: perguntas com resposta calculada, conferida contra o motor do site; pontuação e leitura dos palpites.
-{vm.runInContext(read('jogos/quem-divergiu/perguntas.js'),ctx,{filename:'perguntas.js'});const Q=ctx.QDPerguntas,near=(a,b,r=1e-9)=>Math.abs(a-b)<=r*Math.max(1,Math.abs(b));
+{vm.runInContext(read('jogos/bobo-da-corte/perguntas.js'),ctx,{filename:'perguntas.js'});const Q=ctx.BCPerguntas,near=(a,b,r=1e-9)=>Math.abs(a-b)<=r*Math.max(1,Math.abs(b));
  ok(Q&&Q.TODAS.length>=50,'Banco com pelo menos 50 perguntas ('+(Q&&Q.TODAS.length)+')');
  const ids=new Set();for(const q of Q.TODAS){const r=Q.resolver(q);ok(Number.isFinite(r.resposta)&&r.resposta!==0,'Resposta numérica e não nula: '+q.id);ok(Array.isArray(r.passos)&&r.passos.length>0&&r.passos.every(x=>typeof x==='string'&&x.length>3),'Passo a passo para a professora: '+q.id);ok(!/[\w)\]]\^/.test(q.texto)&&!/[\w)\]]\^/.test(r.passos.join(' '))&&!/[\w)\]]\^/.test(q.dica),'Expoentes elevados, sem ^: '+q.id);ok(!ids.has(q.id),'Id único: '+q.id);ids.add(q.id);ok([1,2,3].includes(q.nivel)&&q.dica,'Nível e dica: '+q.id);}
  ok(Q.TODAS.every(q=>!C.isHidden(q.metodo))&&!Q.TEMAS.some(([id])=>C.isHidden(id)),'Métodos escondidos ficam fora do jogo');
@@ -447,7 +447,7 @@ group='Quem Divergiu? (v12)';
  ok(new Set(s1.map(q=>q.id)).size===6&&s1.every(q=>['bisection','newton','erro'].includes(q.metodo)&&[1,2].includes(q.nivel)),'Sorteio sem repetição, nos temas e níveis pedidos');
  ok(s1.every((q,i)=>!i||q.nivel>=s1[i-1].nivel),'Rodadas do mais fácil ao mais difícil');
  ok(Q.sortear({temas:['bisection'],niveis:[1,2,3],rodadas:10,relampago:false,semente:1}).every(q=>!q.relampago),'Sem relâmpago quando desligado');
- ok(Q.sortear({temas:['gauss'],niveis:[1],rodadas:8,listas:false,semente:1}).length===0,'Sem pergunta possível, partida vazia (a tela avisa)');ok(Q.sortear({temas:['gauss'],niveis:[1],rodadas:8,semente:1}).every(q=>q.lista),'As questões das listas completam o que faltava (v13)');ok(Q.TEMAS.some(([id])=>id==='integral')&&Q.TODAS.filter(q=>q.lista).length>100,'Questões numéricas das listas no Quem Divergiu? (v13)');
+ ok(Q.sortear({temas:['gauss'],niveis:[1],rodadas:8,listas:false,semente:1}).length===0,'Sem pergunta possível, partida vazia (a tela avisa)');ok(Q.sortear({temas:['gauss'],niveis:[1],rodadas:8,semente:1}).every(q=>q.lista),'As questões das listas completam o que faltava (v13)');ok(Q.TEMAS.some(([id])=>id==='integral')&&Q.TODAS.filter(q=>q.lista).length>100,'Questões numéricas das listas no Bobo da Corte (v13)');
  // pontuação: o exemplo do reel (206 ossos)
  const J=[{id:'a',nome:'Ana'},{id:'b',nome:'Felipe'},{id:'c',nome:'Giovana'},{id:'d',nome:'Lucas'}];
  let ap=Q.apurar({jogadores:J,palpites:{a:205,b:12,c:250},votos:{a:'b',c:'b',d:'b',b:'c'},resposta:206});const L=id=>ap.linhas.find(l=>l.id===id);
@@ -457,6 +457,18 @@ group='Quem Divergiu? (v12)';
  ap=Q.apurar({jogadores:J,palpites:{a:205,b:12,c:250,d:300},votos:{a:'c',b:'c',c:'a',d:'c'},resposta:206});
  ok(ap.divergiram.join()==='b'&&ap.maisVotados.join()==='c'&&!ap.acertouTurma&&ap.linhas.find(l=>l.id==='c').bonus.some(b=>b[0]==='injusticado'),'Votado sem ter divergido ganha o bônus de injustiça');
  ap=Q.apurar({jogadores:J.slice(0,2),palpites:{a:5,b:5},votos:{},resposta:5});ok(!ap.divergiram.length&&ap.raizes.length===2,'Empate perfeito: ninguém divergiu, os dois convergem');
+ // v14: o Bobo da Corte, o carimbo Na Mosca e os eventos especiais
+ ap=Q.apurar({jogadores:J,palpites:{a:205,b:12,c:250},votos:{a:'b',c:'b',d:'b',b:'c'},resposta:206});ok(ap.bobo&&ap.bobo.id==='b'&&!ap.bobo.injusticado&&ap.bobo.votantes.sort().join()==='a,c,d','Bobo da Corte: o mais votado (Felipe), que divergiu mesmo');
+ ap=Q.apurar({jogadores:J,palpites:{a:205,b:12,c:250,d:300},votos:{a:'c',b:'d',c:'a',d:'c'},resposta:206});ok(ap.bobo.id==='c'&&ap.bobo.injusticado&&ap.bobo.votantes.sort().join()==='a,d','Bobo injustiçado: mais votado sem ter divergido; quem votou nele fica marcado');
+ ap=Q.apurar({jogadores:J,palpites:{a:205,b:12,c:250,d:300},votos:{a:'c',c:'d',b:'a',d:'b'},resposta:206});ok(ap.maisVotados.length===4&&ap.bobo.id==='b','Empate nos votos: vira bobo quem chutou mais longe');
+ ap=Q.apurar({jogadores:J,palpites:{a:205,b:12},votos:{},resposta:206});ok(ap.bobo.id==='b'&&!ap.bobo.porVoto,'Sem votos: o chapéu vai para quem divergiu');
+ ap=Q.apurar({jogadores:J.slice(0,2),palpites:{a:5,b:5},votos:{},resposta:5});ok(ap.bobo===null,'Sem votos e sem divergência: rodada sem bobo');
+ ap=Q.apurar({jogadores:J,palpites:{a:1.41421,b:1.4142,c:1.41},votos:{},resposta:Math.SQRT2});ok(ap.mosca.join()==='a,b'&&ap.linhas[0].bonus.some(b=>b[0]==='mosca'&&b[1]===Q.BONUS.mosca)&&!ap.linhas[2].bonus.some(b=>b[0]==='mosca'),'Na mosca: 4 decimais iguais aos da resposta ganham o carimbo dourado');
+ ok(Q.PRENDAS.length>=12&&Q.PRENDAS.every(t=>t.length>20&&!/\^/.test(t)),'Roleta com 12 prendas, sem ^');
+ for(const b of Q.BOLAO){const r=Q.bolaoContar(b),k=Math.ceil(Math.log2((b.b-b.a)/1e-6));ok((r.bis===k||r.bis===k-1)&&r.fp>0&&r.vencedor===(r.bis<r.fp?'bis':r.fp<r.bis?'fp':'empate')&&b.f(b.a)*b.f(b.b)<0,'Bolão '+b.id+': '+r.bis+' × '+r.fp+' iterações');}
+ ok(Q.BOLAO.some(b=>Q.bolaoContar(b).vencedor==='bis')&&Q.BOLAO.some(b=>Q.bolaoContar(b).vencedor==='fp'),'Bolão: às vezes vence a Bisseção, às vezes a Falsa Posição');
+ for(const pt of Q.PERTURBACOES){const r=Q.perturbar(pt),k=M.conditionNumber?M.conditionNumber(pt.A):null;ok(r.x.every(v=>Number.isFinite(v))&&r.kappa>=1&&(r.mudaTudo===(r.variacao>0.05))&&(!k||!Number.isFinite(k)||Math.abs(Math.log10(k)-Math.log10(r.kappa))<1.2),'Perturbação '+pt.id+': κ ≈ '+r.kappa.toFixed(1));}
+ ok(Q.PERTURBACOES.some(pt=>Q.perturbar(pt).mudaTudo)&&Q.PERTURBACOES.some(pt=>!Q.perturbar(pt).mudaTudo),'Perturbação: há sistema bem e mal condicionado');
  ap=Q.apurar({jogadores:J.slice(0,2),palpites:{a:-5},votos:{},resposta:5});ok(!ap.divergiram.length&&ap.raizes.length===0&&ap.linhas[0].faixa.pontos===0,'Um palpite só e longe: sem carimbo, sem raiz');
  ok(Q.faixa(0.01).pontos===100&&Q.faixa(0.0100001).pontos===60&&Q.faixa(0.2).pontos===30&&Q.faixa(0.5).pontos===10&&Q.faixa(0.51).pontos===0,'Bordas das faixas');
  // leitura dos palpites
@@ -464,12 +476,47 @@ group='Quem Divergiu? (v12)';
  for(const [x,v] of L2)ok(v===null?Q.lerNumero(x)===null:near(Q.lerNumero(x),v,1e-12),'Lê o palpite '+JSON.stringify(x));
  ok(Q.fmt(1.625,4)==='1,625'&&Q.fmt(18000,0)==='18.000'&&Q.fmt(2**-52,3)==='2,22·10⁻¹⁶'&&Q.fmt(-0.5,2)==='−0,5','Números em português');
  // página do jogo
- const qh=read('jogos/quem-divergiu/index.html');ok(/script-src 'self'/.test(qh)&&!/<script>/.test(qh)&&qh.includes('../../js/conteudo/conteudo.js')&&qh.indexOf('perguntas.js')<qh.indexOf('quem-divergiu.js'),'Página do jogo: CSP sem script embutido e scripts na ordem');
- const qjs=read('jogos/quem-divergiu/quem-divergiu.js');ok(qjs.includes("'numera-quem-divergiu-v1'")&&qjs.includes('prefers-reduced-motion')&&qjs.includes('anunciar(')&&qh.includes('aria-live="polite"'),'Guarda no navegador, respeita reduzir movimento e anuncia ao leitor de tela');
+ const qh=read('jogos/bobo-da-corte/index.html');ok(/script-src 'self'/.test(qh)&&!/<script>/.test(qh)&&qh.includes('../../js/conteudo/conteudo.js')&&qh.indexOf('perguntas.js')<qh.indexOf('bobo-da-corte.js'),'Página do jogo: CSP sem script embutido e scripts na ordem');
+ const qjs=read('jogos/bobo-da-corte/bobo-da-corte.js');ok(qjs.includes("'numera-bobo-da-corte-v1'")&&qjs.includes('prefers-reduced-motion')&&qjs.includes('anunciar(')&&qh.includes('aria-live="polite"'),'Guarda no navegador, respeita reduzir movimento e anuncia ao leitor de tela');
  ok(!/[\w)\]]\^/.test(qjs.replace(/\/\/.*$/gm,'')),'Sem ^ nos textos do jogo');
- {const cores=JSON.parse((/const ROUPA = (\[[^\]]+\])/.exec(qjs)||[,'[]'])[1].replace(/'/g,'"')),css=read('jogos/quem-divergiu/quem-divergiu.css'),a=Number((/rgba\(0,0,0,(\.\d+)\)\),var\(--c\)/.exec(css)||[,0])[1]);
+ {const cores=JSON.parse((/const ROUPA = (\[[^\]]+\])/.exec(qjs)||[,'[]'])[1].replace(/'/g,'"')),css=read('jogos/bobo-da-corte/bobo-da-corte.css'),a=Number((/rgba\(0,0,0,(\.\d+)\)\),var\(--c\)/.exec(css)||[,0])[1]);
   const lum=h=>{const c=[1,3,5].map(i=>parseInt(h.slice(i,i+2),16)/255*(1-a)).map(v=>v<=0.03928?v/12.92:((v+0.055)/1.055)**2.4);return 0.2126*c[0]+0.7152*c[1]+0.0722*c[2];};
   ok(cores.length>=12&&a>0&&cores.every(h=>1.05/(lum(h)+0.05)>=4.5),'Pódio: texto branco legível sobre a cor de qualquer aluno (contraste ≥ 4,5:1)');}}
+group='Laboratório e Modo Lousa (v14)';
+// Página Laboratório: explorador tátil (raízes), quebra-cabeça de linhas (sistemas) e fenômenos; Modo Lousa nas tabelas.
+{t.navigate('laboratorio');let h=elements['#app'].innerHTML;
+ ok(h.includes('Matemática tátil')&&h.includes('id="lt-svg"')&&h.includes('data-lt-handle="x0"')&&h.includes('Corrida de Convergência'),'Laboratório: aba tátil com o gráfico, a alça de x₀ e a corrida');
+ ok(h.includes('Condição de Fourier')||h.includes('tangente quase horizontal'),'Tátil: diagnóstico de Fourier / tangente horizontal');
+ const F0=ctx.LT_FUN?null:null;void F0;
+ const P=ctx.ltPassos('newton',{f:x=>x*x-2,df:x=>2*x},{x0:1},3);ok(P.length===3&&near(P[0].nx,1.5)&&near(P[1].nx,17/12)&&near(P[2].nx,577/408,1e-12),'Tátil: 3 passos do Newton para √2 (1,5; 17/12; 577/408)');
+ const B=ctx.ltPassos('bisection',{f:x=>x*x-2},{a:1,b:2},3);ok(B.map(q=>q.nx).join()==='1.5,1.25,1.375','Tátil: 3 pontos médios da Bisseção');
+ const Sc=ctx.ltPassos('secant',{f:x=>x*x-2},{x0:1,x1:2},2);ok(near(Sc[0].nx,4/3)&&near(Sc[1].nx,1.4),'Tátil: Secante 4/3 e 1,4');
+ const rs=ctx.ltRaizes({f:x=>x**3-3*x,lo:-2.4,hi:2.4});ok(rs.length===3&&rs.some(r=>near(r,Math.sqrt(3),1e-9))&&rs.some(r=>near(r,0,1e-9)),'Bacias: as 3 raízes de x³ − 3x');
+ const bac=ctx.ltBacias({f:x=>x**3-3*x,df:x=>3*x*x-3,lo:-2.4,hi:2.4},rs,60);ok(bac.length===60&&new Set(bac.filter(i=>i>=0)).size===3,'Bacias: o Newton chega às 3 raízes, conforme o x₀');
+ t.s.lt.aba='tatil';t.s.lt.fn=0;t.s.lt.x0=t.s.lt.x1=t.s.lt.a=t.s.lt.b=null;h=ctx.ltCorridaSvg(30);ok(h.includes('Newton-Raphson')&&h.includes('Bisseção')&&h.includes('polyline'),'Corrida de Convergência desenha os 4 métodos');
+ const cr=ctx.ltCriterios([[10,2,1],[2,10,1],[1,1,5]]);ok(cr.maxA<1&&cr.maxB<1&&near(cr.beta[0],0.3)&&near(cr.beta[1],(2*0.3+1)/10),'Sassenfeld ao vivo: β₁ = 0,3 e β₂ = 0,16');
+ const crRuim=ctx.ltCriterios([[2,10,1],[10,2,1],[1,1,5]]);ok(crRuim.maxB>1,'Ordem ruim: máx β > 1, sem garantia');
+ const gs=ctx.ltSeidel([[10,2,1],[2,10,1],[1,1,5]],[13,13,7]);ok(gs[gs.length-1].x.every(v=>near(v,1,1e-3)),'Gauss-Seidel na ordem boa converge para (1; 1; 1)');
+ const se=ctx.ltSensibilidade([[1,1],[1,1.001]],[2,2.001]);ok(se.k>1000&&se.dx>0.5,'Testar sensibilidade: sistema quase singular perde muitos dígitos');
+ const se2=ctx.ltSensibilidade([[4,1],[1,3]],[5,4]);ok(se2.k<5&&se2.dx<0.05,'Testar sensibilidade: sistema bem condicionado quase não muda');
+ const cb=ctx.ltCompPassos('bisection'),cn=ctx.ltCompPassos('newton');ok(cb.length>12&&cn.length<=6&&cn[cn.length-1].conv&&near(0.8*cn[cn.length-1].h**1.5+0.2*cn[cn.length-1].h-1.2,0,1e-6),'Comporta: a Bisseção passa de 12 iterações (transborda) e o Newton estabiliza em poucas');
+ t.s.lt.aba='linhas';t.render();h=elements['#app'].innerHTML;ok(h.includes('Convergência garantida')||h.includes('Sem garantia'),'Aba Linhas: selo do Sassenfeld');ok((h.match(/data-act="lt-sobe"/g)||[]).length===3,'Aba Linhas: botões ↑ ↓ para cada equação (teclado)');
+ t.s.lt.aba='fenomenos';t.render();h=elements['#app'].innerHTML;ok(h.includes('Comporta da barragem')&&h.includes('lt-comp-passo'),'Aba Fenômenos: comporta');
+ t.s.lt.fen='trelica';t.render();h=elements['#app'].innerHTML;ok(h.includes('Treliça')&&h.includes('lt-trel-passo'),'Aba Fenômenos: treliça');
+ t.navigate('lab');h=elements['#app'].innerHTML;ok(h.includes('data-page="laboratorio"'),'Terminal leva ao Laboratório');
+ // Modo Lousa: botão em toda tabela dos slides
+ const tab=ctx.passosTable(['i','a','b','xᵢ'],[['1','0','1','0,5']]);ok(tab.includes('data-act="lousa"')&&tab.includes('pp-table'),'Modo Lousa: botão "Ver construção da tabela"');
+ const lou=read('js/site/modo-lousa.js');ok(lou.includes('prefers-reduced-motion')&&lou.includes('herdou')&&lou.includes("'pivo'")&&lou.includes("'alvo'")&&lou.includes("'zera'"),'Modo Lousa: herança da ponta e destaque de pivô, alvo e elemento zerado');
+}
+group='Caça ao Bug Numérico (v14)';
+// Toda tabela sabotada tem exatamente uma célula errada, com explicação e dica; o Relâmpago tem o modo.
+{const CB=ctx.NumeraCacaBug;ok(CB&&CB.TIPOS.length>=8,'Caça ao Bug: 8 tipos de erro');
+ for(const tp of CB.TIPOS)for(const sd of [1,2,3,5,8,13,21,34]){const g=CB.gerar(tp,sd);let dif=[];g.linhas.forEach((r,i)=>r.forEach((v,j)=>{if(v!==g.certa[i][j])dif.push([i,j]);}));
+  ok(dif.length===1&&dif[0][0]===g.bug.linha&&dif[0][1]===g.bug.coluna,`Bug ${tp} (semente ${sd}): exatamente uma célula errada, a marcada`);
+  ok(g.explicacao.length>30&&g.dica.length>20&&g.colunas.length===g.linhas[0].length&&!/\^/.test(g.titulo+g.explicacao),`Bug ${tp} (semente ${sd}): explicação, dica e colunas`);}
+ const a=CB.gerar('seidel-velho',4),b=CB.gerar('seidel-velho',4);ok(JSON.stringify(a)===JSON.stringify(b),'Caça ao Bug repetível pela semente');
+ t.navigate('relampago');let h=elements['#app'].innerHTML;ok(h.includes('Caça ao Bug Numérico')&&h.includes('data-act="rl-bug"'),'Relâmpago: cartão da Caça ao Bug');
+}
 group='PWA e organização';
 {const man=JSON.parse(read('manifest.webmanifest'));ok(man.name&&man.short_name&&man.start_url&&man.display==='standalone'&&man.lang==='pt-BR','Manifesto do app');
  for(const ic of man.icons){ok(fs.existsSync(path.join(dir,ic.src)),'Ícone existe: '+ic.src);if(ic.src.endsWith('.png')){const b=fs.readFileSync(path.join(dir,ic.src)),w=b.readUInt32BE(16),h=b.readUInt32BE(20);ok(ic.sizes===w+'x'+h,'Tamanho do ícone '+ic.src+' ('+w+'x'+h+')');}}

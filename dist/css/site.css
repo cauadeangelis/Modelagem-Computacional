@@ -840,3 +840,18 @@ body.has-mascots .player{background:radial-gradient(circle at 12% 88%,var(--rose
 .pp-stage ul{margin:6px 0 10px;padding-left:20px;font-family:var(--mono);font-size:.88rem;line-height:1.7}
 .matrix caption{caption-side:top;text-align:left;font-family:var(--mono);font-size:.82rem;color:var(--muted);padding:0 4px 4px}
 .slides-opts{display:flex;flex-wrap:wrap;gap:10px;margin:12px 0}
+
+/* ---------- v14: Modo Lousa (tabela construída célula por célula) e destaque do pivô no Gauss ---------- */
+.pp-lousa{position:relative}
+.lousa-btn{margin:2px 0 6px;padding-left:0}
+.pp-table.lousa td.lousa-oculta{color:transparent}
+.pp-table td.lousa-agora{background:var(--sand);box-shadow:inset 0 0 0 2px var(--blue)}
+.pp-table td.herdou{box-shadow:inset 0 0 0 2px var(--go);position:relative}
+.pp-table td.herdou::after{content:'↓ herdou';position:absolute;right:4px;top:-9px;font-size:.62rem;font-weight:800;color:var(--go-text);background:var(--surface);padding:0 3px;border-radius:4px}
+.pp-op{cursor:help;border-radius:6px;padding:1px 4px;margin-left:-4px}
+.pp-op.ativo,.pp-op:focus-visible{background:var(--sand)}
+.matrix tr.pivo td{background:var(--blue-soft)}
+.matrix tr.alvo td{background:var(--warn-soft)}
+.matrix td.zera{box-shadow:inset 0 0 0 2px var(--bad);animation:pivo-pulsa 1s ease-in-out infinite}
+@keyframes pivo-pulsa{50%{box-shadow:inset 0 0 0 2px transparent}}
+@media (prefers-reduced-motion:reduce){.matrix td.zera{animation:none}}

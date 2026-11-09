@@ -1,7 +1,7 @@
 // Perguntas de múltipla escolha geradas para cada método (o quiz do protótipo).
-// v13: servem de reserva para as casas verdes (pergunta-rapida.js) quando o banco de questões do site não tem
-// pergunta do método (Spline cúbica e Ponto Fixo) ou não carregou. As fases azul e vermelha usam
-// catalogo-de-fases.js, sessao.js e tela-da-questao.js.
+// v14: servem de reserva para a tela de perguntas (pergunta.js) quando o banco de questões do site não tem
+// pergunta do método (Spline cúbica, Cancelamento, Overflow) ou não carregou. O simulador antigo
+// (catalogo-de-fases.js, sessao.js e tela-da-questao.js) continua no botão 🧪 Laboratório das casas.
 import { fmt, iv, opcoes, R, ri, pickOne, nz } from './numeros.js';
 import { shuffle } from '../utilitarios/matematica.js';
 

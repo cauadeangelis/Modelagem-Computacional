@@ -72,7 +72,7 @@ function montarObjeto({ texto, t }) {
     id: q.id, lista: q.lista_id, numero: q.numero, secao: q.secao || undefined, tema: q.tema_id, dificuldade: q.dificuldade, tipo: q.tipo,
     rapida: q.rapida === 1 || undefined, origem: q.origem_id || undefined, enunciado: q.enunciado, gabaritoLista: q.gabarito_lista || undefined,
     resposta: q.resposta, valor: q.valor ?? undefined, valorLista: q.valor_lista ?? undefined, vetor: json(q.vetor), vetorLista: json(q.vetor_lista), matriz: json(q.matriz),
-    casas: q.casas ?? undefined, tolerancia: q.tolerancia ?? undefined, parametros: json(q.parametros), observacao: q.observacao || undefined, diverge: q.diverge === 1 || undefined,
+    casas: q.casas ?? undefined, tolerancia: q.tolerancia ?? undefined, parametros: json(q.parametros), observacao: q.observacao || undefined, diverge: q.diverge === 1 || undefined, casa: q.casa || undefined, iteracoes: q.iteracoes ?? undefined,
     alternativas: (alts[q.id] || []).sort((a, b) => a.letra.localeCompare(b.letra)),
   }));
   return {

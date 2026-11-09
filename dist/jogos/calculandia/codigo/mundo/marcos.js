@@ -185,9 +185,15 @@ export const LANDMARKS = {
     const colL = L.collideDyn(4 - 1.1, -1, 1.7), colR = L.collideDyn(4 + 1.1, -1, 1.7);
     L.collide(-3.5, 0, 1.1);
     let open = 0;
+    // v14: a balança começa torta (a raiz ainda não foi achada) e se ajusta a cada casa vencida; com as três,
+    // o travessão encaixa na horizontal, como o intervalo que fecha em torno da raiz.
+    let torto = 0.42, alvo = 0.42, encaixou = false;
     return {
+      onWin(count) { alvo = [0.42, 0.26, 0.12, 0][Math.min(3, count)]; },
       update(t, dt) {
-        const tilt = Math.sin(t * 0.8) * 0.18;
+        torto += (alvo - torto) * Math.min(1, dt * 1.2);
+        if (!encaixou && alvo === 0 && torto < 0.01) { encaixou = true; const w = L.toWorld(-3.5, 4.6, 0); G.particles.emit('dourado', w.x, w.y, w.z); }
+        const tilt = torto + Math.sin(t * 0.8) * (0.03 + torto * 0.35);
         beam.rotation.z = tilt;
         for (const p of pans) p.rotation.z = -tilt;
         const heroNear = L.distToHero(4, -1) < 7;
@@ -386,6 +392,21 @@ export const LANDMARKS = {
       arms.push({ g, a, diag: i === 1 || i === 5, s: 1, target: 1 });
     }
     L.collide(0, 0, 2.3);
+    // v14: três torres de energia ligadas à cabeça do polvo. Os feixes piscam desiguais até as casas serem
+    // vencidas; com as três, ficam iguais e firmes (o sistema equilibrado).
+    const feixes = [];
+    for (let i = 0; i < 3; i++) {
+      const a = (i / 3) * Math.PI * 2 + 0.6, x = Math.cos(a) * 5.2, z = Math.sin(a) * 5.2;
+      L.st.add(cyl(0.22, 0.35, 4.2, '#6b6f78', x, 2.1, z, 6));
+      L.st.add(sph(0.38, '#f2c14e', x, 4.4, z));
+      const de = V(0, 3.6, 0), ate = V(x, 4.4, z), meio = de.clone().add(ate).multiplyScalar(0.5), comp = de.distanceTo(ate);
+      const m = new THREE.MeshBasicMaterial({ color: '#b7ff3c', transparent: true, opacity: 0.6, depthWrite: false });
+      const b = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.09, comp, 6), m);
+      b.position.copy(meio); b.quaternion.setFromUnitVectors(V(0, 1, 0), ate.clone().sub(de).normalize());
+      L.dyn.add(b); feixes.push({ b, m, f: 1.3 + i * 0.9 });
+      L.collide(x, z, 0.5);
+    }
+    let equilibrio = 0, eqAlvo = 0;
     return {
       update(t, dt) {
         for (const arm of arms) {
@@ -393,8 +414,17 @@ export const LANDMARKS = {
           arm.g.scale.setScalar(Math.max(0.12, arm.s));
           arm.g.rotation.x = Math.sin(t * 0.8 + arm.a * 2) * 0.05;
         }
+        equilibrio += (eqAlvo - equilibrio) * Math.min(1, dt * 1.5);
+        const caos = 1 - equilibrio;
+        for (const fx of feixes) {
+          const pulso = Math.max(0, Math.sin(t * fx.f * 3) + Math.sin(t * fx.f * 7.3) * 0.6);
+          fx.m.opacity = 0.75 * equilibrio + caos * (0.15 + 0.6 * pulso * 0.5);
+          fx.b.scale.set(1 + caos * pulso * 0.8, 1, 1 + caos * pulso * 0.8);
+          if (equilibrio > 0.95) fx.m.color.set('#f2c14e');
+        }
       },
       onWin(count) {
+        eqAlvo = Math.min(1, count / 3);
         const shrinkable = arms.filter((a) => !a.diag);
         const n = Math.min(shrinkable.length, count * 2);
         shrinkable.forEach((a, i) => (a.target = i < n ? 0 : 1));
@@ -790,14 +820,17 @@ export const LANDMARKS = {
     return { update(t) { beamPiv.rotation.y = t * 0.8; } };
   },
 
-  // F — reator com cúpula rachada e fumaça verde-limão
+  // F — reator com cúpula rachada e fumaça verde-limão. v14: três turbinas giram aos trancos enquanto o Grande
+  // Erro manda; no final a cúpula explode (explodir) e a Usina salva (salvar) solta vapor branco, com o núcleo
+  // azul-claro e as turbinas girando em ritmo constante.
   reator(L) {
     L.st.add(cyl(3.6, 4.0, 2.4, '#4a4f57', 0, 1.2, 0, 16));
+    const domo = [];
     for (let i = 0; i < 6; i++) {
       const a = (i / 6) * Math.PI * 2 + 0.25;
       if (i === 2) continue; // rachadura: um gomo faltando
       const piece = mesh(new THREE.SphereGeometry(3.3, 6, 6, a, (Math.PI * 2) / 6 - 0.06, 0, Math.PI / 2), '#8d9199', 0, 2.4, 0);
-      L.st.add(piece);
+      L.dyn.add(piece); domo.push({ m: piece, a: a + Math.PI / 6, v: V(0, 0, 0), w: 0 });
     }
     for (let i = 0; i < 6; i++) {
       const a = (i / 6) * Math.PI * 2;
@@ -805,17 +838,46 @@ export const LANDMARKS = {
     }
     const coreMat = mat('#b7ff3c', { emissive: '#6aa000' });
     const core = new THREE.Mesh(G_SPH(1.8, 12, 8), coreMat); core.position.y = 3.0; L.dyn.add(core);
+    // turbinas: poste + rotor de três pás
+    const rotores = [];
+    for (let i = 0; i < 3; i++) {
+      const a = (i / 3) * Math.PI * 2 + Math.PI / 6, x = Math.cos(a) * 9, z = Math.sin(a) * 9;
+      L.st.add(cyl(0.25, 0.4, 5, '#6b6f78', x, 2.5, z, 8));
+      const rotor = new THREE.Group(); rotor.position.set(x, 5.2, z); rotor.rotation.y = -a + Math.PI / 2;
+      for (let k = 0; k < 3; k++) { const p = box(0.35, 2.4, 0.08, '#e9e4d8', 0, 1.2, 0); const g = new THREE.Group(); g.rotation.z = (k / 3) * Math.PI * 2; g.add(p); rotor.add(g); }
+      rotor.add(sph(0.3, '#c9a24e', 0, 0, 0)); L.dyn.add(rotor); rotores.push({ rotor, fase: i * 1.7 });
+      L.collide(x, z, 0.6);
+    }
     L.collide(0, 0, 4.2);
+    let explosao = -1, salva = false;
+    function salvar() {
+      salva = true; L.s.salva = true;
+      coreMat.color.set('#8fe3ff'); coreMat.emissive.set('#2a7fa0');
+      for (const d of domo) d.m.visible = false;
+    }
     return {
       update(t, dt, near) {
-        core.scale.setScalar(1 + Math.sin(t * 4) * 0.08);
+        if (explosao >= 0) {
+          explosao += dt;
+          core.scale.setScalar(explosao < 0.6 ? 1 + explosao * 2.2 : Math.max(1, 2.3 - (explosao - 0.6) * 1.5));
+          for (const d of domo) { d.v.y -= 9 * dt; d.m.position.addScaledVector(d.v, dt); d.m.rotation.x += d.w * dt; d.m.rotation.z += d.w * 0.7 * dt; if (d.m.position.y < -6) d.m.visible = false; }
+          if (explosao > 4) { explosao = -1; salvar(); }
+        } else core.scale.setScalar(1 + Math.sin(t * (salva ? 1.5 : 4)) * (salva ? 0.04 : 0.08));
+        for (const r of rotores) r.rotor.rotation.z += dt * (salva ? 2.2 : Math.max(0, Math.sin(t * 1.3 + r.fase)) * 4.5);
         const final = L.s.finalMode;
-        if (near && Math.random() < dt * (final ? 10 : 4)) {
+        if (near && Math.random() < dt * (salva ? 6 : final ? 10 : 4)) {
           const w = L.toWorld((Math.random() - 0.5) * 2, 4.5, (Math.random() - 0.5) * 2);
-          G.particles.emit(Math.random() < 0.5 ? 'fumacaVerde' : 'fumaca', w.x, w.y, w.z);
+          G.particles.emit(salva ? 'vapor' : Math.random() < 0.5 ? 'fumacaVerde' : 'fumaca', w.x, w.y, w.z);
         }
-        if (near && Math.random() < dt * (final ? 3 : 0.8)) { const w = L.toWorld(0, 3.5, 2); G.particles.emit('faiscas', w.x, w.y, w.z); }
+        if (!salva && near && Math.random() < dt * (final ? 3 : 0.8)) { const w = L.toWorld(0, 3.5, 2); G.particles.emit('faiscas', w.x, w.y, w.z); }
       },
+      // a cúpula voa em pedaços; depois de 4 s a Usina fica salva
+      explodir() {
+        if (salva || explosao >= 0) return;
+        explosao = 0;
+        for (const d of domo) { d.v.set(Math.cos(d.a) * (6 + Math.random() * 4), 9 + Math.random() * 6, Math.sin(d.a) * (6 + Math.random() * 4)); d.w = (Math.random() - 0.5) * 8; }
+      },
+      salvar,
     };
   },
 };

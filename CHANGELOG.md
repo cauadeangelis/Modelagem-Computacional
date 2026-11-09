@@ -1,5 +1,38 @@
 # Histórico de versões
 
+## v14 — Uma tela de perguntas para a Calculândia, os Testes no banco, a Usina final e o Bobo da Corte
+
+**Banco de questões** (468 questões, antes 334)
+- **Testes 1 a 6** da professora entram no banco, com o gabarito oficial conferido pela conta. Cada Teste tem também uma versão curta (até 4 iterações) para o jogo. Os Testes que continuam uma Bisseção já começada usam os parâmetros novos `inicio` e `anterior`, com a mesma numeração e o mesmo arredondamento do gabarito; no Newton, f e f′ são arredondados nas casas pedidas, como na calculadora.
+- **86 perguntas básicas** de múltipla escolha, 4 por método do jogo, no nível do início do curso, e duas de Ponto Fixo para digitar.
+- Colunas novas `casa` (verde, azul ou vermelha) e `iteracoes`. Verde: básicas, slides e conceitos. Azul: Testes e listas da Profa. Danielle. Vermelha: Listas 1 a 10 de Cálculo Numérico. O teste do banco confere as duas colunas.
+
+**Calculândia: uma tela só para todas as perguntas** (`codigo/fases/pergunta.js`)
+- Casas verde, azul e vermelha e chefões usam a mesma tela da antiga casa verde, com o selo da casa, os dispositivos no topo e a resolução completa depois de responder. Toda pergunta tem no máximo 4 iterações.
+- **Terminal** nas casas azul e vermelha: a resposta é digitada como conta (`(0.5+1)/2`, `2 - f(2)/df(2)`, `ans`); Enter calcula, Enter de novo envia; 3 tentativas. A Lupa troca o terminal por alternativas.
+- **Caça ao Bug Numérico** como tipo de pergunta da casa vermelha: uma tabela com exatamente uma célula errada (8 tipos: metade errada e ponto médio na Bisseção, valor velho no Gauss-Seidel, b esquecido no Gauss, erro absoluto no lugar do relativo, sinal do Newton, ponto da Falsa Posição, peso do Trapézio).
+- **Chefões** como sequência de golpes, com barra de vida e 3 corações; o golpe final é o **Método Híbrido**: achar a raiz de atan(x − 1,3) gastando no máximo 8 avaliações, misturando Bisseção (custa 1), Secante (1) e Newton (2). Só um método puro não chega.
+- O simulador antigo continua no botão 🧪 **Laboratório** das casas azul e vermelha.
+- **Usina final** (`codigo/fases/usina-final.js`): três reatores. Bisseção de x³ − 9x + 3 em [0, 1] com 10 iterações (digita cada xₖ e escolhe a metade), Eliminação de Gauss num sistema 4×4 (os 6 multiplicadores, com pivô, linha alvo e elemento zerado em destaque, e a substituição regressiva) e Newton em x³ − 2x − 5 com 6 iterações. 5 corações e progresso salvo por reator.
+- **O final:** vencida a Usina, o Grande Erro fala pela última vez, a câmera chega no reator, a **Usina explode**, a fumaça verde vira vapor, a ilha comemora com fogos e aparece a tela "Calculândia salva!".
+- **Mundo que reage:** o reator da Usina gira e explode; a balança de Bi-Polis nivela conforme as casas caem; os três feixes do polvo de Gaussburgo se equilibram.
+- **Vídeo-resumo** (`docs/video/calculandia-resumo.mp4`): gravado do próprio jogo, quadro a quadro, da abertura à explosão da Usina, com legendas.
+
+**Bobo da Corte** (antigo Quem Divergiu?; `jogos/bobo-da-corte/`, o endereço antigo redireciona)
+- Apresentadora nova, mais jovem, e o mais votado de cada rodada vira o **Bobo da Corte**: cortina, holofote, o bobo dançando e a roleta de 12 prendas leves de sala. Prenda em toda rodada, só no fim ou desligada.
+- Rodadas especiais: **🎰 Bolão da Convergência** (aposta entre Bisseção e Falsa Posição, ×1,5 para quem acerta), **🌪️ Perturbação da Épsilon** (0,01 a mais no b₁: muda tudo ou quase nada? com o κ∞) e **✨ Na mosca** (+25 para 4 decimais certos). Título novo "Na mosca" e a prenda do Bobo da partida no pódio.
+- O salvamento passa a `numera-bobo-da-corte-v1` e lê o antigo na primeira vez.
+
+**Site**
+- **Laboratório** (página nova, aberta pelo Terminal): aba Tátil (arraste x₀, x₀ e x₁ ou [a, b] no gráfico; bacias de convergência do Newton; **Corrida de Convergência**), aba Linhas (troque as equações até o medidor de Sassenfeld acender "Convergência garantida!"; **Testar sensibilidade** com ruído de 1% no b e o κ) e aba Fenômenos (a comporta da barragem e a treliça da ponte).
+- **Modo Lousa:** toda tabela no formato dos slides tem o botão "▶ Ver construção da tabela", que preenche célula por célula e marca a ponta que herdou o xᵢ. No Gauss, passar o mouse num multiplicador destaca a linha pivô, a linha alvo e o elemento zerado.
+- **Relâmpago: Caça ao Bug**, o modo novo com as 8 tabelas com erro plantado.
+- **Raiz e Pivô** reagem ao método: na Bisseção a Raiz corta o intervalo ao meio com uma tesoura, no Gauss o Pivô dá o soco de boxeador, cada método tem frases próprias e, num erro em questão com seno ou cosseno, o Pivô aparece com um transferidor torto (calculadora em graus?).
+
+**Correções**
+- Respostas como `(a+b)/2` eram recusadas porque o leitor tirava os parênteses de fora mesmo quando não envolviam o texto todo.
+- O resumo da Bisseção que continua do meio mostrava "8 iterações"; agora mostra de qual a qual iteração a conta foi.
+
 ## v13 — Conteúdo no formato dos slides, banco de questões em SQL e telas mais limpas
 
 **Conteúdo de acordo com os slides da professora (Cap. 2 e Cap. 3)**

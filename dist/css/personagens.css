@@ -104,3 +104,16 @@
   .mz-confetti,.mz-coin{display:none}
 }
 @media print{.mz-stage{display:none!important}}
+
+/* v14: reações por método — tesoura da Raiz (Bisseção), soco de boxeador do Pivô (Gauss) e transferidor torto (graus?) */
+.mz-tesoura,.mz-transferidor{opacity:0;transition:opacity .2s}
+.mz-stage[data-metodo="bisection"].is-ok .mz-tesoura,.mz-stage[data-metodo="bisection"].is-combo .mz-tesoura{opacity:1}
+.mz-stage[data-metodo="bisection"] .mz-tesoura-lamina{transform-origin:50% 100%;animation:mz-corta .32s ease-in-out 3 alternate}
+.mz-stage[data-metodo="gauss"].is-ok .mz-glove-r,.mz-stage[data-metodo="gauss"].is-combo .mz-glove-r{animation:mz-jab .26s ease-in-out 4 alternate}
+.mz-stage[data-metodo="gauss"].is-ok .mz-glove-l,.mz-stage[data-metodo="gauss"].is-combo .mz-glove-l{animation:mz-guarda .26s ease-in-out 4 alternate}
+.mz-stage[data-erro="graus"].is-bad .mz-transferidor{opacity:1;animation:mz-torto .6s ease-in-out 2 alternate}
+@keyframes mz-corta{from{transform:scaleX(1)}to{transform:scaleX(.35)}}
+@keyframes mz-jab{from{transform:translateX(0)}to{transform:translateX(14px) translateY(-4px)}}
+@keyframes mz-guarda{from{transform:translateY(0)}to{transform:translateY(-6px)}}
+@keyframes mz-torto{from{transform:rotate(-6deg)}to{transform:rotate(10deg)}}
+@media (prefers-reduced-motion:reduce){.mz-tesoura-lamina,.mz-transferidor,.mz-stage[data-metodo] .mz-glove-r,.mz-stage[data-metodo] .mz-glove-l{animation:none!important}}

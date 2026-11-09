@@ -78,38 +78,43 @@ await page.click('[data-act=free-toggle]'); ok(await page.$$eval('.journey .worl
 // ---------- v12: Jogos (no lugar da Arena)
 await go('arena'); ok((await page.evaluate(() => location.hash)) === '#jogos' && await page.isVisible('.games'), 'Link antigo #arena abre a página Jogos');
 ok(!(await page.textContent('.topbar')).includes('Arena') && (await page.textContent('.topbar')).includes('Jogos'), 'Menu: Jogos no lugar da Arena');
-ok(await page.$$eval('.game-card', c => c.length) === 3 && await page.isVisible('.game-rl') && await page.isVisible('a.btn[href="jogos/calculandia/index.html"]') && await page.isVisible('a.btn[href="jogos/quem-divergiu/index.html"]'), 'Jogos: Calculândia, Quem Divergiu? e Relâmpago');
+ok(await page.$$eval('.game-card', c => c.length) === 3 && await page.isVisible('.game-rl') && await page.isVisible('a.btn[href="jogos/calculandia/index.html"]') && await page.isVisible('a.btn[href="jogos/bobo-da-corte/index.html"]'), 'Jogos: Calculândia, Bobo da Corte e Relâmpago');
 await page.$$eval('.game-cover img', imgs => Promise.all(imgs.map(i => i.decode().catch(() => {}))));
 ok(await page.$$eval('.game-cover img', imgs => imgs.every(i => i.complete && i.naturalWidth === 1200)), 'Capas dos jogos carregadas');
 await shot(page, 'v12-jogos');
-// Quem Divergiu?: uma rodada completa no modo telão, do jeito que a professora usaria.
-await page.click('a.btn[href="jogos/quem-divergiu/index.html"]'); await page.waitForSelector('[data-a=exemplo]');
+// Bobo da Corte (v14, antes Quem Divergiu?): uma rodada completa no modo telão, do jeito que a professora usaria.
+await page.click('a.btn[href="jogos/bobo-da-corte/index.html"]'); await page.waitForSelector('[data-a=exemplo]');
 await page.click('[data-a=exemplo]'); await page.click('[data-a=rodadas][data-v="5"]'); await page.click('[data-a=comecar]');
-ok(await page.isVisible('#pergunta-t') && await page.isVisible('#relogio'), 'Quem Divergiu?: pergunta no quadro e relógio');
-await shot(page, 'v12-quem-divergiu-pergunta');
-await page.click('[data-a=ir-voto]'); const qids = await page.evaluate(() => window.__qd.S.jogadores.map(j => j.id));
+await page.evaluate(() => { const S = window.__bc.S; S.perguntas[0] = window.BCPerguntas.TODAS.find(q => q.id === 'nw-raiz2'); S.eventos[0] = {}; window.__bc.render(); });
+ok(await page.isVisible('#pergunta-t') && await page.isVisible('#relogio'), 'Bobo da Corte: pergunta no quadro e relógio');
+await shot(page, 'v14-bobo-da-corte-pergunta');
+await page.click('[data-a=ir-voto]'); const qids = await page.evaluate(() => window.__bc.S.jogadores.map(j => j.id));
 ok(await page.$$eval('[data-a=votar]', b => b.length) === qids.length - 1, 'Votação: ninguém vota em si mesmo');
 for (let i = 0; i < qids.length; i++) await page.click(`[data-a=votar][data-id=${qids[i === qids.length - 1 ? 0 : qids.length - 1]}]`);
 await page.click('[data-a=revelar-votos]'); ok((await page.textContent('#fala')).includes('Felipe'), 'Votos revelados: a turma aposta no Felipe');
-await page.click('[data-a=ir-anotar]'); const qr = await page.evaluate(() => window.QDPerguntas.resolver(window.__qd.S.perguntas[0]).resposta);
+await page.click('[data-a=ir-anotar]'); const qr = await page.evaluate(() => window.BCPerguntas.resolver(window.__bc.S.perguntas[0]).resposta);
 const pals = [qr, qr * 1.03, qr * 1.15, qr * 1.4, '', qr * 5];
 for (let i = 0; i < qids.length; i++) await page.fill(`#pal-${qids[i]}`, pals[i] === '' ? '' : String(pals[i]).replace('.', ','));
 ok((await page.textContent(`#lido-${qids[0]}`)).startsWith('='), 'Palpite lido na hora, em português');
-await page.click('[data-a=revelar]'); await page.waitForSelector('[data-a=placar]:not([disabled])', { timeout: 20000 });
+await page.click('[data-a=revelar]'); await page.waitForSelector('[data-a=pos-revelar]:not([disabled])', { timeout: 20000 });
 ok(await page.$$eval('.reta .pin', p => p.length) === 5 && await page.isVisible('.reta .resp'), 'Reta: 5 palpites e a resposta');
 ok(await page.isVisible('.carteira.divergiu .carimbo') && await page.isVisible('.carteira.raiz'), 'Carimbos: DIVERGIU e CONVERGIU');
-ok((await page.textContent('#fala')).includes('A turma acertou'), 'Professora comenta o resultado');
+ok((await page.textContent('#fala')).includes('A turma acertou'), 'A anfitriã comenta o resultado');
 await page.click('[data-a=passos]'); ok(await page.isVisible('.giz-passos-res li'), 'Passo a passo do cálculo no quadro');
-await shot(page, 'v12-quem-divergiu-revelacao');
-await page.click('[data-a=placar]'); ok(await page.$$eval('.giz-placar li', l => l.length) === 6, 'Placar com a turma inteira');
+await shot(page, 'v14-bobo-da-corte-revelacao');
+await page.click('[data-a=pos-revelar]'); ok(await page.isVisible('.bobo-palco .bobo-fila') && (await page.textContent('.bobo-chamada')).includes('Bobo da Corte'), 'Show do Bobo: cortina e holofote sobre a turma');
+await page.waitForSelector('.bobo-palco.etapa-danca', { timeout: 8000 }); ok((await page.textContent('#bobo-t')).includes('Felipe') && await page.isVisible('.bobo-danca'), 'O mais votado (Felipe) vira o Bobo da Corte e dança');
+await shot(page, 'v14-bobo-da-corte-show');
+await page.click('[data-a=bobo-roleta]'); await page.waitForSelector('.prenda-txt', { timeout: 8000 }); ok((await page.textContent('.prenda-txt')).length > 20, 'Roleta sorteia uma prenda');
+await page.click('[data-a=bobo-fechar]'); ok(await page.$$eval('.giz-placar li', l => l.length) === 6 && (await page.textContent('.giz-placar')).includes('🃏'), 'Placar com a turma inteira e o chapéu do bobo');
 await page.click('[data-a=sair]'); await page.click('[data-a=sair]'); ok(await page.isVisible('.podio'), 'Encerrar leva ao pódio');
-ok(JSON.parse(await page.evaluate(() => localStorage.getItem('numera-quem-divergiu-v1'))).stats.games === 1, 'Partida guardada no navegador');
-await shot(page, 'v12-quem-divergiu-podio');
+ok(JSON.parse(await page.evaluate(() => localStorage.getItem('numera-bobo-da-corte-v1'))).stats.games === 1, 'Partida guardada no navegador');
+await shot(page, 'v14-bobo-da-corte-podio');
 await page.click('a.b[href="../../index.html#jogos"]'); await page.waitForSelector('.games');
 ok((await page.textContent('.game-qd .game-progress')).includes('1 partida jogada'), 'Site mostra a partida nos Jogos');
 await go('progress'); ok(await page.$$eval('.badge.earned', b => b.some(x => x.textContent.includes('Turma reunida'))), 'Conquista Turma reunida');
 // Modo passa o aparelho: palpite escondido, um por vez.
-await page.goto(BASE + 'jogos/quem-divergiu/index.html'); await page.click('[data-a=modo][data-v=passa]'); await page.click('[data-a=comecar]');
+await page.goto(BASE + 'jogos/bobo-da-corte/index.html'); await page.click('[data-a=modo][data-v=passa]'); await page.click('[data-a=comecar]');
 await page.click('[data-a=abrir-segredo]'); ok(await page.isVisible('.segredo') && !(await page.isVisible('#seg-in')), 'Passa o aparelho: o campo só aparece depois de "sou eu"');
 await page.click('[data-a=seg-abrir]'); await page.fill('#seg-in', 'xyz'); await page.click('form[data-form=segredo] button[type=submit]');
 ok((await page.textContent('#seg-lido')).includes('Não entendi'), 'Palpite inválido não passa');
@@ -340,6 +345,6 @@ await go('relampago'); await page.click('[data-act=rl-grupo][data-id=raizes]'); 
 for (let i = 0; i < 10; i++) { await page.keyboard.press('1'); await page.click('[data-act=rl-proxima]'); }
 ok(await page.isVisible('[data-act=rl-comecar]') && (await page.textContent('.stat-row')).includes('Pontos'), 'Relâmpago: rodada de 10 perguntas pelo teclado até o resultado');
 await go('jogos'); ok(await page.isVisible('.game-rl'), 'Jogos: cartão do Relâmpago');
-await page.goto(BASE + 'jogos/quem-divergiu/index.html'); await page.click('[data-a=comecar]').catch(() => {});
-ok(await page.evaluate(() => document.documentElement.scrollWidth - innerWidth) <= 0, 'Celular: Quem Divergiu? sem rolagem lateral');
+await page.goto(BASE + 'jogos/bobo-da-corte/index.html'); await page.click('[data-a=comecar]').catch(() => {});
+ok(await page.evaluate(() => document.documentElement.scrollWidth - innerWidth) <= 0, 'Celular: Bobo da Corte sem rolagem lateral');
 await browser.close(); fim('Fluxos (v12)');

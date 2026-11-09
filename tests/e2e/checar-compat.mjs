@@ -26,15 +26,15 @@ for (const f of fs.readdirSync(path.join(dist, 'css')).filter(f => f.endsWith('.
   for (const [p, onde] of Object.entries(PROGRESSIVO)) if (css.includes(p)) ok(onde.includes(f), `${f}: ${p} só como melhoria progressiva`);
 }
 // v12: os jogos.
-// Quem Divergiu? segue a mesma regra do site (scripts clássicos ES2021, Safari 15+).
-const qd = path.join(dist, 'jogos/quem-divergiu');
+// Bobo da Corte segue a mesma regra do site (scripts clássicos ES2021, Safari 15+).
+const qd = path.join(dist, 'jogos/bobo-da-corte');
 for (const f of fs.readdirSync(qd).filter(f => f.endsWith('.js'))) {
   const src = fs.readFileSync(path.join(qd, f), 'utf8');
   let err = null; try { parse(src, { ecmaVersion: 2021, sourceType: 'script' }); } catch (e) { err = e.message; }
-  ok(!err, `quem-divergiu/${f}: JavaScript ES2021 válido ${err || ''}`);
-  for (const [re, nome] of PROIBIDO_JS) ok(!re.test(src), `quem-divergiu/${f}: sem ${nome}`);
+  ok(!err, `bobo-da-corte/${f}: JavaScript ES2021 válido ${err || ''}`);
+  for (const [re, nome] of PROIBIDO_JS) ok(!re.test(src), `bobo-da-corte/${f}: sem ${nome}`);
 }
-{ const css = fs.readFileSync(path.join(qd, 'quem-divergiu.css'), 'utf8'); for (const p of PROIBIDO_CSS) ok(!css.includes(p), `quem-divergiu.css: sem ${p}`); ok(!/[^-]backdrop-filter/.test(css.replace(/-webkit-backdrop-filter:[^;]+;backdrop-filter/g, '')), 'quem-divergiu.css: backdrop-filter com o prefixo do Safari'); }
+{ const css = fs.readFileSync(path.join(qd, 'bobo-da-corte.css'), 'utf8'); for (const p of PROIBIDO_CSS) ok(!css.includes(p), `bobo-da-corte.css: sem ${p}`); ok(!/[^-]backdrop-filter/.test(css.replace(/-webkit-backdrop-filter:[^;]+;backdrop-filter/g, '')), 'bobo-da-corte.css: backdrop-filter com o prefixo do Safari'); }
 // Calculândia: módulos ES (3D com Three.js e WebGL 2). Ela usa Array.prototype.at e structuredClone, então o mínimo dela é
 // Chrome/Edge 98+, Firefox 94+ e Safari 15.4+ (declarado no README); o resto da lista continua proibido.
 const calc = path.join(dist, 'jogos/calculandia/codigo'), walk = d => fs.readdirSync(d).flatMap(f => fs.statSync(path.join(d, f)).isDirectory() ? walk(path.join(d, f)) : [path.join(d, f)]);

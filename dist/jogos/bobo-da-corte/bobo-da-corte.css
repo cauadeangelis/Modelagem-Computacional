@@ -1,4 +1,4 @@
-/* Quem Divergiu? — sala de aula desenhada para o telão: parede clara, quadro verde, giz e carteiras.
+/* Bobo da Corte (antigo Quem Divergiu?) — sala de aula desenhada para o telão: parede clara, quadro verde, giz e carteiras.
    Tudo em CSS e SVG próprios; a tipografia é a do Numera (Figtree e Newsreader, servidas pelo site). */
 :root{
   --parede:#F3EDE0; --parede-2:#E9DEC6; --rodape:#CBB48C; --chao:#D9C3A0; --chao-2:#CDB48D;
@@ -39,7 +39,7 @@ body{font-family:var(--sans);color:var(--tinta);background:var(--parede);-webkit
 .relogio.fim .rel-arco{stroke:var(--vermelho)}
 .relogio.fim{animation:treme .4s 3}
 
-/* ---------- Palco: quadro + professora ---------- */
+/* ---------- Palco: quadro + Épsilon, a anfitriã ---------- */
 .palco{flex:1;width:100%;max-width:1560px;margin:0 auto;padding:0 clamp(12px,2vw,28px) 24px;outline:none;display:flex;flex-direction:column}
 .cena{display:grid;grid-template-columns:minmax(0,1fr) clamp(170px,17vw,250px);gap:clamp(10px,1.5vw,22px);align-items:end}
 .quadro-moldura{position:relative;background:linear-gradient(var(--moldura),var(--moldura-2));padding:clamp(8px,1vw,14px);border-radius:16px;box-shadow:0 10px 30px rgba(60,35,10,.25)}
@@ -271,3 +271,100 @@ legend{font-weight:700;margin-bottom:8px;padding:0}
   .acoes .b{flex:1 1 auto;white-space:normal}
   .add-linha{flex-direction:column}
 }
+
+/* ===================== v14: Bobo da Corte ===================== */
+.titulo-ico{font-style:normal;display:inline-block;animation:balanca 2.6s ease-in-out infinite;transform-origin:50% 90%}
+.rabo{transform-origin:102px 46px;animation:rabo 2.2s ease-in-out infinite}
+@keyframes rabo{0%,100%{transform:rotate(0)}50%{transform:rotate(7deg)}}
+/* bolão */
+.bolao-opcoes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:.6em 0}
+.bolao-op{border:2px dashed rgba(246,243,234,.6);border-radius:16px;padding:12px 16px;display:flex;flex-direction:column;gap:2px}
+.bolao-op b{font-family:var(--display);font-size:1.5em;color:var(--giz-amarelo)}
+.bolao-op span{font-size:.8em;color:var(--giz-2)} .bolao-op em{font-style:normal;font-weight:700}
+.apostas{display:flex;gap:6px;justify-content:center;margin-top:6px}
+.aposta{min-width:46px;min-height:40px;border-radius:999px;border:2px solid var(--tinta);background:#fff;font:800 .95rem var(--sans);color:var(--tinta);cursor:pointer}
+.aposta[aria-pressed="true"]{background:var(--amarelo);box-shadow:inset 0 0 0 2px #fff}
+.giz-bolao{margin:.4em 0 0;font-size:.85em;color:var(--giz-amarelo)}
+.app.anima .giz-bolao{animation:aparece .5s both;animation-delay:var(--d)}
+/* perturbação */
+.perturb-res{border-top:2px dashed rgba(246,243,234,.4);margin-top:.5em;padding-top:.4em}
+.perturb-res p{margin:.25em 0}
+/* chapéus de bobo e carimbo dourado */
+.chapeu-tag{position:absolute;top:-4px;right:4px;font-size:1.05rem;background:#fff;border-radius:999px;padding:0 6px;box-shadow:var(--sombra);font-weight:800}
+.chapeus{font-size:.85em}
+.carimbo.dourado{border-color:#B8860B;color:#8A6200;background:linear-gradient(135deg,#FFF6C8,#F7D35E);box-shadow:0 0 18px rgba(247,211,94,.9)}
+.giz-bobo-final{margin:.1em 0 .4em;font-size:1.1em;color:var(--giz-amarelo)}
+/* segredo em forma de terminal (mesma ideia da Calculândia) */
+.seg-perg-card{width:100%;text-align:left;background:#FFFDF6;border-radius:16px;padding:14px 16px;box-shadow:inset 0 0 0 2px #E3D4B4}
+.seg-perg-card span{display:block;font-size:.75rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--tinta-2);margin-bottom:4px}
+.seg-perg-card .seg-perg{color:var(--tinta);font-size:1.1rem}
+.seg-term{background:#1F2A24;border-radius:16px;padding:12px 14px;color:#E6F5D0;text-align:left}
+.seg-term-topo{font-weight:800;font-size:.8rem;letter-spacing:.06em;text-transform:uppercase;color:#B7FF3C;margin-bottom:8px}
+.seg-term-linha{display:flex;align-items:center;gap:8px;width:100%}
+.seg-term-linha label{font-family:ui-monospace,Menlo,Consolas,monospace;color:#B7FF3C;font-weight:700;white-space:nowrap}
+.seg-term .palpite.grande{flex:1;min-width:0;background:#0F1713;color:#F4FFE6;border:2px solid #6B8F5E;font-family:ui-monospace,Menlo,Consolas,monospace;caret-color:#B7FF3C}
+.seg-term .lido{color:#A9BFA2;text-align:left;margin:6px 0 0}
+.seg-term .seg-botoes{justify-content:flex-end}
+/* o show do Bobo da Corte: palco, cortinas, holofote, dança, confete e roleta */
+.bobo-palco{position:fixed;inset:0;z-index:60;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:24px;overflow:hidden;color:#fff;outline:none;
+  background:radial-gradient(60% 50% at 50% 40%,#3B2A5A,#130C22 75%)}
+.bobo-luzes{position:absolute;inset:0;pointer-events:none;background:repeating-conic-gradient(from 0deg at 50% 110%,rgba(255,240,180,.07) 0 6deg,transparent 6deg 18deg);animation:gira-luz 18s linear infinite}
+@keyframes gira-luz{to{transform:rotate(360deg)}}
+.bobo-chamada{position:relative;margin:0;font-family:var(--display);font-style:italic;font-size:clamp(1.8rem,4.4vw,3.6rem);text-align:center;text-shadow:0 4px 20px rgba(0,0,0,.6);animation:entra .6s both}
+.bobo-fila-wrap{position:relative;width:min(1100px,100%)}
+.bobo-fila{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(var(--n),minmax(0,1fr));gap:8px;filter:brightness(.45)}
+.bobo-fila li{display:flex;flex-direction:column;align-items:center;gap:4px;font-weight:700;font-size:clamp(.7rem,1.2vw,1rem);text-align:center}
+.bobo-fila .aluno-svg{width:min(90px,100%);height:auto}
+.holofote{position:absolute;top:-30px;bottom:-20px;width:clamp(90px,12vw,170px);margin-left:calc(clamp(90px,12vw,170px) / -2);left:var(--x);border-radius:50%;pointer-events:none;
+  background:radial-gradient(closest-side,rgba(255,246,200,.75),rgba(255,246,200,.25) 60%,transparent);mix-blend-mode:screen;animation:varre 2.6s cubic-bezier(.45,0,.2,1) both}
+@keyframes varre{0%{left:2%}28%{left:98%}52%{left:12%}74%{left:80%}100%{left:var(--x)}}
+.cortina{position:absolute;top:0;bottom:0;width:52%;z-index:3;pointer-events:none;
+  background:repeating-linear-gradient(90deg,#8E1B24 0 26px,#B32432 26px 44px,#7A141C 44px 60px);box-shadow:inset 0 -40px 60px rgba(0,0,0,.45)}
+.cortina.esq{left:0;transform:translateX(-96%)} .cortina.dir{right:0;transform:translateX(96%)}
+.etapa-cortina .cortina.esq{animation:fecha-e .7s 2.3s ease-in forwards} .etapa-cortina .cortina.dir{animation:fecha-d .7s 2.3s ease-in forwards}
+.etapa-danca .cortina.esq{animation:abre-e 1s ease-out forwards} .etapa-danca .cortina.dir{animation:abre-d 1s ease-out forwards}
+@keyframes fecha-e{from{transform:translateX(-96%)}to{transform:translateX(0)}} @keyframes fecha-d{from{transform:translateX(96%)}to{transform:translateX(0)}}
+@keyframes abre-e{from{transform:translateX(0)}to{transform:translateX(-96%)}} @keyframes abre-d{from{transform:translateX(0)}to{transform:translateX(96%)}}
+.bobo-revela{position:relative;z-index:2;display:flex;align-items:center;justify-content:center;gap:clamp(16px,4vw,56px);flex-wrap:wrap;width:min(1100px,100%)}
+.bobo-svg{width:clamp(200px,30vw,340px);height:auto;filter:drop-shadow(0 18px 30px rgba(0,0,0,.45))}
+.bobo-texto{max-width:520px;text-align:left}
+.bobo-texto h2{margin:0;font-family:var(--display);font-size:clamp(2rem,4.6vw,3.8rem);line-height:1.05}
+.bobo-texto h2 b{color:#F7D35E}
+.bobo-texto p{font-size:clamp(1rem,1.5vw,1.3rem);line-height:1.4;margin:.6em 0 0}
+.bobo-coroa{font-size:3rem;margin:0!important;animation:pula 1s ease-in-out infinite}
+.bobo-legenda{font-family:var(--display);font-style:italic;color:#F6A2BD}
+.prenda-txt{background:#fff;color:var(--tinta);border-radius:18px;padding:14px 18px;box-shadow:0 10px 30px rgba(0,0,0,.35);animation:cai-forte .5s both}
+.prenda-txt span{display:block;font-size:.75rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--vermelho);margin-bottom:4px}
+.bobo-acoes{position:relative;z-index:4;display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+.etapa-danca .bobo-revela{animation:cai-forte .7s .2s both}
+/* a dança: corpo quica, braços e pernas alternam, guizos tremem */
+.bobo-danca{animation:requebra 1.2s ease-in-out infinite;transform-origin:50% 95%}
+.bobo-danca .bb-corpo{animation:quica .6s ease-in-out infinite alternate}
+.bobo-danca .bb-braco-e{transform-origin:68px 130px;animation:braco-e .6s ease-in-out infinite alternate}
+.bobo-danca .bb-braco-d{transform-origin:132px 130px;animation:braco-d .6s ease-in-out infinite alternate}
+.bobo-danca .bb-perna-e{transform-origin:88px 188px;animation:perna-e .6s ease-in-out infinite alternate}
+.bobo-danca .bb-perna-d{transform-origin:112px 188px;animation:perna-d .6s ease-in-out infinite alternate}
+.bobo-danca .bb-cabeca{transform-origin:100px 112px;animation:cabeca 1.2s ease-in-out infinite}
+.bobo-danca .guizo{transform-box:fill-box;transform-origin:50% 0;animation:guizo .25s ease-in-out infinite alternate}
+.bobo-danca .g2{animation-delay:.1s} .bobo-danca .g3{animation-delay:.18s}
+@keyframes requebra{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(5deg)}}
+@keyframes quica{from{transform:translateY(0)}to{transform:translateY(-12px)}}
+@keyframes braco-e{from{transform:rotate(-30deg)}to{transform:rotate(25deg)}}
+@keyframes braco-d{from{transform:rotate(30deg)}to{transform:rotate(-40deg)}}
+@keyframes perna-e{from{transform:rotate(0)}to{transform:rotate(18deg)}}
+@keyframes perna-d{from{transform:rotate(-16deg)}to{transform:rotate(0)}}
+@keyframes cabeca{0%,100%{transform:rotate(-8deg)}50%{transform:rotate(8deg)}}
+@keyframes guizo{from{transform:rotate(-18deg)}to{transform:rotate(18deg)}}
+.bobo-confete{position:absolute;inset:0;pointer-events:none;z-index:1}
+.bobo-confete i{position:absolute;top:-20px;left:calc(var(--i) * 3.6%);width:10px;height:16px;border-radius:3px;background:hsl(calc(var(--i) * 47),85%,62%);animation:confete 2.8s calc(var(--i) * .07s) ease-in forwards}
+@keyframes confete{0%{transform:translateY(0) rotate(0)}100%{transform:translateY(110vh) rotate(720deg)}}
+.roleta{position:relative;width:clamp(240px,30vw,360px)}
+.roleta-svg{width:100%;height:auto;display:block;filter:drop-shadow(0 16px 30px rgba(0,0,0,.45))}
+.roleta-giro{transition:transform 3.6s cubic-bezier(.12,.6,.08,1)}
+.roleta-seta{position:absolute;left:50%;top:-6px;z-index:2;width:0;height:0;margin-left:-16px;border:16px solid transparent;border-bottom:0;border-top:30px solid #F7D35E;filter:drop-shadow(0 2px 2px rgba(0,0,0,.5))}
+@media (max-width:720px){
+  .bobo-texto{text-align:center}
+  .bolao-opcoes{grid-template-columns:minmax(0,1fr)}
+  .bobo-fila .aluno-svg{width:52px}
+}
+@media (prefers-reduced-motion:reduce){.bobo-luzes,.bobo-danca,.bobo-danca *,.holofote,.bobo-confete,.rabo,.titulo-ico{animation:none!important}.roleta-giro{transition:none}}

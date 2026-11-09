@@ -4,7 +4,10 @@
    - dançam enquanto você pensa;
    - comemoram o acerto e sofrem (de leve) com o erro;
    - a cada 3 acertos seguidos, o Pivô soca a caixa Σ e caem moedas;
-   - fase e mundo concluídos viram festa com confete.
+   - fase e mundo concluídos viram festa com confete;
+   - v14: reagem ao método. No Gauss, o Pivô faz pose de boxeador (escolheu o maior pivô); na Bisseção, a Raiz corta
+     o intervalo ao meio com uma tesoura; num erro em questão com seno/cosseno, o Pivô aparece com um transferidor torto
+     (calculadora em graus?).
    É só enfeite: o palco tem aria-hidden, e tudo o que importa (acerto, moedas) também aparece em texto na página.
    Com "reduzir movimento" ligado no sistema, os dois ficam parados e só trocam de expressão. */
 (function (global) {
@@ -29,6 +32,16 @@
     level: ['Fase concluída! Próximo nível!', 'Subimos de nível, amor!', 'Essa fase já era. Bora!'],
     world: ['Mundo concluído! Próximo mundo liberado!', 'Zeramos o mundo! Partiu o próximo!']
   };
+  // v14: frases por método (acerto) e o lembrete do transferidor (erro em questão com função trigonométrica)
+  const PHRASES_METODO = {
+    gauss: ['Pivô parcial: peguei o maior!', 'Escalonou bonito! Soco no zero!', 'Linha pivô na guarda, multiplicador no queixo!'],
+    seidel: ['Usou o valor novo na hora: é Seidel!', 'Sassenfeld aprovou: β < 1!'],
+    bisection: ['Corta no meio e fica com a troca de sinal!', 'Tesourada certeira no intervalo!'],
+    falseposition: ['A corda acertou o eixo!', 'Falsa Posição, raiz verdadeira!'],
+    newton: ['A tangente mirou e acertou!', 'Convergência quadrática, coração acelerado!'],
+    secant: ['Duas sondas, uma raiz!', 'Sem derivada e sem drama!']
+  };
+  const GRAUS = ['Calculadora em graus? Eu trouxe o transferidor…', 'Confere: seno e cosseno aqui são em radianos!'];
   const pick = list => list[Math.floor(Math.random() * list.length)];
 
   // ---------- desenho (SVG) ----------
@@ -95,6 +108,8 @@
  <g class="mz-glove-l"><path d="M-33 -46 C-42 -44 -46 -40 -47 -36" stroke="#24398F" stroke-width="5" stroke-linecap="round" fill="none"/><circle cx="-48" cy="-35" r="9" fill="#E8457A"/><path d="M-53 -38 C-50 -42 -45 -42 -43 -39" stroke="#fff" stroke-width="2" fill="none" opacity=".6"/></g>
  <g class="mz-glove-r"><path d="M33 -46 C42 -44 46 -40 47 -36" stroke="#24398F" stroke-width="5" stroke-linecap="round" fill="none"/><circle cx="48" cy="-35" r="9" fill="#E8457A"/><path d="M43 -38 C46 -42 51 -42 53 -39" stroke="#fff" stroke-width="2" fill="none" opacity=".6"/></g>
 </g></g>
+<g class="mz-tesoura" transform="translate(78 120)"><path d="M-30 16 H30" stroke="#20262D" stroke-width="2" stroke-dasharray="4 3"/><g class="mz-tesoura-lamina"><path d="M0 16 L-10 -6 M0 16 L10 -6" stroke="#5F6B7A" stroke-width="4" stroke-linecap="round"/><circle cx="-12" cy="-10" r="5" fill="none" stroke="#E8457A" stroke-width="3"/><circle cx="12" cy="-10" r="5" fill="none" stroke="#E8457A" stroke-width="3"/></g></g>
+<g class="mz-transferidor" transform="translate(186 112) rotate(-16)"><path d="M-26 0 A26 26 0 0 1 26 0 Z" fill="rgba(255,255,255,.85)" stroke="#24398F" stroke-width="2.5"/><path d="M0 0 L0 -22 M0 0 L-16 -16 M0 0 L16 -16" stroke="#24398F" stroke-width="1.5"/><text x="0" y="-6" text-anchor="middle" font-size="9" font-weight="800" fill="#E8457A" font-family="Figtree, sans-serif">90°?</text></g>
 <g class="mz-sparkles"><path d="M40 70 l3 -9 l3 9 l9 3 l-9 3 l-3 9 l-3 -9 l-9 -3z" fill="#F7C531"/><path d="M222 64 l2 -7 l2 7 l7 2 l-7 2 l-2 7 l-2 -7 l-7 -2z" fill="#F7C531"/><path d="M118 98 l2 -6 l2 6 l6 2 l-6 2 l-2 6 l-2 -6 l-6 -2z" fill="#9AE6B4"/></g>
 </svg>`;
   }
@@ -174,11 +189,12 @@
     if (!mount() || stage.hidden) return false;
     const o = opts || {};
     stage.classList.remove('is-ok', 'is-bad', 'is-combo', 'is-level', 'is-world');
+    stage.dataset.metodo = o.metodo || ''; stage.dataset.erro = o.erro || '';
     void stage.offsetWidth; // reinicia a animação mesmo se a reação se repetir
     stage.classList.add('is-' + kind);
-    clearTimeout(reactTimer); reactTimer = setTimeout(() => stage.classList.remove('is-' + kind), DURATION[kind] || 1200);
+    clearTimeout(reactTimer); reactTimer = setTimeout(() => { stage.classList.remove('is-' + kind); stage.dataset.metodo = ''; stage.dataset.erro = ''; }, (DURATION[kind] || 1200) + (o.metodo || o.erro ? 600 : 0));
     // Com moedas no ar, o balão espera elas passarem (senão as moedas cobrem a frase).
-    const text = o.text || pick(PHRASES[kind] || PHRASES.ok), late = !reduce() && (kind === 'combo' || ((kind === 'level' || kind === 'world') && o.coins));
+    const text = o.text || (o.erro === 'graus' && kind === 'bad' ? pick(GRAUS) : kind === 'ok' && PHRASES_METODO[o.metodo] && Math.random() < 0.7 ? pick(PHRASES_METODO[o.metodo]) : pick(PHRASES[kind] || PHRASES.ok)), late = !reduce() && (kind === 'combo' || ((kind === 'level' || kind === 'world') && o.coins));
     clearTimeout(sayTimer);
     if (late) { stage.querySelector('.mz-bubble').classList.remove('show'); sayTimer = setTimeout(() => say(text, 2600), kind === 'combo' ? 1450 : 1250); }
     else say(text, kind === 'world' || kind === 'level' ? 3200 : 2400);
@@ -187,5 +203,5 @@
     return true;
   }
   if (doc) { if (doc.readyState === 'loading') doc.addEventListener('DOMContentLoaded', mount); else mount(); }
-  global.NumeraMascotes = { ITEMS, PHRASES, svg, mount, update, react, say };
+  global.NumeraMascotes = { ITEMS, PHRASES, PHRASES_METODO, svg, mount, update, react, say };
 })(window);

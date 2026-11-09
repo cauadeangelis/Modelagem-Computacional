@@ -93,8 +93,13 @@
 </div>
 
 <noscript>Este jogo precisa de JavaScript.</noscript>
-<!-- Banco de questões do site (gerado de banco-de-questoes/questoes.sql): perguntas das casas verdes. -->
+<!-- Banco de questões do site (gerado de banco-de-questoes/questoes.sql) e o motor numérico do site: as casas
+     tiram as perguntas do banco, o terminal de resposta faz as contas e a resolução sai no formato dos slides. -->
 <script src="../../dados/banco-de-questoes.js"></script>
+<script src="../../js/motor/motor-numerico.js"></script>
+<script src="../../js/motor/passo-a-passo.js"></script>
+<script src="../../js/motor/resolver-questoes.js"></script>
+<script src="../../js/motor/caca-ao-bug.js"></script>
 <script type="module" src="codigo/principal.js"></script>
 </body>
 </html>

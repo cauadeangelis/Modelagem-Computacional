@@ -1,17 +1,17 @@
 # Roteiro de apresentação — 14 a 16 minutos
 
-> Versão 12. Os blocos (v11) e (v12) são os mais recentes; se o tempo for curto, priorize 1, 1d, 1c, 1e, 4c, 4d e 5b. **Abra a apresentação com o bloco 1d: jogar o Quem Divergiu? com a professora e a turma** é o melhor jeito de mostrar o projeto, porque todo mundo participa.
+> Versão 14. Os blocos (v14) são os mais recentes; se o tempo for curto, priorize 1, 1d, 1f, 1e, 4g, 4c e 5b. **Abra a apresentação com o bloco 1d: jogar o Bobo da Corte com a professora e a turma** é o melhor jeito de mostrar o projeto, porque todo mundo participa. O Quem Divergiu? da v12 virou o Bobo da Corte; o endereço antigo redireciona.
 
 ## 1. Proposta — 40 segundos
 
-“A Numera Academy é um jogo para aprender métodos numéricos de Modelagem Computacional. A pessoa entende a ideia, observa o algoritmo, pratica e aplica a um problema. Tem dois jogos: a Calculândia, uma aventura 3D, e o Quem Divergiu?, que a gente vai jogar agora com a sala. O terminal funciona como ferramenta de investigação e conferência.”
+“A Numera Academy é um jogo para aprender métodos numéricos de Modelagem Computacional. A pessoa entende a ideia, observa o algoritmo, pratica e aplica a um problema. Tem dois jogos: a Calculândia, uma aventura 3D, e o Bobo da Corte, que a gente vai jogar agora com a sala. O terminal funciona como ferramenta de investigação e conferência.”
 
 Explique que esta versão cobre **seis métodos** (Bisseção, Falsa Posição, Newton-Raphson, Secante, Gauss e Gauss-Seidel), e não toda a disciplina de Cálculo 4. O Ponto Fixo está pronto no projeto, mas escondido por enquanto, a pedido da professora; volta com uma linha.
 
-## 1d. Quem Divergiu? com a turma — 3 a 4 minutos (v12)
+## 1d. Bobo da Corte com a turma — 3 a 4 minutos (v12, renovado na v14)
 
 Prepare antes:
-- abra `/jogos/quem-divergiu/` no computador do projetor e clique em ⛶ (tela cheia);
+- abra `/jogos/bobo-da-corte/` no computador do projetor e clique em ⛶ (tela cheia);
 - em "A turma", use **4 times por fileira** (ou os nomes de 4 a 6 colegas que topem participar);
 - escolha 3 rodadas no modo **Telão**, com os temas que a turma já viu e o relógio de 1 minuto.
 
@@ -22,7 +22,10 @@ Na hora:
 3. **Palpites:** cada fileira mostra o caderno e você digita. A tela mostra na hora como leu o número; vale vírgula, fração e 1e-6.
 4. **Revelar a resposta:** os palpites caem na reta, a resposta cai por último e aparecem as faixas de 1%, 5% e 20%. Carimbos DIVERGIU! e CONVERGIU! nas carteiras.
 5. Clique em **Como se calcula**: o passo a passo aparece no quadro, e a professora pode explicar. É aqui que o jogo vira aula: "erro relativo de 0,4% está dentro da tolerância de 1%".
-6. Mostre o **placar** e, na última rodada, o **pódio** com os títulos (Olho de Newton, Detetive do erro…).
+6. **O Bobo da Corte:** a fileira mais votada vira o bobo da rodada. Cortina, holofote, o bobo dança e a roleta sorteia a prenda (explicar o método como narrador de futebol, imitar a Bisseção andando pela sala…). Se o mais votado não tinha divergido, ele ganha o selo de injustiçado.
+7. Mostre o **placar** e, na última rodada, o **pódio** com os títulos (Olho de Newton, Na mosca, Detetive do erro…) e a prenda do Bobo da partida.
+
+Se sobrar tempo, uma rodada especial: no **Bolão da Convergência** cada fileira aposta se a Bisseção ou a Falsa Posição chega antes; na **Perturbação da Épsilon** (depois de um sistema linear), a turma diz se 0,01 a mais no b₁ muda tudo ou quase nada, e o κ explica.
 
 Frase de fechamento: "a pontuação é o critério de parada dos métodos: quanto menor o erro relativo, mais perto de convergir".
 
@@ -35,6 +38,16 @@ Abra **Jogos → Jogar a Calculândia**. Mostre a ilha e ande até a Padaria do 
 Volte pelo botão **← Numera Academy**: a página Jogos já mostra as estrelas que você ganhou.
 
 Num computador sem placa de vídeo, use Menu → Opções → Qualidade leve.
+
+## 1f. Calculândia na v14 — 90 segundos (v14)
+
+Se não der para jogar ao vivo, passe o **vídeo-resumo** (`docs/video/calculandia-resumo.mp4`, cerca de 3 minutos): ele mostra tudo abaixo, gravado do próprio jogo.
+
+1. **Casa verde:** pergunta básica de múltipla escolha. "Toda pergunta do jogo usa esta mesma tela."
+2. **Casa azul:** uma questão do Teste da professora no **terminal**. Digite `2 - f(2)/df(2)`, Enter calcula, Enter de novo envia. "A conta é feita ali, como na calculadora, e no máximo 4 iterações."
+3. **Casa vermelha:** a **Caça ao Bug**: "o estagiário errou uma célula da tabela; qual?"
+4. **Chefão:** barra de vida, 3 corações e o golpe final, o **Método Híbrido**: 8 avaliações, Bisseção e Secante custam 1, Newton custa 2. "Só Newton estoura o orçamento; só Bisseção não chega na precisão."
+5. **Usina:** os três reatores (Bisseção com 10 iterações, Gauss 4×4 e Newton com 6 iterações) e a explosão no final.
 
 ## 1b. Abertura interativa — 30 segundos (v6)
 
@@ -100,6 +113,10 @@ Use um exercício no formato da aula: "calcule a raiz de x³ − 9x + 3 no inter
 1. Digite `x³ − 9x + 3 = 0 em [0; 1]`, escolha **Bisseção** no campo Método e resolva. O intervalo sai da equação e vai para os campos a e b; o resultado mostra f(0) = 3 e f(1) = −5 (sinais opostos, então há raiz pelo Teorema do Valor Intermediário), o gráfico marca as pontas e a raiz 0,33761.
 2. Troque o intervalo para [0; 3] e resolva de novo. Como f(0) e f(3) valem 3, a Bisseção não pode começar, e o Terminal mostra onde f troca de sinal: [0,3; 0,4] e [2,8; 2,9]. Clique em uma das sugestões.
 3. Escolha **Newton** com o campo x₀ vazio: ele começa na ponta onde f(x)·f″(x) > 0 (condição de Fourier), como no livro.
+
+## 4g. Laboratório e Modo Lousa — 60 segundos (v14)
+
+No Terminal, clique em **🧪 Laboratório tátil**. Arraste o x₀ do Newton até a tangente ficar quase horizontal e mostre o aviso; ligue as **bacias de convergência** e rode a **Corrida de Convergência** ("o Newton dobra os dígitos certos a cada passo; a Bisseção ganha um dígito a cada 3 ou 4 iterações"). Na aba **Linhas**, troque as equações até o medidor de Sassenfeld acender "Convergência garantida!". Volte ao Terminal, abra a aba Slides e clique em **▶ Ver construção da tabela**: a tabela se monta célula por célula, como na lousa; no Gauss, passe o mouse num multiplicador mᵢₖ para ver a linha pivô e a linha alvo.
 
 ## 4b. Teclado científico — 45 segundos (v7)
 

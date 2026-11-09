@@ -42,21 +42,23 @@ await sessao({}, async (page, go, foto) => {
   await go('progress'); await page.click('[data-act=buy][data-id=laco]'); await foto('camarim', '.camarim');
   await go('cases'); await page.click('[data-act=case][data-id=loan]'); await page.click('details summary').catch(() => {}); await foto('missao-carne');
   await go('jogos'); await page.$$eval('.game-cover img', i => Promise.all(i.map(x => x.decode().catch(() => {})))); await foto('jogos');
-  // Quem Divergiu?: as telas de uma rodada no telão
-  const qd = async () => { await page.goto(base + 'jogos/quem-divergiu/index.html'); await page.waitForTimeout(200); };
-  await qd(); await page.click('[data-a=exemplo]'); await foto('quem-divergiu-montar');
+  // Bobo da Corte: as telas de uma rodada no telão
+  const qd = async () => { await page.goto(base + 'jogos/bobo-da-corte/index.html'); await page.waitForTimeout(200); };
+  await qd(); await page.click('[data-a=exemplo]'); await foto('bobo-da-corte-montar');
   await page.click('[data-a=rodadas][data-v="5"]'); await page.click('[data-a=comecar]');
-  await page.evaluate(() => { const S = window.__qd.S; S.perguntas[0] = window.QDPerguntas.TODAS.find(q => q.id === 'nw-raiz2'); window.__qd.render(); });
-  await foto('quem-divergiu-pergunta');
-  await page.click('[data-a=ir-voto]'); const ids = await page.evaluate(() => window.__qd.S.jogadores.map(j => j.id));
-  for (let i = 0; i < 2; i++) await page.click(`[data-a=votar][data-id=${ids[5]}]`); await foto('quem-divergiu-votacao');
+  await page.evaluate(() => { const S = window.__bc.S; S.perguntas[0] = window.BCPerguntas.TODAS.find(q => q.id === 'nw-raiz2'); S.eventos[0] = {}; window.__bc.render(); });
+  await foto('bobo-da-corte-pergunta');
+  await page.click('[data-a=ir-voto]'); const ids = await page.evaluate(() => window.__bc.S.jogadores.map(j => j.id));
+  for (let i = 0; i < 2; i++) await page.click(`[data-a=votar][data-id=${ids[5]}]`); await foto('bobo-da-corte-votacao');
   for (let i = 2; i < ids.length; i++) await page.click(`[data-a=votar][data-id=${i === 5 ? ids[2] : ids[5]}]`);
-  await page.click('[data-a=revelar-votos]'); await page.waitForTimeout(900); await foto('quem-divergiu-votos');
+  await page.click('[data-a=revelar-votos]'); await page.waitForTimeout(900); await foto('bobo-da-corte-votos');
   await page.click('[data-a=ir-anotar]'); const pal = ['1,4142', '1,5', '1,3', '1,45', '1,41', '2']; for (let i = 0; i < ids.length; i++) await page.fill(`#pal-${ids[i]}`, pal[i]);
-  await page.click('[data-a=revelar]'); await page.waitForSelector('[data-a=placar]:not([disabled])', { timeout: 20000 }); await foto('quem-divergiu-revelacao');
-  await page.click('[data-a=passos]'); await foto('quem-divergiu-calculo');
-  await page.click('[data-a=placar]'); await page.waitForTimeout(900); await foto('quem-divergiu-placar');
-  await page.click('[data-a=sair]'); await page.click('[data-a=sair]'); await page.waitForTimeout(900); await foto('quem-divergiu-podio');
+  await page.click('[data-a=revelar]'); await page.waitForSelector('[data-a=pos-revelar]:not([disabled])', { timeout: 20000 }); await foto('bobo-da-corte-revelacao');
+  await page.click('[data-a=passos]'); await foto('bobo-da-corte-calculo');
+  await page.click('[data-a=pos-revelar]'); await page.click('[data-a=bobo-pular]'); await page.waitForTimeout(1600); await foto('bobo-da-corte-show');
+  await page.click('[data-a=bobo-roleta]'); await page.waitForSelector('.prenda-txt', { timeout: 8000 }); await foto('bobo-da-corte-prenda');
+  await page.click('[data-a=bobo-fechar]'); await page.waitForTimeout(900); await foto('bobo-da-corte-placar');
+  await page.click('[data-a=sair]'); await page.click('[data-a=sair]'); await page.waitForTimeout(900); await foto('bobo-da-corte-podio');
   // Calculândia: tela inicial e o mundo
   await page.goto(base + 'jogos/calculandia/index.html'); await page.waitForFunction(() => window.G?.mode === 'title', null, { timeout: 120000 }); await page.waitForTimeout(800); await foto('calculandia');
   await go('lab'); await foto('terminal', '#terminal-form');
@@ -76,7 +78,7 @@ await sessao({ colorScheme: 'dark' }, async (page, go, foto) => {
 });
 await sessao({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true }, async (page, go, foto) => {
   await go('jogos'); await foto('celular-jogos');
-  await page.goto(base + 'jogos/quem-divergiu/index.html'); await page.click('[data-a=exemplo]'); await page.click('[data-a=modo][data-v=passa]'); await page.click('[data-a=comecar]'); await page.click('[data-a=abrir-segredo]'); await page.click('[data-a=seg-abrir]'); await page.fill('#seg-in', '1,6'); await foto('celular-quem-divergiu-segredo');
+  await page.goto(base + 'jogos/bobo-da-corte/index.html'); await page.click('[data-a=exemplo]'); await page.click('[data-a=modo][data-v=passa]'); await page.click('[data-a=comecar]'); await page.click('[data-a=abrir-segredo]'); await page.click('[data-a=seg-abrir]'); await page.fill('#seg-in', '1,6'); await foto('celular-bobo-da-corte-segredo');
   await go('academy'); await foto('celular-jornada', '.journey');
   await page.desafio('bisection'); await page.waitForTimeout(600); await foto('celular-desafio-mascotes');
   await page.responder('bisection', 0); await page.click('[data-act=next-course]'); await page.responder('bisection', 1); await page.click('[data-act=next-course]'); await page.responder('bisection', 2); await page.waitForTimeout(720); await foto('celular-combo');

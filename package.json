@@ -1,8 +1,8 @@
 {
   "name": "numera-academy",
-  "version": "13.0.0",
+  "version": "14.0.0",
   "private": true,
-  "description": "Numera Academy: jogo e laboratório de métodos numéricos (Modelagem Computacional), com as listas da disciplina num banco de questões em SQL, o modo Relâmpago, a Calculândia (3D) e o Quem Divergiu? (jogo de sala). Site estático em dist/, sem build.",
+  "description": "Numera Academy: jogo e laboratório de métodos numéricos (Modelagem Computacional), com as listas da disciplina num banco de questões em SQL, o modo Relâmpago, a Calculândia (3D) e o Bobo da Corte (jogo de sala). Site estático em dist/, sem build.",
   "scripts": {
     "servir": "node serve.js",
     "testar": "node tests/verify.cjs && node tests/banco/conferir-banco.cjs && node tests/treino/conferir-com-motor.cjs && node tests/pwa/atualizar-sw.cjs --check && node --test tests/calculandia/rules.test.mjs",

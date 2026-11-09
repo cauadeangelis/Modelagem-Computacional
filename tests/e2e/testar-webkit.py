@@ -83,27 +83,30 @@ ok(js("return document.querySelectorAll('.mz-coin').length") >= 3, 'moedas caem 
 time.sleep(1.2)
 ok('11' in js("return document.querySelector('.player-top .coin-meta').textContent"), 'contador de moedas: 11')
 
-# v12: Quem Divergiu? no motor do Safari (uma rodada no modo telão). Aqui o clique é disparado pelo DOM:
+# v12: Bobo da Corte no motor do Safari (uma rodada no modo telão). Aqui o clique é disparado pelo DOM:
 # o que se testa é o jogo no WebKit; o clique simulado do WebDriver do WebKitGTK erra o alvo depois de rolar a página.
 def jsclick(sel):
     js('document.querySelector(arguments[0]).click()', sel); time.sleep(0.15)
-d.get(BASE + 'jogos/quem-divergiu/index.html'); time.sleep(0.6)
+d.get(BASE + 'jogos/bobo-da-corte/index.html'); time.sleep(0.6)
 js("window.__erros = window.__erros || []; window.addEventListener('error', e => window.__erros.push(e.message));")
 jsclick('[data-a=exemplo]'); jsclick('[data-a=comecar]')
-ok(js("return !!document.getElementById('pergunta-t')"), 'Quem Divergiu?: pergunta no quadro (WebKit)')
+ok(js("return !!document.getElementById('pergunta-t')"), 'Bobo da Corte: pergunta no quadro (WebKit)')
 jsclick('[data-a=ir-voto]')
-ids = js("return window.__qd.S.jogadores.map(j => j.id)")
+ids = js("return window.__bc.S.jogadores.map(j => j.id)")
 for i in range(len(ids)):
     js("document.querySelector(`[data-a=votar][data-id=${arguments[0]}]`).click()", ids[(i + 1) % len(ids)])
 jsclick('[data-a=revelar-votos]'); jsclick('[data-a=ir-anotar]')
-r = js("return window.QDPerguntas.resolver(window.__qd.S.perguntas[0]).resposta")
+r = js("return window.BCPerguntas.resolver(window.__bc.S.perguntas[0]).resposta")
 for i, j in enumerate(ids):
     el = d.find_element(By.ID, 'pal-' + j); el.clear(); el.send_keys(str(r * (1 + 0.1 * i)).replace('.', ','))
 jsclick('[data-a=revelar]'); time.sleep(6)
 ok(js("return document.querySelectorAll('.reta .pin').length") == len(ids), 'reta numérica com os palpites (WebKit)')
-ok(js("return !document.querySelector('[data-a=placar]').disabled"), 'revelação termina e libera o placar (WebKit)')
+ok(js("return !(document.querySelector('[data-a=pos-revelar]') || document.querySelector('[data-a=ir-perturbacao]')).disabled"), 'revelação termina e libera o Bobo da Corte (WebKit)')
+js("(document.querySelector('[data-a=ir-perturbacao]') || {click(){}}).click()"); time.sleep(0.2); js("(document.querySelector('[data-a=perturb]') || {click(){}}).click()"); time.sleep(0.2)
+jsclick('[data-a=pos-revelar]'); time.sleep(0.3); jsclick('[data-a=bobo-pular]'); time.sleep(0.4)
+ok(js("return !!document.querySelector('.bobo-palco .bobo-danca')"), 'Bobo da Corte dançando (WebKit)')
 ok(js("return !!document.querySelector('.carteira.divergiu .carimbo')"), 'carimbo DIVERGIU (WebKit)')
-erros_qd = js('return window.__erros || []'); ok(not erros_qd, 'Quem Divergiu? sem erros de JavaScript: ' + json.dumps(erros_qd))
+erros_qd = js('return window.__erros || []'); ok(not erros_qd, 'Bobo da Corte sem erros de JavaScript: ' + json.dumps(erros_qd))
 
 # Treino: diagnóstico, resposta e gabarito com gráfico
 go('treino')

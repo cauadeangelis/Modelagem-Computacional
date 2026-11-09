@@ -45,3 +45,55 @@
   .calc-key{min-height:40px;font-size:.92rem}
   .calc-check{font-size:.74rem}
 }
+
+/* ---------- v14: Laboratório (tátil, troca de linhas e fenômenos) ---------- */
+.lt-card{padding:20px 22px;display:flex;flex-direction:column;gap:14px}
+.lt-ctrl{display:flex;flex-wrap:wrap;gap:10px}
+.lt-ctrl .seg{flex-wrap:wrap}
+.lt-grafico{color:var(--ink);background:var(--surface-2);border-radius:var(--r-sm);box-shadow:inset 0 0 0 1px var(--line);touch-action:none}
+.lt-svg{display:block;width:100%;height:auto}
+.lt-alca{cursor:ew-resize}
+.lt-alca circle{transition:r .12s}
+.lt-alca:hover circle{r:14}
+.lt-sliders{display:flex;flex-wrap:wrap;gap:12px 20px}
+.lt-slider{display:flex;flex-direction:column;gap:4px;flex:1 1 220px;font-weight:700;font-size:.9rem}
+.lt-slider input{width:100%;accent-color:#8A3FD1}
+.lt-diag{margin:0;padding:10px 14px;border-radius:var(--r-sm);background:var(--surface-2);line-height:1.45}
+.lt-diag.ok{background:var(--go-soft)} .lt-diag.bad{background:var(--bad-soft)}
+.lt-legenda{font-size:.9rem;line-height:1.5;margin:6px 0 0}
+.lt-tab{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums;font-size:.92rem}
+.lt-tab th,.lt-tab td{padding:6px 10px;border-bottom:1px solid var(--line);text-align:right}
+.lt-tab th{text-align:center;background:var(--surface-2)}
+.lt-tab caption{caption-side:top;text-align:left;font-weight:700;padding:4px 0}
+.lt-corrida{padding:16px 18px}
+.lt-corrida h3{margin:0 0 6px}
+.lt-corrida-svg{display:block;width:100%;height:auto;color:var(--ink)}
+.lt-linhas{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.lt-linha{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:10px 12px;border-radius:var(--r-sm);background:var(--surface-2);box-shadow:inset 0 0 0 1px var(--line)}
+.lt-linha.arrastando{opacity:.6} .lt-linha.alvo{box-shadow:inset 0 0 0 2px var(--blue)}
+.lt-pega{cursor:grab;font-weight:900;color:var(--muted);letter-spacing:-2px;touch-action:none;padding:4px 2px}
+.lt-eq{flex:1 1 260px;font-family:var(--mono);font-size:1rem}
+.lt-diag-el{font-size:.82rem;font-weight:700;color:var(--bad)} .lt-diag-el.ok{color:var(--go-text)}
+.lt-mover .btn{min-width:40px}
+.lt-medidores{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;align-items:start}
+.lt-medidores h3{margin:0 0 6px;font-size:1rem}
+.lt-medidor{position:relative;display:block;height:30px;margin:6px 0;border-radius:999px;background:var(--surface-2);box-shadow:inset 0 0 0 1px var(--line);overflow:hidden}
+.lt-medidor i{position:absolute;left:0;top:0;bottom:0;background:var(--bad-soft);transition:width .3s}
+.lt-medidor.ok i{background:var(--go-soft)}
+.lt-medidor::after{content:'';position:absolute;left:50%;top:0;bottom:0;border-left:2px dashed var(--ink);opacity:.35}
+.lt-medidor b{position:relative;padding:0 12px;line-height:30px;font-size:.9rem}
+.lt-selo{display:flex;flex-direction:column;justify-content:center;gap:4px;min-height:96px;padding:14px;border-radius:var(--r-card);background:var(--bad-soft);text-align:center}
+.lt-selo b{font-size:1.15rem} .lt-selo.ok{background:var(--go-soft);box-shadow:inset 0 0 0 2px var(--go)}
+.lt-fen{display:block;width:100%;height:auto;background:linear-gradient(#EAF4FB,#F7F3EA);border-radius:var(--r-sm);box-shadow:inset 0 0 0 1px var(--line)}
+.lt-agua{fill:#5AA9E6;opacity:.85}
+.lt-muro{fill:#8B8F98} .lt-pistao{fill:#C2591B;transition:y .5s,height .5s} .lt-haste{fill:#5F6B7A;transition:height .5s}
+.lt-chao{stroke:#6B5B45;stroke-width:3}
+.lt-gota{fill:#2E7CC0;animation:lt-escorre 1s linear infinite}
+@keyframes lt-escorre{from{transform:translateX(0);opacity:1}to{transform:translateX(220px);opacity:0}}
+.lt-fen-txt{font:700 15px var(--sans,system-ui);fill:#14202A;text-anchor:middle}
+.lt-fen.travou .lt-pistao{fill:#B13A22} .lt-fen.transbordou .lt-agua{fill:#E8554A} .lt-fen.estavel .lt-pistao{fill:#11805A}
+.lt-no{fill:#14202A} .lt-no.agora{fill:#F2B705}
+.lt-fen.caiu{animation:lt-treme .5s ease-in-out 2}
+@keyframes lt-treme{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+@media (prefers-reduced-motion:reduce){.lt-gota,.lt-fen.caiu{animation:none}.lt-pistao,.lt-haste,.lt-medidor i{transition:none}}
+@media (max-width:720px){.lt-card{padding:14px}}

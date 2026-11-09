@@ -20,6 +20,8 @@ const PRESETS = {
   graos: { n: 4, life: 0.8, size: 0.07, colors: ['#e8c872', '#d9b34a'], vy: [-0.5, 0.5], vh: 0.8, g: -9 },
   dourado: { n: 18, life: 1.2, size: 0.1, colors: ['#f2c14e', '#fff3b0', '#ffffff'], vy: [2, 4], vh: 1.2, g: -3, spin: 6 },
   fogos: { n: 40, life: 1.3, size: 0.14, colors: ['#e8554a', '#f2c14e', '#3cc0a0', '#7ab8f5', '#f28ab2', '#b7ff3c'], vy: [-3, 3], vh: 5, g: -3, radial: true, sphere: true },
+  vapor: { n: 5, life: 2.2, size: 0.45, colors: ['#ffffff', '#eef6fb', '#dfeef7'], vy: [1.2, 2.0], vh: 0.4, g: 0, grow: 2.4 },
+  explosao: { n: 70, life: 1.6, size: 0.4, colors: ['#fff3b0', '#ffd23a', '#ff8a2a', '#e8554a', '#b7ff3c'], vy: [-6, 6], vh: 14, g: -4, radial: true, sphere: true, grow: 1.2 },
   raizes: { n: 50, life: 3.0, size: 0.35, colors: ['#7cc35f', '#b7ff3c', '#5fae4a'], vy: [6, 14], vh: 30, g: -9, spin: 4 },
 };
 

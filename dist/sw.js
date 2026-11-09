@@ -2,10 +2,10 @@
    Guarda os arquivos do site no aparelho para funcionar sem internet, inclusive as fontes (v10: empacotadas no site).
    VERSION é calculada a partir do conteúdo dos arquivos (tests/pwa/atualizar-sw.cjs); quando algo muda,
    a versão muda, o cache novo é montado e o antigo é apagado. Não edite VERSION à mão.
-   v12: o Quem Divergiu? entra no cache inicial (é leve e precisa abrir sem internet na sala). A Calculândia (≈ 1,5 MB, 3D)
+   v12: o jogo de sala (v14: Bobo da Corte, antes Quem Divergiu?) entra no cache inicial (é leve e precisa abrir sem internet na sala). A Calculândia (≈ 1,5 MB, 3D)
    não pesa no primeiro acesso: cada arquivo dela é guardado na primeira vez que o jogo abre e, daí em diante, ele também
    funciona offline. Uma versão nova do site apaga esse cache junto com o resto. */
-const VERSION = 'numera-v13-5153fe381e';
+const VERSION = 'numera-v14-1f59717975';
 const ASSETS = [
   './',
   'index.html',
@@ -29,13 +29,15 @@ const ASSETS = [
   'imagens/icone-512.png',
   'imagens/icone-adaptavel-512.png',
   'imagens/icone-apple.png',
+  'jogos/bobo-da-corte/bobo-da-corte.css',
+  'jogos/bobo-da-corte/bobo-da-corte.js',
+  'jogos/bobo-da-corte/index.html',
+  'jogos/bobo-da-corte/perguntas.js',
+  'jogos/capas/bobo-da-corte.webp',
   'jogos/capas/calculandia.webp',
-  'jogos/capas/quem-divergiu.webp',
   'jogos/quem-divergiu/index.html',
-  'jogos/quem-divergiu/perguntas.js',
-  'jogos/quem-divergiu/quem-divergiu.css',
-  'jogos/quem-divergiu/quem-divergiu.js',
   'js/conteudo/conteudo.js',
+  'js/motor/caca-ao-bug.js',
   'js/motor/motor-numerico.js',
   'js/motor/passo-a-passo.js',
   'js/motor/resolver-questoes.js',
@@ -43,6 +45,7 @@ const ASSETS = [
   'js/paginas/aulas-em-video.js',
   'js/paginas/inicio.js',
   'js/paginas/jogos.js',
+  'js/paginas/laboratorio.js',
   'js/paginas/licao.js',
   'js/paginas/listas.js',
   'js/paginas/missoes.js',
@@ -58,6 +61,7 @@ const ASSETS = [
   'js/site/graficos.js',
   'js/site/ilustracoes.js',
   'js/site/jornada-e-backup.js',
+  'js/site/modo-lousa.js',
   'js/site/moldura.js',
   'js/site/visuais-das-secoes.js',
   'js/terminal/grafico-de-convergencia.js',

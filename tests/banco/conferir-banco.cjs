@@ -58,11 +58,19 @@ for (const q of B.questoes) {
     if (certa && q.tipo !== 'texto' && certa.texto !== q.resposta) falha(`${onde} a alternativa correta não é a resposta`);
     if (a.some((x) => !x.correta && !x.explicacao)) falha(`${onde} alternativa errada sem explicação`);
   }
-  // 5. sem LaTeX
+  // 5. casa da Calculândia e número de iterações
+  if (!['verde', 'azul', 'vermelha'].includes(q.casa)) falha(`${onde} casa inválida ${q.casa}`);
+  if (q.casa === 'verde' && q.tipo !== 'programa' && q.alternativas.length !== 4) falha(`${onde} casa verde sem alternativas`);
+  const its = r.run && Number.isFinite(r.run.iteracoes) ? r.run.iteracoes : r.linhas && r.linhas.length > 1 ? r.linhas.length - 1 : undefined;
+  if (q.iteracoes !== its) falha(`${onde} iterações gravadas ${q.iteracoes}, conta ${its}`);
+  // 6. sem LaTeX
   if (/\\(frac|sqrt|cdot|left|right|begin|mathrm)|\$/.test(JSON.stringify(q))) falha(`${onde} tem LaTeX`);
   conferidas++;
 }
 const rapidas = B.questoes.filter((q) => q.rapida).length;
 for (const t of B.temas) if (!B.questoes.some((q) => q.tema === t.id)) falha(`tema ${t.id} sem questões`);
+// a Calculândia precisa de pergunta verde para cada método com tema no banco, e de questões azuis dos Testes
+for (const t of B.temas) if (!B.questoes.some((q) => q.tema === t.id && q.casa === 'verde') && !B.temas.some((u) => u.regiao === t.regiao && B.questoes.some((q) => q.tema === u.id && q.casa === 'verde'))) falha(`método ${t.regiao} sem pergunta para a casa verde`);
+for (let k = 1; k <= 6; k++) if (!B.questoes.some((q) => q.lista === `teste-${k}` && q.casa === 'azul' && q.iteracoes != null && q.iteracoes <= 4)) falha(`Teste ${k} sem versão de até 4 iterações para a casa azul`);
 if (falhas.length) { console.error(falhas.join('\n')); console.error(`\nBANCO: ${falhas.length} problema(s).`); process.exit(1); }
 console.log(`Banco de questões: ${conferidas} questões conferidas pelo resolvedor (${rapidas} rápidas, ${B.questoes.filter((q) => q.diverge).length} com gabarito da lista divergente e explicado).`);

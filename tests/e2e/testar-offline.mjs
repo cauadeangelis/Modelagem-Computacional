@@ -29,8 +29,8 @@ ok(await page.evaluate(async () => { await document.fonts.ready; return document
 await page.goto(BASE + 'index.html#jogos'); await page.waitForTimeout(200);
 await page.$$eval('.game-cover img', imgs => Promise.all(imgs.map(i => i.decode().catch(() => {}))));
 ok(await page.$$eval('.game-cover img', imgs => imgs.length === 2 && imgs.every(i => i.naturalWidth === 1200)), 'offline: página Jogos com as capas');
-await page.goto(BASE + 'jogos/quem-divergiu/index.html'); await page.click('[data-a=exemplo]'); await page.click('[data-a=comecar]');
-ok(await page.isVisible('#pergunta-t'), 'offline: o Quem Divergiu? abre e sorteia a pergunta');
+await page.goto(BASE + 'jogos/bobo-da-corte/index.html'); await page.click('[data-a=exemplo]'); await page.click('[data-a=comecar]');
+ok(await page.isVisible('#pergunta-t'), 'offline: o Bobo da Corte abre e sorteia a pergunta');
 await page.goto(BASE + 'jogos/calculandia/index.html'); 
 ok(await page.waitForFunction(() => window.G?.mode === 'title', null, { timeout: 120000 }).then(() => true, () => false), 'offline: a Calculândia abre depois da primeira visita');
 ok(erros.length === 0, 'sem erros de JavaScript: ' + erros.join(' | '));

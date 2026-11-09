@@ -71,14 +71,16 @@
   function iteracoesBissecao(a, b, eps) { const k = (Math.log10(b - a) - Math.log10(eps)) / Math.log10(2); return { limite: k, k: Math.floor(k) + 1 }; }
 
   /* ---------- Métodos intervalares ---------- */
-  function intervalar(nome, regra, { f, a, b, eps = 1e-2, K = 50, criterio = 'relativo', iteracoes = null, casas = null }) {
-    const F = fn(f); let A = Number(a), B = Number(b);
+  // inicio: número da primeira iteração (nos Testes, "continue a partir da 2ª"); anterior: a última aproximação
+  // fornecida, usada no primeiro erro. Com casas, aproximações e valores de f são arredondados (como na prova).
+  function intervalar(nome, regra, { f, a, b, eps = 1e-2, K = 50, criterio = 'relativo', iteracoes = null, casas = null, inicio = 1, anterior = null }) {
+    const F0 = fn(f), F = casas != null ? (v) => arred(F0(v), casas) : F0; let A = Number(a), B = Number(b);
     if (!(A < B)) err(`${nome}: o intervalo precisa ter a < b.`);
     let fa = F(A), fb = F(B);
     if (!Number.isFinite(fa) || !Number.isFinite(fb)) err(`${nome}: f não está definida em uma das extremidades.`);
     if (fa * fb > 0) err(`${nome}: f(a) e f(b) têm o mesmo sinal (f(a)·f(b) > 0). Pelo Teorema 1, não há garantia de raiz em [a, b].`);
-    const n = iteracoes || K, linhas = []; let x = null, parada = '';
-    for (let i = 1; i <= n; i++) {
+    const ultima = iteracoes ? inicio + iteracoes - 1 : K, linhas = []; let x = anterior != null ? Number(anterior) : null, parada = '';
+    for (let i = inicio; i <= ultima; i++) {
       let xi = regra(A, B, fa, fb); if (casas != null) xi = arred(xi, casas);
       const fx = F(xi), erro = erroEstimado(xi, x, criterio === 'largura' || criterio === 'iteracoes' || criterio === 'residuo' ? 'relativo' : criterio);
       const linha = { i, a: A, b: B, x: xi, fa, fb, fx, erro };
@@ -93,9 +95,9 @@
         if (criterio === 'residuo' && Math.abs(fx) < eps) { parada = `|f(x${sub(i)})| = ${fmt(Math.abs(fx))} < ε na ${i}ª iteração.`; break; }
         if ((criterio === 'relativo' || criterio === 'percentual' || criterio === 'absoluto') && erro !== null && erro <= eps) { parada = `Na ${i}ª iteração o erro estimado é menor que o critério de parada: ${fmt(erro)} ≤ ${fmt(eps)}.`; break; }
       }
-      if (i === n) parada = iteracoes ? `${n} iterações, como pedido.` : `Atingiu o número máximo de iterações (K = ${K}).`;
+      if (i === ultima) parada = iteracoes ? `${iteracoes} ${iteracoes === 1 ? 'iteração' : 'iterações'}, como pedido.` : `Atingiu o número máximo de iterações (N = ${K}).`;
     }
-    return { metodo: nome, criterio: CRITERIOS[criterio], colunas: ['i', 'a', 'b', 'xᵢ', 'f(a)', 'f(b)', 'f(xᵢ)', criterio === 'percentual' ? 'εₐ (%)' : 'εₐ'], linhas, raiz: x, iteracoes: linhas.length, parada };
+    return { metodo: nome, criterio: CRITERIOS[criterio], colunas: ['i', 'a', 'b', 'xᵢ', 'f(a)', 'f(b)', 'f(xᵢ)', criterio === 'percentual' ? 'εₐ (%)' : 'εₐ'], linhas, raiz: x, iteracoes: linhas.length, inicio, parada };
   }
   const bissecao = (o) => intervalar('Bisseção', (a, b) => (a + b) / 2, o);
   const falsaPosicao = (o) => intervalar('Falsa Posição', (a, b, fa, fb) => (a * fb - b * fa) / (fb - fa), o);
@@ -118,12 +120,13 @@
   }
   function pontoFixo(o) { const G = fn(o.g); const r = aberto('Ponto Fixo', (x) => ({ novo: G(x) }), o); r.colunas = ['i', 'xᵢ', 'xᵢ₊₁ = g(xᵢ)', 'Eᵣ%']; return r; }
   function newton(o) {
-    const F = fn(o.f), D = o.df ? fn(o.df) : null;
-    const r = aberto('Newton-Raphson', (x) => { const fx = F(x), d = D ? D(x) : derivada(F, x); if (d === 0) err(`Newton-Raphson: f′(x) = 0 em x = ${fmt(x)} (desastre!). Escolha outro x₀.`); return { novo: x - fx / d, extra: { fx, dfx: d } }; }, o);
+    // Com casas, f(xᵢ) e f′(xᵢ) são arredondados antes da divisão, como no gabarito da professora.
+    const F = fn(o.f), D = o.df ? fn(o.df) : null, c = (v) => (o.casas != null ? arred(v, o.casas) : v);
+    const r = aberto('Newton-Raphson', (x) => { const fx = c(F(x)), d = c(D ? D(x) : derivada(F, x)); if (d === 0) err(`Newton-Raphson: f′(x) = 0 em x = ${fmt(x)} (desastre!). Escolha outro x₀.`); return { novo: x - fx / d, extra: { fx, dfx: d } }; }, o);
     r.colunas = ['i', 'xᵢ', 'f(xᵢ)', 'f′(xᵢ)', 'xᵢ₊₁', 'Eᵣ%']; return r;
   }
   function secante(o) {
-    const F = fn(o.f); let ant = Number(o.x0);
+    const F0 = fn(o.f), F = o.casas != null ? (v) => arred(F0(v), o.casas) : F0; let ant = Number(o.x0);
     const r = aberto('Secante', (x) => { const fA = F(ant), fX = F(x), den = fX - fA; if (den === 0) err('Secante: f(xᵢ) = f(xᵢ₋₁), o denominador zerou.'); const novo = x - fX * (x - ant) / den, extra = { ant, fAnt: fA, fx: fX }; ant = x; return { novo, extra }; }, Object.assign({}, o, { x0: o.x1 }));
     r.colunas = ['i', 'xᵢ₋₁', 'xᵢ', 'f(xᵢ₋₁)', 'f(xᵢ)', 'xᵢ₊₁', 'Eᵣ%'];
     r.linhas.forEach((l) => { l.i += 1; }); // nos slides a primeira linha da Secante é i = 1 (usa x₀ e x₁)

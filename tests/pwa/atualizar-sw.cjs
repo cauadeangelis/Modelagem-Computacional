@@ -9,7 +9,7 @@
 //      node tests/pwa/atualizar-sw.cjs --check (só confere; sai com erro se estiver desatualizado)
 const fs = require('fs'), path = require('path'), crypto = require('crypto');
 const dist = path.join(__dirname, '../../dist'), swPath = path.join(dist, 'sw.js');
-const PREFIXO = 'numera-v13-';
+const PREFIXO = 'numera-v14-';
 const TEXTO = /\.(js|css|html|json|webmanifest|svg|txt|md|sql)$/i;
 const walk = (d) => fs.readdirSync(path.join(dist, d), { withFileTypes: true }).flatMap((e) => {
   const r = d ? d + '/' + e.name : e.name;

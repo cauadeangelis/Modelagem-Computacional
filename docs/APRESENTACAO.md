@@ -41,7 +41,7 @@ Num computador sem placa de vídeo, use Menu → Opções → Qualidade leve.
 
 ## 1f. Calculândia na v14 — 90 segundos (v14)
 
-Se não der para jogar ao vivo, passe o **vídeo-resumo** (`docs/video/calculandia-resumo.mp4`, cerca de 3 minutos): ele mostra tudo abaixo, gravado do próprio jogo.
+Se não der para jogar ao vivo, passe o **vídeo-resumo** (`/video/` no site, ou o botão "🎬 Vídeo do final (resumão)" na página Jogos; cerca de 3 minutos e 20 segundos): ele mostra tudo abaixo, gravado do próprio jogo.
 
 1. **Casa verde:** pergunta básica de múltipla escolha. "Toda pergunta do jogo usa esta mesma tela."
 2. **Casa azul:** uma questão do Teste da professora no **terminal**. Digite `2 - f(2)/df(2)`, Enter calcula, Enter de novo envia. "A conta é feita ali, como na calculadora, e no máximo 4 iterações."

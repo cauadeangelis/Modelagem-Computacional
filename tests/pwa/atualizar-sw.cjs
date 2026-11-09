@@ -17,7 +17,7 @@ const walk = (d) => fs.readdirSync(path.join(dist, d), { withFileTypes: true }).
 });
 const conteudo = (rel) => { const b = fs.readFileSync(path.join(dist, rel)); return TEXTO.test(rel) ? Buffer.from(b.toString('utf8').split('\r\n').join('\n')) : b; };
 function listaDeArquivos() {
-  const files = walk('').filter((f) => f !== 'sw.js' && !f.split('/').some((x) => x.startsWith('.')) && !/LICENSE/.test(f) && !f.startsWith('jogos/calculandia/'));
+  const files = walk('').filter((f) => f !== 'sw.js' && !f.split('/').some((x) => x.startsWith('.')) && !/LICENSE/.test(f) && !f.startsWith('jogos/calculandia/') && !f.endsWith('.mp4'));
   files.sort((a, b) => (a === 'index.html' ? -1 : b === 'index.html' ? 1 : a.localeCompare(b)));
   return ['./', ...files];
 }

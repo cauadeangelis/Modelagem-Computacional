@@ -21,7 +21,7 @@ Jogo e laboratório de **métodos numéricos** para a disciplina de Modelagem Co
 | **Relâmpago:** pergunta rápida com cronômetro | **Calculândia:** a tela mais limpa das casas azul e vermelha |
 | ![Pergunta do Relâmpago respondida](previews/v13-relampago-resposta.png) | ![Simulador do Newton com a tela nova](previews/v13-calculandia-tela-limpa.png) |
 
-**Vídeo-resumo da Calculândia:** [`docs/video/calculandia-resumo.mp4`](docs/video/calculandia-resumo.mp4), da abertura à explosão da Usina, gravado do próprio jogo.
+**Vídeo-resumo da Calculândia:** [`/video/`](https://modelagem-computacional.vercel.app/video/) (arquivo em `dist/video/calculandia-resumo.mp4`), da abertura à explosão da Usina, gravado do próprio jogo.
 
 ## Abrir
 
@@ -39,6 +39,7 @@ Abra http://localhost:8000. O site também abre direto do disco (`dist/index.htm
 | `/#jogos` | página Jogos, com o progresso salvo de cada jogo |
 | `/jogos/calculandia/` | Calculândia (3D) |
 | `/#laboratorio` | Laboratório (tátil, troca de linhas, sensibilidade e fenômenos) |
+| `/video/` | vídeo-resumo da Calculândia (o resumão) |
 | `/jogos/bobo-da-corte/` | Bobo da Corte (telão da sala); `/jogos/quem-divergiu/` redireciona para cá |
 
 ## O que tem
@@ -107,7 +108,8 @@ dist/                         o site (o que o navegador abre)
   dados/                      dados gerados (banco-de-questoes.js, treino-exercicios.js)
   jogos/calculandia/          Calculândia: index.html, estilo.css, codigo/ (dados, fases, interface, personagens, mundo, sistemas)
   jogos/bobo-da-corte/        Bobo da Corte: index.html, bobo-da-corte.js, perguntas.js
-docs/                         relatório técnico, apresentação, qualidade, Calculândia, vídeo-resumo e documentos organizacionais
+  video/                      vídeo-resumo da Calculândia (página e MP4, fora do cache offline)
+docs/                         relatório técnico, apresentação, qualidade, Calculândia e documentos organizacionais
 tests/                        testes automáticos (verify, banco, calculandia, e2e, treino, terminal, pwa)
 previews/                     capturas de tela
 serve.js                      servidor local sem dependências

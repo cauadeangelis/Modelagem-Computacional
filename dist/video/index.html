@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Calculândia: o resumão</title>
+<meta name="description" content="Vídeo-resumo da Calculândia, gravado do próprio jogo: da criação do personagem à explosão da Usina.">
+<link rel="icon" href="../imagens/favicon.svg" type="image/svg+xml">
+<style>
+@font-face { font-family: Fredoka; src: url(../jogos/calculandia/fontes/fredoka-latin-600-normal.woff2) format('woff2'); font-weight: 600; font-display: swap; }
+@font-face { font-family: Fredoka; src: url(../jogos/calculandia/fontes/fredoka-latin-400-normal.woff2) format('woff2'); font-weight: 400; font-display: swap; }
+:root { --bg: #140f26; --ink: #fff8e6; --sub: #d9d2f2; --acc: #b7ff3c; --btn: #f2c14e; }
+* { box-sizing: border-box; }
+body { margin: 0; min-height: 100vh; background: var(--bg); color: var(--ink); font-family: Fredoka, system-ui, sans-serif; display: flex; flex-direction: column; align-items: center; padding: 24px 16px 40px; }
+header { width: min(1100px, 100%); margin-bottom: 16px; }
+.k { color: #ffe9a8; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; font-size: 14px; }
+h1 { margin: 6px 0 4px; font-size: clamp(28px, 5vw, 48px); line-height: 1.1; }
+h1 b { color: var(--acc); }
+p { margin: 0; color: var(--sub); font-size: 17px; line-height: 1.5; }
+video { width: min(1100px, 100%); aspect-ratio: 16 / 9; background: #000; border-radius: 16px; box-shadow: 0 16px 50px rgba(0,0,0,.5); }
+nav { width: min(1100px, 100%); display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+a.btn { display: inline-flex; align-items: center; padding: 10px 18px; border-radius: 999px; background: var(--btn); color: #2b1d0e; font-weight: 600; text-decoration: none; }
+a.btn.sec { background: rgba(255,255,255,.12); color: var(--ink); }
+a.btn:focus-visible { outline: 3px solid var(--acc); outline-offset: 3px; }
+ol { width: min(1100px, 100%); margin: 22px 0 0; padding-left: 22px; color: var(--sub); line-height: 1.7; }
+ol b { color: var(--ink); }
+</style>
+</head>
+<body>
+<header>
+  <div class="k">Numera Academy · Modelagem Computacional</div>
+  <h1>Calculândia: <b>o resumão</b></h1>
+  <p>Gravado do próprio jogo, quadro a quadro: da criação do personagem à explosão da Usina. Cerca de 3 minutos e 20 segundos.</p>
+</header>
+<video controls preload="metadata" poster="capa.jpg" playsinline>
+  <source src="calculandia-resumo.mp4" type="video/mp4">
+  Seu navegador não toca vídeo aqui. <a href="calculandia-resumo.mp4">Baixe o vídeo</a>.
+</video>
+<nav aria-label="Atalhos">
+  <a class="btn" href="../jogos/calculandia/index.html">Jogar a Calculândia</a>
+  <a class="btn sec" href="../index.html#jogos">Página Jogos</a>
+  <a class="btn sec" href="calculandia-resumo.mp4" download>Baixar o vídeo (MP4)</a>
+</nav>
+<ol>
+  <li><b>Abertura:</b> criação do personagem e a cinemática da Usina.</li>
+  <li><b>Chegada:</b> o herói anda pelo mapa e conversa com os bichos guias.</li>
+  <li><b>Casa verde:</b> pergunta básica de múltipla escolha.</li>
+  <li><b>Casa azul:</b> questão do Teste da professora resolvida no terminal.</li>
+  <li><b>Casa vermelha:</b> Caça ao Bug, a célula errada da tabela.</li>
+  <li><b>Chefão:</b> golpes, vidas e o Método Híbrido.</li>
+  <li><b>Viagem:</b> outras cidades destravadas e os marcos reagindo.</li>
+  <li><b>Usina:</b> Bisseção com 10 iterações, Gauss 4×4 e Newton com 6 iterações.</li>
+  <li><b>Final:</b> a Usina explode e a ilha comemora.</li>
+</ol>
+</body>
+</html>

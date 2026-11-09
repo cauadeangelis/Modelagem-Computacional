@@ -16,7 +16,7 @@
 - **Usina final** (`codigo/fases/usina-final.js`): três reatores. Bisseção de x³ − 9x + 3 em [0, 1] com 10 iterações (digita cada xₖ e escolhe a metade), Eliminação de Gauss num sistema 4×4 (os 6 multiplicadores, com pivô, linha alvo e elemento zerado em destaque, e a substituição regressiva) e Newton em x³ − 2x − 5 com 6 iterações. 5 corações e progresso salvo por reator.
 - **O final:** vencida a Usina, o Grande Erro fala pela última vez, a câmera chega no reator, a **Usina explode**, a fumaça verde vira vapor, a ilha comemora com fogos e aparece a tela "Calculândia salva!".
 - **Mundo que reage:** o reator da Usina gira e explode; a balança de Bi-Polis nivela conforme as casas caem; os três feixes do polvo de Gaussburgo se equilibram.
-- **Vídeo-resumo** (`docs/video/calculandia-resumo.mp4`): gravado do próprio jogo, quadro a quadro, da abertura à explosão da Usina, com legendas.
+- **Vídeo-resumo** (página `/video/` do site, com botão "🎬 Vídeo do final (resumão)" na página Jogos e na tela final do jogo): gravado do próprio jogo, quadro a quadro, da abertura à explosão da Usina, com legendas.
 
 **Bobo da Corte** (antigo Quem Divergiu?; `jogos/bobo-da-corte/`, o endereço antigo redireciona)
 - Apresentadora nova, mais jovem, e o mais votado de cada rodada vira o **Bobo da Corte**: cortina, holofote, o bobo dançando e a roleta de 12 prendas leves de sala. Prenda em toda rodada, só no fim ou desligada.

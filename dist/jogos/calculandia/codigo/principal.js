@@ -548,7 +548,7 @@ function telaDeFim() {
     <p>A Usina Central explodiu o Grande Erro para longe: a fumaça verde virou vapor e as turbinas voltaram a girar.</p>
     <ul class="fim-num"><li><b>${p.totalStars()}</b><span>estrelas</span></li><li><b>${p.rootsCaught()}</b><span>raízes fugitivas</span></li><li><b>${Math.round(p.d.rpg?.xp || 0)}</b><span>XP</span></li></ul>
     <p class="fim-cred">Numera Academy · Modelagem Computacional (Ibmec). Questões dos Testes, das listas e dos slides da disciplina.</p>
-    <button class="btn" id="fim-ok">Continuar explorando</button></div>`;
+    <button class="btn" id="fim-ok">Continuar explorando</button> <a class="btn" href="../../video/index.html" target="_blank" rel="noopener">🎬 Vídeo do resumão</a></div>`;
   document.getElementById('ui').appendChild(el);
   const fechar = () => { el.remove(); };
   el.querySelector('#fim-ok').addEventListener('click', fechar);

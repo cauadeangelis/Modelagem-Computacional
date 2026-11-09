@@ -18,6 +18,8 @@ Este documento resume como o site foi conferido (a tabela vem da v10.1, com as s
 | Compatibilidade | `node tests/e2e/checar-compat.mjs` | todo `.js` é ES2021 válido (acorn) e não usa recursos ausentes em Safari 15, Firefox 90 ou Chrome 90; CSS recente só como melhoria progressiva ; na v12, o Quem Divergiu? com a mesma regra e os módulos da Calculândia (módulo ES válido, nada importado de fora) | **536 / 536** |
 | Calculândia | `node --test tests/calculandia/rules.test.mjs` · `node tests/calculandia/browser-smoke.cjs` · `node tests/calculandia/world-reach.cjs` | regras das 63 fases, dos chefões e da Usina (bateria, estrelas, XP, desfazer); no navegador, as 69 montagens de fase, vitória, derrota e dica salvas, celular sem rolagem lateral; e uma busca a pé que alcança todas as portas do mapa | **79 / 79**, sem erros |
 
+**v14 (última execução):** verificações gerais 3.215 / 3.215; banco 468 / 468 (17 gabaritos divergentes explicados); Treino 0 divergências; Calculândia 79 / 79 nas regras, fumaça no navegador sem erros (69 montagens, 21 casas verdes, 38 casas com terminal, chefão com o Método Híbrido e os três reatores da Usina) e mapa todo alcançável; fluxos 130 / 130; offline 14 / 14; acessibilidade 98 / 98 sem violações; WebKit 39 / 39; compatibilidade 803 / 803. O vídeo-resumo (`dist/video/`) fica fora do cache offline de propósito.
+
 Na v13 os testes de navegador também cobrem a página Listas, a Revisão com questões das listas, o Relâmpago (rodada inteira pelo teclado), as 21 casas verdes da Calculândia e as telas novas na auditoria de acessibilidade. O repositório não tem mais workflows do GitHub Actions: rode as suítes localmente (`npm run testar`, `npm run testar-navegador`, `npm run testar-calculandia`).
 
 ## Acessibilidade

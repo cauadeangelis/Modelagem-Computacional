@@ -11,7 +11,7 @@ Modelagem-Computacional/
 ├── serve.js                  servidor local sem dependências (http://localhost:8000)
 ├── banco-de-questoes/        AS QUESTÕES DAS LISTAS, em SQL (separado de todo o resto)
 ├── dist/                     o site publicado (tudo o que o navegador abre)
-├── docs/                     relatório técnico, apresentação, qualidade, documentação do jogo 3D e o vídeo-resumo
+├── docs/                     relatório técnico, apresentação, qualidade, documentação do jogo 3D
 ├── previews/                 capturas de tela das versões
 └── tests/                    testes automáticos
 ```
@@ -59,6 +59,7 @@ Modelagem-Computacional/
 | `css/` | estilos: `site.css` (geral), `listas.css` (Listas e Relâmpago), `terminal.css`, `treino.css`, `grafico-de-convergencia.css`, `personagens.css`, `fontes.css` |
 | `dados/` | dados gerados: `banco-de-questoes.js` (do SQL) e `treino-exercicios.js` |
 | `fontes/`, `imagens/` | fontes e ícones do próprio site (nada vem de fora) |
+| `video/` | o vídeo-resumo da Calculândia (`index.html` e `calculandia-resumo.mp4`; fora do cache offline) |
 | `jogos/` | os dois jogos (Calculândia e Bobo da Corte) e as capas da página Jogos; `jogos/quem-divergiu/` só redireciona para o Bobo da Corte |
 
 ### `dist/js/` — JavaScript do site
@@ -129,7 +130,6 @@ Os arquivos de `js/site/` e `js/paginas/` são scripts comuns que compartilham a
 |---|---|
 | `RELATORIO-TECNICO.md`, `APRESENTACAO.md`, `QUALIDADE.md`, `LIMITES-NUMERICOS.md`, `TREINO.md`, `TESTES-TERMINAL.md` | documentação do site |
 | `calculandia/` | documentação do jogo 3D (regras, decisões, auditorias) |
-| `video/` | o vídeo-resumo da Calculândia para a apresentação (`calculandia-resumo.mp4`) |
 | `organizacionais/` | documentos de organização do grupo (5W2H e diagrama) |
 
 ## Nomes antigos → nomes novos

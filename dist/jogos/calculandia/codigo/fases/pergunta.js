@@ -283,7 +283,7 @@ function abrirTela({ settlement, casa, perguntas, freeHint = false, chefe = null
     const q = atual.q;
     if (chefe) {
       vida--; G.audio?.sfx?.('acerto'); G.camRig?.shake?.(0.25, 0.25);
-      if (vida <= 0) { fim = { vitoria: true, estrelas: estrelas() }; G.audio?.sfx?.('vitoria'); msg = { tipo: 'ok', html: `<b>Golpe final!</b> ${esc(chefe.nome)} foi vencido. A resposta é ${tx(q.resposta)}.` }; }
+      if (vida <= 0) { fim = { vitoria: true, estrelas: estrelas() }; G.audio?.sfx?.('vitoria'); msg = { tipo: 'ok', html: `<b>Golpe final!</b> ${esc(chefe.nome)} caiu! A resposta é ${tx(q.resposta)}.` }; }
       else msg = { tipo: 'ok', html: `<b>Acertou o golpe!</b> A resposta é ${tx(q.resposta)}. Faltam ${vida} ${vida === 1 ? 'golpe' : 'golpes'}.` };
     } else { fim = { vitoria: true, estrelas: estrelas() }; G.audio?.sfx?.('vitoria'); msg = { tipo: 'ok', html: `<b>Certo!</b> A resposta é ${tx(q.resposta)}.${q.observacao ? ` <br><small>${esc(q.observacao)}</small>` : ''}` }; }
   }

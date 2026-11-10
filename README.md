@@ -23,6 +23,12 @@ Jogo e laboratório de **métodos numéricos** para a disciplina de Modelagem Co
 
 **Vídeo-resumo da Calculândia:** [`/video/`](https://modelagem-computacional.vercel.app/video/) (arquivo em `dist/video/calculandia-resumo.mp4`), da abertura à explosão da Usina, gravado do próprio jogo.
 
+## Evolução pedagógica
+
+O Terminal agora inclui **malha térmica**, **drone com polinômio versus spline**, **régua de mantissa**, **interpolação/ajuste/integração** e um **Ponto Fixo opcional** em Pesquisa avançada. Gráficos táteis e troca de linhas usam os dados digitados; as Trilhas e Missões abrem os experimentos. Na Calculândia, há habilidades dos pets, desafios opcionais dos mestres e fenômenos ligados aos passos da Usina.
+
+[Guia, cobertura do plano e modelos utilizados](docs/EVOLUCAO-PEDAGOGICA.md).
+
 ## Abrir
 
 ```bash

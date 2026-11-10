@@ -3,8 +3,9 @@
 // 2) Recursos que esses navegadores NÃO têm são proibidos (ex.: lookbehind em regex só existe no Safari 16.4+).
 // 3) Recursos de CSS recentes só podem aparecer como melhoria progressiva (sem eles, a página continua usável).
 // Uso: node checar-compat.mjs
+import { fileURLToPath } from 'node:url';
 import fs from 'node:fs'; import path from 'node:path'; import { parse } from 'acorn';
-const dist = path.join(path.dirname(new URL(import.meta.url).pathname), '../../dist');
+const dist = path.join(path.dirname(fileURLToPath(import.meta.url)), '../../dist');
 let n = 0; const falhas = [];
 const ok = (c, m) => { n++; if (!c) { falhas.push(m); console.log('  FALHOU:', m); } };
 const PROIBIDO_JS = [[/\(\?<[=!]/, 'lookbehind em regex (Safari < 16.4)'], [/\.at\(/, 'Array.prototype.at (Safari < 15.4)'], [/structuredClone\(/, 'structuredClone (Safari < 15.4)'],

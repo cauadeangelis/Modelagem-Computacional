@@ -23,7 +23,7 @@ const method=id=>(C.ALL_METHODS||C.METHODS).find(m=>m.id===id); // inclui os esc
 const ROOTS=()=>C.METHODS.filter(m=>m.category!=='Sistemas lineares'),SYSTEMS=()=>C.METHODS.filter(m=>m.category==='Sistemas lineares'),isSysMethod=id=>id==='gauss'||id==='seidel';
 const WORDS={3:'três',4:'quatro',5:'cinco',6:'seis',7:'sete',8:'oito',9:'nove',10:'dez'},words=n=>WORDS[n]||String(n),cap=t=>t.charAt(0).toUpperCase()+t.slice(1);
 /* Número de verificações automáticas de tests/verify.cjs (o próprio teste confere este valor). */
-const VERIFY_COUNT=3215;
+const VERIFY_COUNT=3217;
 const doneCount=id=>C.TASKS[id].filter((_,i)=>p.completed[`c:${id}:${i}`]).length;
 // v11: só conta o que está à vista (o Ponto Fixo escondido guarda o progresso, mas não entra nos totais).
 const visibleIds=()=>[...C.METHODS.flatMap(m=>C.TASKS[m.id].map((_,i)=>`c:${m.id}:${i}`)),...C.CASES.flatMap(c=>c.tasks.map((_,i)=>`p:${c.id}:${i}`))];

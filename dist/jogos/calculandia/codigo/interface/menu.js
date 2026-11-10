@@ -60,7 +60,7 @@ export class Menu {
 
   mestres() {
     this.sheet(`<div class="row" style="justify-content:space-between"><h2>📜 Mestres</h2><button class="btn secondary" data-go="main">← Voltar</button></div>
-      <p>Apresentações e missões dos personagens históricos que você já encontrou. Para conversar de novo, vá até eles e aperte E.</p>${paginaMestres(esc)}`);
+      <p>Conheça os nomes dos mestres e onde encontrá-los. Converse com cada um para liberar sua apresentação e missão: aproxime-se e aperte E.</p>${paginaMestres(esc)}`);
     this.el.querySelectorAll('[data-mestre]').forEach((c) => drawPortrait(c, 'historico', c.dataset.mestre, 0, 0));
   }
 

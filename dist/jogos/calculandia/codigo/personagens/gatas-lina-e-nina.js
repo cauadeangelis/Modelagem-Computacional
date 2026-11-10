@@ -155,6 +155,7 @@ export class Gatas {
     this.cats.forEach((c, i) => {
       const m = c.m;
       const target = hero.pos.clone().addScaledVector(fw, -c.def.atras).addScaledVector(right, c.def.lado);
+      if (this.intervaloAte > performance.now()) { const lado = this.cats.indexOf(c) ? 1 : -1; target.copy(hero.pos).addScaledVector(right, lado * 2).addScaledVector(fw, 1); }
       const toT = target.clone().sub(c.pos); toT.y = 0;
       const dist = toT.length();
       if (hero.pos.distanceTo(c.pos) > C.teleportDist) c.pos.set(target.x, walkHeight(target.x, target.z), target.z);

@@ -7,6 +7,7 @@
 // A integridade da Usina é de 5 ❤; cada resposta errada tira 1. Os reatores estabilizados ficam salvos: se
 // a integridade acabar, a próxima tentativa recomeça no reator seguinte. Vencendo os três, o núcleo é liberado
 // e o jogo segue para o final (a Usina explode e a Calculândia fica livre do Grande Erro).
+import { cenaUsina } from './fenomeno-usina.js';
 import { G } from '../jogo.js';
 import { REGIONS } from '../dados/regioes-e-cidades.js';
 import { abrirDuvidas } from '../interface/casas-de-duvidas.js';
@@ -123,6 +124,13 @@ export function runUsinaFinal({ s: settlement }) {
       <form class="pq-term-linha" id="pq-form" autocomplete="off"><label for="pq-in">${esc(rotuloPedido())}</label><input id="pq-in" type="text" spellcheck="false" autocapitalize="off"><button class="btn" type="submit" id="pq-enviar">Enviar</button></form>
     </div>`;
   }
+  function fenomeno() {
+    if (reator === 0) { const k = Math.min(10, passo + (lado ? 1 : 0)), x = k ? bis[k - 1].x : BISSECAO.a; return cenaUsina(0, [x], Math.abs(BISSECAO.f(x)), k); }
+    if (reator === 2) { const k = Math.min(6, nPasso), x = k ? nwt[k - 1].novo : NEWTON.x0; return cenaUsina(2, [x], Math.abs(NEWTON.f(x)), k); }
+    const u = [0, 0, 0, 0]; for (const p of pedidosGauss.slice(0, gPasso)) if (p.tipo === 'x') u[p.i] = gau.x[p.i];
+    const r = Math.max(...GAUSS.A.map((a, i) => Math.abs(a.reduce((v, x, j) => v + x * u[j], 0) - GAUSS.b[i])));
+    return cenaUsina(1, u, r, gPasso);
+  }
   function desenhar() {
     const estados = [0, 1, 2].map((i) => (i < (d.usina.reatores || 0) || (fim?.vitoria) ? 'ok' : i === reator ? 'agora' : 'fechado'));
     root.innerHTML = `<section class="fase-box pq pq-chefe-final uf" role="dialog" aria-modal="true" aria-labelledby="pq-t">
@@ -132,6 +140,7 @@ export function runUsinaFinal({ s: settlement }) {
         <span class="pq-vidas" aria-label="Integridade da Usina: ${vida} de ${INTEGRIDADE}">${'❤️'.repeat(Math.max(0, vida))}${'🖤'.repeat(INTEGRIDADE - Math.max(0, vida))}</span>
         <button class="btn" data-pq="conceito">📘 Conceito <small>grátis</small></button></div>
       <div class="pq-pergunta"><p class="pq-enunciado">${tx(enunciado())}</p></div>
+      ${fenomeno()}
       ${lousa()}
       ${areaResposta()}
       <div id="pq-msg" class="pq-msg ${msg ? msg.tipo : ''}" role="status" aria-live="polite">${msg ? msg.html : ''}</div>

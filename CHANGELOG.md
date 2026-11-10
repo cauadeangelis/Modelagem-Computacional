@@ -1,5 +1,13 @@
 # Histórico de versões
 
+## v14 — Complemento do plano de evolução pedagógica (10/11/2026)
+
+- Laboratório ampliado: malha térmica Seidel/Jacobi, resfriamento por Euler, drone com Runge/spline, mantissa, pontos com interpolação/ajuste/quadraturas e Ponto Fixo opcional.
+- Dados do Terminal e das Trilhas nos controles táteis; fenômenos complementares nas Missões; tratamento de sistemas singulares e varreduras sobrepostas.
+- Calculândia: habilidades contextuais dos pets, desafios opcionais de Newton/Gauss/Lagrange/Euler e cena numérica nos reatores da Usina.
+- Testes numéricos, fluxos novos, acessibilidade, teclado e offline; correções da execução dos testes no Windows. Servidor local vinculado a 127.0.0.1.
+- [Detalhamento e guia de uso](docs/EVOLUCAO-PEDAGOGICA.md).
+
 ## v14 — Uma tela de perguntas para a Calculândia, os Testes no banco, a Usina final e o Bobo da Corte
 
 **Banco de questões** (468 questões, antes 334)

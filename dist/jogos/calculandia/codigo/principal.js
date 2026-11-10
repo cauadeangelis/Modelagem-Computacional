@@ -40,6 +40,7 @@ import { Bubbles, Dialog } from './interface/dialogos.js';
 import { Minimap } from './interface/minimapa.js';
 import { MapScreen } from './interface/tela-do-mapa.js';
 import { Menu, showTitle } from './interface/menu.js';
+import { analisarPorta } from './sistemas/habilidades-dos-pets.js';
 import { criarMestres } from './sistemas/dicas-dos-mestres.js';
 import { abrirDuvidas } from './interface/casas-de-duvidas.js';
 import { abrirInventario } from './interface/inventario.js';
@@ -296,8 +297,9 @@ async function talkPet() {
   const v = await G.ui.dialog.show({
     ...quem,
     lines: [pet.fala('idle'), obj ? `Nosso próximo objetivo: ${obj.text.replace(/<[^>]+>/g, '')}` : 'A ilha está salva!'],
-    options: [{ label: 'Dica geral', value: 'dica' }, { label: 'Onde estamos?', value: 'onde' }, { label: 'Valeu!', value: 'ok' }],
+    options: [...(G.portaPet ? [{ label: pet.kind === 'raizinha' ? 'Farejar a porta' : 'Marcar os extremos', value: 'habilidade' }] : []), { label: 'Dica geral', value: 'dica' }, { label: 'Onde estamos?', value: 'onde' }, { label: 'Valeu!', value: 'ok' }],
   });
+  if (v === 'habilidade' && G.portaPet) { const a = analisarPorta(G.portaPet.s.def, G.portaPet.nivel); if (a) { if (pet.kind !== 'gatas') pet.react_('heart'); await G.ui.dialog.show({ ...quem, lines: [a.texto, pet.kind === 'gatas' ? 'Lina marca a ponta a à esquerda; Nina marca b à direita. Na Secante elas representam x₀ e x₁. A distância no chão é ilustrativa.' : 'A habilidade revela condições do simulador; as perguntas das listas continuam no terminal da casa.'] }); if (pet.kind === 'gatas' && a.intervalo) pet.intervaloAte = performance.now() + 12000; } }
   if (v === 'dica') await G.ui.dialog.show({ ...quem, lines: [HINTS.raizinha[`dica${1 + Math.floor(Math.random() * 3)}`]] });
   if (v === 'onde') {
     const r = regionAt(G.hero.pos.x, G.hero.pos.z);
@@ -589,7 +591,7 @@ function setupEvents() {
     }
     enterPhase(s, nivel);
   });
-  E.on('doorNear', ({ s, nivel, on }) => { if (G.mode === 'play') ui.hud.showPreview(on ? phasePreviewInfo(s, nivel) : null); });
+  E.on('doorNear', ({ s, nivel, on }) => { G.portaPet = on ? { s, nivel } : null; if (on && !s._petAvisou) { s._petAvisou = true; G.pet.say(G.pet.kind === 'raizinha' ? 'Posso farejar as condições do simulador. Use H ou o botão de dica para conversar comigo!' : 'Podemos marcar os dois extremos. Use H ou o botão de dica para conversar conosco!'); } if (G.mode === 'play') ui.hud.showPreview(on ? phasePreviewInfo(s, nivel) : null); });
   E.on('gateNear', (S) => {
     if (G.progress.canFightBoss(S.def) || gateCool > G.time) return;
     gateCool = G.time + 8;
@@ -725,7 +727,7 @@ function frame(now, manual = false) {
       if (inp.hit('KeyQ')) G.camRig.rotate(-1);
       if (inp.hit('KeyR')) G.camRig.rotate(1);
       if (inp.hit('KeyI')) G.events.emit('openInventory');
-      if (inp.hit('KeyH')) { G.hero.play('think', { dur: 1.2 }); G.audio.sfx('dica'); const o = G.objective; G.pet.say(o ? o.text.replace(/<[^>]+>/g, '') : G.pet.fala('idle'), 4.5); }
+      if (inp.hit('KeyH') && G.portaPet) { talkPet(); } else if (inp.hit('KeyH')) { G.hero.play('think', { dur: 1.2 }); G.audio.sfx('dica'); const o = G.objective; G.pet.say(o ? o.text.replace(/<[^>]+>/g, '') : G.pet.fala('idle'), 4.5); }
     }
   }
 

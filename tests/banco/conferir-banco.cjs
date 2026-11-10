@@ -42,7 +42,7 @@ for (const q of B.questoes) {
   if (q.vetor && !(r.vetor && r.vetor.length === q.vetor.length && r.vetor.every((v, i) => perto(limpa(v), q.vetor[i])))) falha(`${onde} vetor gravado ${JSON.stringify(q.vetor)}, conta ${JSON.stringify(r.vetor)}`);
   if (q.matriz && JSON.stringify(q.matriz) !== JSON.stringify(r.matriz, (k, v) => (typeof v === 'number' ? limpa(v) : v))) falha(`${onde} matriz gravada não confere com a conta`);
   const resol = linhasSql[q.id].resolucao, esperado = ((r.resumo || '') + (r.tabela && r.tabela.linhas.length && r.tabela.linhas.length <= 16 ? '\n' + r.tabela.colunas.join(' | ') + '\n' + r.tabela.linhas.map((l) => l.join(' | ')).join('\n') : '')).trim();
-  if (resol !== esperado) falha(`${onde} a resolução gravada difere da que o resolvedor mostra no site`);
+  if (resol.replace(/\r\n/g, '\n') !== esperado.replace(/\r\n/g, '\n')) falha(`${onde} a resolução gravada difere da que o resolvedor mostra no site`);
   if (q.tipo === 'numero' && !R.confere(q, q.valor)) falha(`${onde} confere() recusa a própria resposta`);
   // 3. gabarito da lista
   if (q.diverge && !q.observacao) falha(`${onde} gabarito da lista diverge sem observação`);

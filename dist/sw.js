@@ -5,10 +5,11 @@
    v12: o jogo de sala (v14: Bobo da Corte, antes Quem Divergiu?) entra no cache inicial (é leve e precisa abrir sem internet na sala). A Calculândia (≈ 1,5 MB, 3D)
    não pesa no primeiro acesso: cada arquivo dela é guardado na primeira vez que o jogo abre e, daí em diante, ele também
    funciona offline. Uma versão nova do site apaga esse cache junto com o resto. */
-const VERSION = 'numera-v14-6ca6b0d135';
+const VERSION = 'numera-v14-d5e233544f';
 const ASSETS = [
   './',
   'index.html',
+  'css/experimentos.css',
   'css/fontes.css',
   'css/grafico-de-convergencia.css',
   'css/listas.css',
@@ -38,6 +39,7 @@ const ASSETS = [
   'jogos/quem-divergiu/index.html',
   'js/conteudo/conteudo.js',
   'js/motor/caca-ao-bug.js',
+  'js/motor/experimentos.js',
   'js/motor/motor-numerico.js',
   'js/motor/passo-a-passo.js',
   'js/motor/resolver-questoes.js',
@@ -51,6 +53,7 @@ const ASSETS = [
   'js/paginas/missoes.js',
   'js/paginas/relampago.js',
   'js/paginas/revisao-e-progresso.js',
+  'js/paginas/simulador-fenomenos.js',
   'js/paginas/terminal.js',
   'js/paginas/trilhas.js',
   'js/personagens/raiz-e-pivo.js',

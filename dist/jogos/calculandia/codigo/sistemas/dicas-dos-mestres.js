@@ -6,6 +6,8 @@ import { HISTORICOS } from '../dados/mestres-historicos.js';
 import { SETTLEMENT_BY_ID, NIVEIS } from '../dados/regioes-e-cidades.js';
 import { Historico, TALK_R } from '../personagens/mestres-da-matematica.js';
 
+import { desafioMestre, jogarDesafio } from './desafios-dos-mestres.js';
+
 const portrait = (h) => ({ kind: 'historico', id: h.id });
 
 export function criarMestres(scene) {
@@ -50,9 +52,10 @@ export async function conversar(m) {
     }
     const v = await dlg.show({ ...quem, lines: [abertura], options: [
       { label: 'Sua história', value: 'historia' }, { label: 'A missão', value: 'missao' },
-      { label: 'Uma orientação', value: 'orientacao' }, { label: 'Até logo', value: 'tchau' },
+      st === 'concluida' && desafioMestre(def.id) ? { label: d.desafio ? 'Refazer desafio ✓' : 'Desafio de Mestre', value: 'desafio' } : { label: 'Uma orientação', value: 'orientacao' }, { label: 'Até logo', value: 'tchau' },
     ] });
-    if (v === 'historia') await dlg.show({ ...quem, lines: def.historia });
+    if (v === 'desafio') await jogarDesafio(dlg, quem, def.id, d, () => p.save());
+    else if (v === 'historia') await dlg.show({ ...quem, lines: def.historia });
     else if (v === 'missao') await dlg.show({ ...quem, lines: [def.missao, st === 'concluida' ? 'Missão concluída. ✔' : `Onde: ${faseLabel(def)}. Situação: em andamento.`] });
     else if (v === 'orientacao') await dlg.show({ ...quem, lines: [def.orientacao, 'As dicas que revelam passos da missão ficam com o bicho guia e dentro da fase; conversar comigo não muda custos nem penalidades.'] });
     else return;
@@ -64,11 +67,11 @@ export function paginaMestres(esc) {
   const p = G.progress;
   return HISTORICOS.map((h) => {
     const met = p.d.historicos[h.id]?.met, ok = p.won(h.missaoFase);
-    if (!met) return `<article class="mestre off"><h3>❔ Mestre ainda não encontrado</h3><p>Procure em ${esc(SETTLEMENT_BY_ID[h.cidade].nome)}.</p></article>`;
+    if (!met) return `<article class="mestre off"><h3>${esc(h.nome)} <small>${esc(h.titulo)}</small></h3><p>❔ Ainda não encontrado. Procure em ${esc(SETTLEMENT_BY_ID[h.cidade].nome)}.</p></article>`;
     return `<article class="mestre"><canvas width="96" height="96" data-mestre="${h.id}" aria-hidden="true"></canvas><div>
       <h3>${esc(h.nome)} <small>${esc(h.titulo)}</small></h3>
       <p>${h.historia.map(esc).join(' ')}</p>
-      <p><b>Missão ${ok ? '✔ concluída' : '⏳ em andamento'}:</b> ${esc(h.missao)}</p>
+      <p>${p.d.historicos[h.id]?.desafio ? '✓ Desafio de Mestre concluído.' : ''}</p><p><b>Missão ${ok ? '✔ concluída' : '⏳ em andamento'}:</b> ${esc(h.missao)}</p>
       <details><summary>Orientação</summary><p>${esc(h.orientacao)}</p></details></div></article>`;
   }).join('');
 }

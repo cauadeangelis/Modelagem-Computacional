@@ -5,12 +5,12 @@
   "description": "Numera Academy: jogo e laboratório de métodos numéricos (Modelagem Computacional), com as listas da disciplina num banco de questões em SQL, o modo Relâmpago, a Calculândia (3D) e o Bobo da Corte (jogo de sala). Site estático em dist/, sem build.",
   "scripts": {
     "servir": "node serve.js",
-    "testar": "node tests/verify.cjs && node tests/banco/conferir-banco.cjs && node tests/treino/conferir-com-motor.cjs && node tests/pwa/atualizar-sw.cjs --check && node --test tests/calculandia/rules.test.mjs",
+    "testar": "node tests/verify.cjs && node tests/banco/conferir-banco.cjs && node tests/treino/conferir-com-motor.cjs && node tests/pwa/atualizar-sw.cjs --check && node --test tests/calculandia/rules.test.mjs tests/experimentos.test.cjs",
     "banco": "node banco-de-questoes/gerar-arquivo-do-site.cjs",
     "conferir-banco": "node tests/banco/conferir-banco.cjs",
     "gerar-treino": "python3 tests/treino/gerar-treino.py dist/dados/treino-exercicios.js",
     "atualizar": "node tests/atualizar.cjs",
-    "testar-navegador": "cd tests/e2e && node checar-compat.mjs && node testar-fluxos.mjs http://127.0.0.1:8000/ && node testar-offline.mjs http://127.0.0.1:8000/ && node auditar-a11y.mjs http://127.0.0.1:8000/",
+    "testar-navegador": "cd tests/e2e && node checar-compat.mjs && node testar-fluxos.mjs http://127.0.0.1:8000/ && node testar-offline.mjs http://127.0.0.1:8000/ && node auditar-a11y.mjs http://127.0.0.1:8000/ && node testar-experimentos.mjs http://127.0.0.1:8000/",
     "testar-calculandia": "node tests/calculandia/browser-smoke.cjs && node tests/calculandia/world-reach.cjs"
   },
   "engines": {

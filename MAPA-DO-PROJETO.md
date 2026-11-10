@@ -166,3 +166,17 @@ Para quem tinha o projeto antes da reorganização.
 | `src/utils/*`, `src/engine/numeric.js` | `codigo/utilitarios/*` (`geo` → `geometria`, `math` → `matematica`), `codigo/motor/numerico.js` |
 | `jogos/calculandia/style.css`, `vendor/`, `fonts/` | `estilo.css`, `bibliotecas/`, `fontes/` |
 | `docs organizacionais/` | `docs/organizacionais/` |
+
+## Complemento de evolução pedagógica
+
+| Arquivo | Responsabilidade |
+|---|---|
+| `dist/js/motor/experimentos.js` | Interpolação, spline, ajuste, quadraturas, precisão finita, malha térmica, Euler e rota do drone |
+| `dist/js/paginas/simulador-fenomenos.js` | Painéis e integrações com Terminal, Trilhas, Missões e Laboratório |
+| `dist/css/experimentos.css` | Layout responsivo dos experimentos e malha térmica |
+| `dist/jogos/calculandia/codigo/fases/fenomeno-usina.js` | Cena a partir dos passos já concluídos de cada reator |
+| `dist/jogos/calculandia/codigo/sistemas/desafios-dos-mestres.js` | Problemas opcionais e conclusão salva |
+| `dist/jogos/calculandia/codigo/sistemas/habilidades-dos-pets.js` | Análise do simulador da cidade para os companheiros |
+| `tests/experimentos.test.cjs` | Referências numéricas e regras das experiências |
+| `tests/e2e/testar-experimentos.mjs` | Fluxos novos, acessibilidade, celular e offline |
+| `docs/EVOLUCAO-PEDAGOGICA.md` | Guia de uso, cobertura do plano e limites dos modelos |

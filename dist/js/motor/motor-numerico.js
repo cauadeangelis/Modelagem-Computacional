@@ -228,7 +228,10 @@
     let a = Number(a0), b = Number(b0);
     if (!(a < b)) err('Na Bisseção, o intervalo deve ter a < b.');
     let fa = value(fn, a), fb = value(fn, b);
-    for (const [p, fp, side] of [[a, fa, 'esquerda'], [b, fb, 'direita']]) if (Math.abs(fp) <= tolerance) {
+    // v15: com options.largura, a parada é pela meia largura (b − a)/2 ≤ largura: as casas exibidas ficam exatas,
+    // mesmo quando |f(x)| já é pequeno (|f| pequeno não diz quantas casas de x estão certas).
+    const largura = Number(options.largura) > 0 ? Number(options.largura) : null;
+    for (const [p, fp, side] of [[a, fa, 'esquerda'], [b, fb, 'direita']]) if (largura ? fp === 0 : Math.abs(fp) <= tolerance) {
       const c = certifyRoot(fn, p);
       if (certified(c)) return result('bisection', [{ i: 0, x: p, fx: fp, error: 0, detail: `A extremidade ${side} já é raiz.` }], p, Math.abs(fp), true, certNote(c), c);
     }
@@ -239,7 +242,8 @@
       const error = Math.abs(b - a) / 2;
       iterations.push({ i, x: mid, fx: fm, error, a, b, fa, fb, detail: `[${fmt(a)}, ${fmt(b)}] → médio = ${fmt(mid)}` });
       // O intervalo sempre tem troca de sinal; |f| pequeno só encerra se houver raiz perto do ponto médio.
-      if (Math.abs(fm) <= tolerance) { const c = certifyRoot(fn, mid); if (certified(c)) return result('bisection', iterations, mid, Math.abs(fm), true, certNote(c), c); }
+      if (largura) { if (fm === 0 || error <= largura) { const c = certifyRoot(fn, mid); return result('bisection', iterations, mid, Math.abs(fm), certified(c), fm === 0 ? 'O ponto médio é raiz exata.' : `Parou com (b − a)/2 = ${fmt(error)} ≤ ${fmt(largura)}: as casas exibidas estão certas.`, c); } }
+      else if (Math.abs(fm) <= tolerance) { const c = certifyRoot(fn, mid); if (certified(c)) return result('bisection', iterations, mid, Math.abs(fm), true, certNote(c), c); }
       if(mid===a||mid===b)return result('bisection', iterations, mid, Math.abs(fm), false, 'Limite de precisão numérica atingido sem resíduo suficientemente pequeno.');
       if (Math.sign(fa) === Math.sign(fm)) { a = mid; fa = fm; } else { b = mid; fb = fm; }
     }
@@ -303,7 +307,10 @@
     let x = Number(initial), fx = value(fn, x);
     const iterations = [{ i: 0, x, fx, error: null, detail: 'Aproximação inicial' }];
     const check = () => { if (Math.abs(fx) > tolerance) return null; const c = certifyRoot(fn, x); return certified(c) ? result('newton', iterations, x, Math.abs(fx), true, certNote(c), c) : c.status === 'quase' ? result('newton', iterations, x, Math.abs(fx), false, certNote(c), c) : null; };
-    let done = check(); if (done) return done;
+    // v15: com options.passo, o Newton só para quando |xₙ₊₁ − xₙ| ≤ passo (as casas pedidas pararam de mudar).
+    const passo = Number(options.passo) > 0 ? Number(options.passo) : null;
+    const quase = () => { if (Math.abs(fx) > tolerance) return null; const c = certifyRoot(fn, x); return c.status === 'quase' ? result('newton', iterations, x, Math.abs(fx), false, certNote(c), c) : null; };
+    let done = passo ? (fx === 0 ? result('newton', iterations, x, 0, true, 'x₀ já é raiz exata.') : quase()) : check(); if (done) return done;
     for (let i = 1; i <= maxIterations; i++) {
       let d = typeof fn.dfn === 'function' ? fn.dfn(x) : NaN;
       if (!Number.isFinite(d)) d = derivative(fn, x);
@@ -313,6 +320,7 @@
       const nf = value(fn, next), delta = Math.abs(next - x);
       iterations.push({ i, x: next, fx: nf, error: delta, previous: x, derivative: d, detail: `x = ${fmt(x)} − f(x)/f'(x), f'(x) = ${fmt(d)}` });
       x = next; fx = nf;
+      if (passo) { done = quase(); if (done) return done; if (delta <= passo || fx === 0) { const c = certifyRoot(fn, x); return result('newton', iterations, x, Math.abs(fx), certified(c) || c.status === 'multipla', `Parou com |xₙ₊₁ − xₙ| = ${fmt(delta)} ≤ ${fmt(passo)}: as casas exibidas pararam de mudar.`, c); } continue; }
       done = check(); if (done) return done;
       if (delta <= tolerance * (1 + Math.abs(x))) return result('newton', iterations, x, Math.abs(fx), false, 'Parou por pequena variação entre aproximações. Confira o resíduo.');
     }

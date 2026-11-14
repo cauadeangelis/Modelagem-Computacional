@@ -5,6 +5,7 @@
 - **Aba "Saída do terminal"** (abre primeiro depois de resolver): sempre na mesma ordem, [1] configuração inicial, [2] tabela de iterações e [3] conclusão analítica com o resíduo.
 - **Bisseção (e Falsa Posição):** 6 casas decimais; confere f(a)·f(b) < 0 (Bolzano) antes de começar; tabela n, aₙ, bₙ, xₙ, f(xₙ) e (bₙ − aₙ)/2; tolerância padrão ε = 10⁻⁶.
 - **Newton-Raphson:** 8 casas decimais; **derivada simbólica** calculada da própria expressão (3x² − 2 para x³ − 2x − 5), sem diferenças finitas; tabela n, xₙ, f(xₙ), f′(xₙ), xₙ₊₁ e |xₙ₊₁ − xₙ|; parada imediata com aviso quando f′(xₙ) = 0.
+- **Precisão de verdade:** no Terminal, a Bisseção só para quando (bₙ − aₙ)/2 ≤ 5×10⁻⁷ e o Newton quando |xₙ₊₁ − xₙ| ≤ 5×10⁻⁹, para que as 6 e as 8 casas mostradas estejam todas certas. Antes, um |f(x)| pequeno (ou uma tolerância grande, como 0,1) encerrava cedo demais: x⁴ − 6x + 3 em [0,5; 0,52] parava em 0,51 depois de 1 iteração; agora dá 0,511400 em 16 iterações (Newton: 0,51139962).
 - **Eliminação de Gauss:** matriz ampliada [A | b] de qualquer tamanho até 6×6 (4×4 incluído), pivoteamento parcial em todas as colunas com as trocas de linha mostradas, multiplicadores, pivôs e substituição regressiva com 6 casas, e verificação Ax − b no fim.
 
 ## v14 — Complemento do plano de evolução pedagógica (10/11/2026)

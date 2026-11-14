@@ -13,7 +13,7 @@ Jogo e laboratório de **métodos numéricos** para a disciplina de Modelagem Co
 
 É um site estático: HTML, CSS e JavaScript puros, sem build, sem servidor, sem conta e sem rastreadores. Funciona offline e pode ser instalado como app.
 
-**Versão 14** · [Mapa do projeto (onde fica cada arquivo)](MAPA-DO-PROJETO.md) · [O que mudou](CHANGELOG.md) · [Banco de questões](banco-de-questoes/README.md) · [Relatório técnico](docs/RELATORIO-TECNICO.md) · [Roteiro de apresentação](docs/APRESENTACAO.md) · [Qualidade](docs/QUALIDADE.md) · [Calculândia](docs/calculandia/README.md)
+**Versão 15** · [Mapa do projeto (onde fica cada arquivo)](MAPA-DO-PROJETO.md) · [O que mudou](CHANGELOG.md) · [Banco de questões](banco-de-questoes/README.md) · [Relatório técnico](docs/RELATORIO-TECNICO.md) · [Roteiro de apresentação](docs/APRESENTACAO.md) · [Qualidade](docs/QUALIDADE.md) · [Calculândia](docs/calculandia/README.md)
 
 | Listas: resolução no formato dos slides e o gabarito da lista que não confere | Calculândia: a casa verde com os dispositivos no topo |
 |---|---|
@@ -61,7 +61,7 @@ Abra http://localhost:8000. O site também abre direto do disco (`dist/index.htm
 | **Laboratório** | aba Tátil (arraste x₀, x₀ e x₁ ou [a, b] no gráfico e veja as 3 primeiras iterações; bacias de convergência do Newton), Corrida de Convergência entre os métodos, troca de linhas com o medidor de Sassenfeld, botão **Testar sensibilidade** (ruído de 1% no b e o número de condição κ) e o Simulador de Fenômenos (a comporta da barragem e a treliça da ponte, que balança e cai com as equações fora de ordem) |
 | **Treino** | 120 problemas misturados: diagnosticar o método, resolver e conferir, com **369 erros típicos** reconhecidos |
 | **Modo prova** | 5, 10 ou 15 questões, cronômetro, nota de 0 a 10 e relatório em PDF |
-| **Terminal** | equações e sistemas lineares, intervalo [a, b] do exercício, teclado científico, comparação de métodos, aba **Slides** (tabela no formato da professora, com o **Modo Lousa** e o destaque do pivô no Gauss), aba Convergência e verificação da raiz; Raiz e Pivô reagem ao método (tesoura na Bisseção, soco no Gauss, transferidor quando a calculadora parece estar em graus) |
+| **Terminal** | aba **Saída do terminal** (configuração, tabela de iterações e conclusão com resíduo; Bisseção com 6 casas e checagem f(a)·f(b) < 0, Newton com 8 casas e derivada simbólica, Gauss com pivoteamento parcial e 6 casas), equações e sistemas lineares, intervalo [a, b] do exercício, teclado científico, comparação de métodos, aba **Slides** (tabela no formato da professora, com o **Modo Lousa** e o destaque do pivô no Gauss), aba Convergência e verificação da raiz; Raiz e Pivô reagem ao método (tesoura na Bisseção, soco no Gauss, transferidor quando a calculadora parece estar em graus) |
 | **Progresso** | XP, moedas, 12 conquistas (2 delas pelos jogos), camarim e backup em JSON |
 
 ### Calculândia: casas, chefões e o final

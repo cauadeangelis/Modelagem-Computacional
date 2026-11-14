@@ -1,5 +1,12 @@
 # Histórico de versões
 
+## v15 — Terminal com saída de terminal: 6 casas na Bisseção, 8 no Newton e Gauss 4×4 com pivoteamento
+
+- **Aba "Saída do terminal"** (abre primeiro depois de resolver): sempre na mesma ordem, [1] configuração inicial, [2] tabela de iterações e [3] conclusão analítica com o resíduo.
+- **Bisseção (e Falsa Posição):** 6 casas decimais; confere f(a)·f(b) < 0 (Bolzano) antes de começar; tabela n, aₙ, bₙ, xₙ, f(xₙ) e (bₙ − aₙ)/2; tolerância padrão ε = 10⁻⁶.
+- **Newton-Raphson:** 8 casas decimais; **derivada simbólica** calculada da própria expressão (3x² − 2 para x³ − 2x − 5), sem diferenças finitas; tabela n, xₙ, f(xₙ), f′(xₙ), xₙ₊₁ e |xₙ₊₁ − xₙ|; parada imediata com aviso quando f′(xₙ) = 0.
+- **Eliminação de Gauss:** matriz ampliada [A | b] de qualquer tamanho até 6×6 (4×4 incluído), pivoteamento parcial em todas as colunas com as trocas de linha mostradas, multiplicadores, pivôs e substituição regressiva com 6 casas, e verificação Ax − b no fim.
+
 ## v14 — Complemento do plano de evolução pedagógica (10/11/2026)
 
 - Laboratório ampliado: malha térmica Seidel/Jacobi, resfriamento por Euler, drone com Runge/spline, mantissa, pontos com interpolação/ajuste/quadraturas e Ponto Fixo opcional.

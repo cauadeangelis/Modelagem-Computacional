@@ -97,3 +97,6 @@
 @keyframes lt-treme{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
 @media (prefers-reduced-motion:reduce){.lt-gota,.lt-fen.caiu{animation:none}.lt-pistao,.lt-haste,.lt-medidor i{transition:none}}
 @media (max-width:720px){.lt-card{padding:14px}}
+/* v15: aba "Saída do terminal" (protocolo fixo: configuração, iterações, conclusão) */
+.saida-term{margin:.5rem 0 0;padding:1rem 1.1rem;border-radius:12px;background:#0f1720;color:#d7f7d0;font:13px/1.55 ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;white-space:pre;overflow-x:auto;tab-size:4;max-width:100%}
+.saida-term:focus-visible{outline:3px solid var(--accent,#7c5cff);outline-offset:2px}

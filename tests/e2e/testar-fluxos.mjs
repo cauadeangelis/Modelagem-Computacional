@@ -312,7 +312,7 @@ await page.fill('#source', 'x^3 - 9x + 3 = 0 em [0; 1]'); await page.waitForTime
 ok((await page.textContent('.calc-check')).includes('no intervalo [0; 1]'), 'Teclado reconhece o intervalo escrito junto da equação');
 await page.selectOption('#algorithm', 'bisection'); await page.click('#solve-btn'); await page.waitForSelector('.interval-echo');
 ok(await page.inputValue('#a') === '0' && await page.inputValue('#b') === '1' && !(await page.inputValue('#source')).includes('['), 'O intervalo sai da equação e vai para os campos a e b');
-ok((await page.textContent('.answer-result strong')).includes('0,33760') && (await page.$$('.g-iv')).length === 2, 'Bisseção em [0; 1]: raiz 0,3376 e pontas marcadas no gráfico');
+await page.click('[data-act=result-tab][data-id=solution]'); ok((await page.textContent('.answer-result strong')).includes('0,33760') && (await page.$$('.g-iv')).length === 2, 'Bisseção em [0; 1]: raiz 0,3376 e pontas marcadas no gráfico');
 await page.evaluate(() => document.querySelector('.result-shell').scrollIntoView()); await shot(page, 'v10.1-intervalo-bissecao');
 await page.fill('#a', '0'); await page.fill('#b', '3'); await page.click('#solve-btn'); await page.waitForSelector('.alert .iv-fix');
 ok((await page.textContent('.alert')).includes('mesmo sinal') && (await page.$$('.alert [data-act=use-interval]')).length === 2, 'Mesmo sinal nas pontas: explica e sugere [0,3; 0,4] e [2,8; 2,9]');

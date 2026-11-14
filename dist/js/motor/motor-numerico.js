@@ -111,6 +111,84 @@
       default: return [NaN, NaN];
     }
   }
+  // Derivada simbólica (v15): f′ sai da própria árvore da expressão, sem diferenças finitas.
+  // O Newton-Raphson usa esta derivada exata quando ela existe; o texto aparece no Terminal.
+  const N = (v) => ({ k: 'num', v }), isNum = (n, v) => n.k === 'num' && (v === undefined || n.v === v);
+  const temX = (n) => n.k === 'var' ? n.name === 'x' : n.k === 'num' ? false : n.k === 'fn' || n.k === 'unary' ? temX(n.arg) : temX(n.left) || temX(n.right);
+  const neg = (a) => isNum(a) ? N(-a.v) : a.k === 'unary' && a.op === '-' ? a.arg : { k: 'unary', op: '-', arg: a };
+  const add = (a, b) => isNum(a, 0) ? b : isNum(b, 0) ? a : isNum(a) && isNum(b) ? N(a.v + b.v) : b.k === 'unary' && b.op === '-' ? sub(a, b.arg) : { k: 'bin', op: '+', left: a, right: b };
+  const sub = (a, b) => isNum(b, 0) ? a : isNum(a, 0) ? neg(b) : isNum(a) && isNum(b) ? N(a.v - b.v) : b.k === 'unary' && b.op === '-' ? add(a, b.arg) : { k: 'bin', op: '-', left: a, right: b };
+  const mul = (a, b) => {
+    if (isNum(a, 0) || isNum(b, 0)) return N(0);
+    if (isNum(a, 1)) return b; if (isNum(b, 1)) return a;
+    if (isNum(a, -1)) return neg(b); if (isNum(b, -1)) return neg(a);
+    if (isNum(a) && isNum(b)) return N(a.v * b.v);
+    if (isNum(b)) return mul(b, a);
+    if (isNum(a) && b.k === 'bin' && b.op === '*' && isNum(b.left)) return mul(N(a.v * b.left.v), b.right);
+    if (a.k === 'unary' && a.op === '-') return neg(mul(a.arg, b));
+    if (b.k === 'unary' && b.op === '-') return neg(mul(a, b.arg));
+    return { k: 'bin', op: '*', left: a, right: b };
+  };
+  const div = (a, b) => a.k === 'var' && b.k === 'var' && a.name === b.name ? N(1) : isNum(a, 0) ? N(0) : isNum(b, 1) ? a : isNum(a) && isNum(b) && b.v !== 0 ? N(a.v / b.v) : { k: 'bin', op: '/', left: a, right: b };
+  const pow = (a, b) => isNum(b, 1) ? a : isNum(b, 0) ? N(1) : isNum(a) && isNum(b) ? N(Math.pow(a.v, b.v)) : { k: 'bin', op: '^', left: a, right: b };
+  const F = (name, arg) => ({ k: 'fn', name, arg });
+  function diffNode(n) {
+    switch (n.k) {
+      case 'num': return N(0);
+      case 'var': return N(n.name === 'x' ? 1 : 0);
+      case 'unary': return n.op === '-' ? neg(diffNode(n.arg)) : diffNode(n.arg);
+      case 'fn': {
+        const u = n.arg, du = diffNode(u);
+        if (isNum(du, 0)) return N(0);
+        const inner = {
+          sin: () => F('cos', u), sen: () => F('cos', u), cos: () => neg(F('sin', u)), tan: () => div(N(1), pow(F('cos', u), N(2))), tg: () => div(N(1), pow(F('cos', u), N(2))),
+          sqrt: () => div(N(1), mul(N(2), F('sqrt', u))), raiz: () => div(N(1), mul(N(2), F('sqrt', u))), abs: () => div(u, F('abs', u)), exp: () => F('exp', u),
+          ln: () => div(N(1), u), log: () => div(N(1), mul(u, F('ln', N(10)))), asin: () => div(N(1), F('sqrt', sub(N(1), pow(u, N(2))))),
+          acos: () => neg(div(N(1), F('sqrt', sub(N(1), pow(u, N(2)))))), atan: () => div(N(1), add(N(1), pow(u, N(2)))), sinh: () => F('cosh', u), cosh: () => F('sinh', u)
+        }[n.name];
+        if (!inner) err('Derivada simbólica indisponível para ' + n.name + '.');
+        const g = inner();
+        if (isNum(du, 1)) return g;
+        if (g.k === 'bin' && g.op === '/' && isNum(g.left, 1)) return div(du, g.right);
+        return mul(du, g);
+      }
+      case 'bin': {
+        const { op, left: l, right: r } = n;
+        if (op === '+') return add(diffNode(l), diffNode(r));
+        if (op === '-') return sub(diffNode(l), diffNode(r));
+        if (op === '*') return add(mul(diffNode(l), r), mul(l, diffNode(r)));
+        if (op === '/') { if (!temX(r)) return div(diffNode(l), r); return div(sub(mul(diffNode(l), r), mul(l, diffNode(r))), pow(r, N(2))); }
+        if (!temX(r)) { const e = isNum(r) ? N(r.v - 1) : sub(r, N(1)); return mul(mul(r, pow(l, e)), diffNode(l)); }
+        if (!temX(l)) return isNum(l, Math.E) ? mul(pow(l, r), diffNode(r)) : mul(mul(pow(l, r), F('ln', l)), diffNode(r));
+        return mul(pow(l, r), add(mul(diffNode(r), F('ln', l)), div(mul(r, diffNode(l)), l)));
+      }
+      default: return err('Nó matemático desconhecido.');
+    }
+  }
+  const SUP = { '0': '⁰', '1': '¹', '2': '²', '3': '³', '4': '⁴', '5': '⁵', '6': '⁶', '7': '⁷', '8': '⁸', '9': '⁹' };
+  const numText = (v) => v === Math.PI ? 'π' : v === Math.E ? 'e' : String(Number(v.toPrecision(10))).replace('.', ',').replace('-', '−');
+  // Texto legível da árvore: 3x² − 2, cos(x)·eˣ fica cos(x)·exp(x); expoente inteiro pequeno vira sobrescrito.
+  function nodeText(n, parent = 0, right = false) {
+    const wrapP = (t, prec) => (prec < parent || (right && prec === parent && prec !== 4)) ? '(' + t + ')' : t;
+    switch (n.k) {
+      case 'num': { const t = numText(n.v); return n.v < 0 && parent > 0 ? '(' + t + ')' : t; }
+      case 'var': return n.name;
+      case 'unary': return n.op === '-' ? wrapP('−' + nodeText(n.arg, 3), 3) : nodeText(n.arg, parent, right);
+      case 'fn': return n.name + '(' + nodeText(n.arg, 0) + ')';
+      case 'bin': {
+        if (n.op === '^') {
+          const base = nodeText(n.left, 5);
+          if (isNum(n.right) && Number.isInteger(n.right.v) && n.right.v >= 0 && n.right.v <= 99) return wrapP(base + String(n.right.v).split('').map((c) => SUP[c]).join(''), 4);
+          return wrapP(base + '^' + nodeText(n.right, 5), 4);
+        }
+        const prec = n.op === '+' || n.op === '-' ? 1 : 2;
+        const L = nodeText(n.left, prec), R = nodeText(n.right, prec, true);
+        if (n.op === '*') return wrapP(isNum(n.left) && /^(x|\()/.test(R) ? L + R : L + '·' + R, prec);
+        return wrapP(L + ' ' + ({ '+': '+', '-': '−', '/': '/' })[n.op] + ' ' + R, prec);
+      }
+      default: return '?';
+    }
+  }
   function parseFunction(raw) {
     const parts = String(raw).split('=');
     if (parts.length > 2) err('Digite uma expressão ou apenas uma igualdade, como x² − 2 = 0.');
@@ -118,6 +196,12 @@
     const right = parts.length === 2 ? parseSide(parts[1]) : { k: 'num', v: 0 };
     const fn = (x) => evalNode(left, x) - evalNode(right, x);
     fn.noise = (x) => 32 * Number.EPSILON * (magNode(left, x)[1] + magNode(right, x)[1]);
+    try {
+      const d = sub(diffNode(left), diffNode(right));
+      fn.dfn = (x) => evalNode(d, x);
+      fn.text = nodeText(sub(left, right));
+      fn.dtext = nodeText(d);
+    } catch (_) { /* sem derivada simbólica: o Newton usa diferenças finitas */ }
     return fn;
   }
   // Função "contada" ou embrulhada continua sabendo o próprio ruído de arredondamento.
@@ -221,12 +305,13 @@
     const check = () => { if (Math.abs(fx) > tolerance) return null; const c = certifyRoot(fn, x); return certified(c) ? result('newton', iterations, x, Math.abs(fx), true, certNote(c), c) : c.status === 'quase' ? result('newton', iterations, x, Math.abs(fx), false, certNote(c), c) : null; };
     let done = check(); if (done) return done;
     for (let i = 1; i <= maxIterations; i++) {
-      const d = derivative(fn, x);
-      if (!Number.isFinite(d) || d === 0) err('Newton-Raphson: derivada nula ou quase nula. Tente outra aproximação.');
+      let d = typeof fn.dfn === 'function' ? fn.dfn(x) : NaN;
+      if (!Number.isFinite(d)) d = derivative(fn, x);
+      if (!Number.isFinite(d) || d === 0) err(`Newton-Raphson: parada por derivada nula. f′(x${SUBS(i - 1)}) = ${Number.isFinite(d) ? 0 : 'indefinida'} em x${SUBS(i - 1)} = ${fmt(x)}; a reta tangente não cruza o eixo. Tente outra aproximação inicial.`);
       const next = x - fx / d;
       if (!Number.isFinite(next) || Math.abs(next) > 1e15) err('Newton-Raphson divergiu. Tente outro ponto inicial ou Bisseção.');
       const nf = value(fn, next), delta = Math.abs(next - x);
-      iterations.push({ i, x: next, fx: nf, error: delta, previous: x, derivative: d, detail: `x = ${fmt(x)} − f(x)/f'(x), f'(x) ≈ ${fmt(d)}` });
+      iterations.push({ i, x: next, fx: nf, error: delta, previous: x, derivative: d, detail: `x = ${fmt(x)} − f(x)/f'(x), f'(x) = ${fmt(d)}` });
       x = next; fx = nf;
       done = check(); if (done) return done;
       if (delta <= tolerance * (1 + Math.abs(x))) return result('newton', iterations, x, Math.abs(fx), false, 'Parou por pequena variação entre aproximações. Confira o resíduo.');
@@ -810,5 +895,5 @@
 
   // Expressão com várias variáveis, ex.: f(x, y) = 2y/(x + 1) + (x + 1)^3 (EDOs do banco de questões).
   function parseExpression(raw, variables = ['x', 'y']) { const ast = parseSide(raw, variables); return (vals) => evalNode(ast, vals); }
-  global.NumeraMath = { parseExpression, parseFunction, parseSystem, bisection, falsePosition, newton, secant, fixedPoint, gauss, seidel, autoRoot, smartRoot, compareRoot, autoSystem, convergenceRoot, convergenceSystem, convergenceStart, observedOrder, value, derivative, fmt, maxResidual, backwardError, validateSystem, certifyRoot, conditionNumber, equilibrate, constValue, parseInterval, splitInterval, intervalStart, signChanges, bisectionBound, fixedPointCheck };
+  global.NumeraMath = { diffText: (raw) => { const f = parseFunction(raw); return f.dtext; }, parseExpression, parseFunction, parseSystem, bisection, falsePosition, newton, secant, fixedPoint, gauss, seidel, autoRoot, smartRoot, compareRoot, autoSystem, convergenceRoot, convergenceSystem, convergenceStart, observedOrder, value, derivative, fmt, maxResidual, backwardError, validateSystem, certifyRoot, conditionNumber, equilibrate, constValue, parseInterval, splitInterval, intervalStart, signChanges, bisectionBound, fixedPointCheck };
 })(window);

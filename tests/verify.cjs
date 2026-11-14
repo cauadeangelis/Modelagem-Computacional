@@ -530,7 +530,7 @@ group='PWA e organização';
  ok(/EM_USO = \/\\\/jogos\\\/calculandia\\\//.test(read('sw.js'))&&read('sw.js').includes('guardar(req, res)'),'Calculândia guardada no cache na primeira vez que abre (offline depois)');
  ok(files.every(f=>sw.assets.includes(f)),'Todo arquivo do site está no cache offline: '+files.filter(f=>!sw.assets.includes(f)).join(','));ok(sw.assets.filter(a=>a!=='./').every(a=>files.includes(a)),'Nenhum arquivo fantasma no cache offline');
  ok(read('sw.js').includes(`const VERSION = '${sw.version}'`),'Versão do cache offline em dia (rode tests/pwa/atualizar-sw.cjs)');
- const html=read('index.html');ok(html.includes('rel="manifest"')&&read('js/offline/registrar-offline.js').includes("register('sw.js')")&&html.includes('apple-touch-icon'),'index.html liga o manifesto e o service worker');
+ const html=read('index.html');ok(html.includes('rel="manifest"')&&read('js/offline/registrar-offline.js').includes("register('sw.js'")&&html.includes('apple-touch-icon'),'index.html liga o manifesto e o service worker');
  const scripts=[...html.matchAll(/<script src="([^"]+)"/g)].map(m=>m[1]);ok(scripts.join()===[...BASE,...SITE,'js/terminal/teclado-cientifico.js','js/offline/registrar-offline.js'].join(),'Ordem dos scripts');
  const css=[...html.matchAll(/<link rel="stylesheet" href="([^"]+\.css)"/g)].map(m=>m[1]);ok(['css/fontes.css','css/site.css','css/terminal.css','css/treino.css','css/grafico-de-convergencia.css','css/personagens.css'].every(c=>css.includes(c)),'Folhas de estilo ligadas');
  for(const f of files.filter(f=>f.endsWith('.js')))ok(!/\(\?<[=!]/.test(read(f)),'Sem lookbehind em regex (Safari < 16.4): '+f);}

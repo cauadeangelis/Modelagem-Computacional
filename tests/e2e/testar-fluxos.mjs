@@ -273,7 +273,7 @@ await page.selectOption('#algorithm', 'auto'); await page.fill('#source', '(x - 
 ok((await page.textContent('.result-shell .eyebrow')).includes('multiplicidade par'), 'Terminal: raiz dupla marcada como provável');
 // Sistema em escala extrema.
 await page.click('[data-act=mode][data-id=system]'); await page.fill('#source', '1e-20x = 1e-20\ny = 1'); await page.click('#terminal-form button[type=submit]'); await page.waitForSelector('.result-shell');
-ok((await page.textContent('.answer-result strong')).replace(/\s/g, '') === 'x=1y=1', 'Terminal resolve 1e-20·x = 1e-20, y = 1');
+ok((await page.textContent('.answer-result strong')).replace(/\s/g, '') === 'x=1,000000y=1,000000', 'Terminal resolve 1e-20·x = 1e-20, y = 1');
 // Aulas em vídeo na trilha: links e player só depois do clique.
 await go('academy'); await page.click('[data-act=course][data-id=secant]');
 ok(await page.$$eval('.course-videos .video-card', c => c.length) === 3, 'Trilha da Secante: 3 aulas em vídeo');

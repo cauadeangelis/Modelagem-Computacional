@@ -123,7 +123,7 @@ function labResult(){const r=s.result,sys=Array.isArray(r.root),rs=rootStatus(r)
    Bisseção e Falsa Posição com 6 casas, Newton-Raphson com 8 casas (f′ simbólica), Eliminação de Gauss com 6 casas
    e pivoteamento parcial. Ordem: configuração inicial, tabela de iterações, conclusão analítica com o resíduo. */
 const CASAS_TERM={bisection:6,falseposition:6,newton:8,secant:8,fixedpoint:6,gauss:6,seidel:6};
-function fx(v,d){if(typeof v!=='number'||!Number.isFinite(v))return '—';let t=v.toFixed(d);if(/^-0\.0*$/.test(t))t=t.slice(1);return t.replace('.',',').replace('-','−');}
+function fx(v,d){if(typeof v!=='number'||!Number.isFinite(v))return '—';const k=Math.pow(10,d),r=Math.sign(v)*Math.round(Math.abs(v)*k*(1+1e-12))/k;let t=r.toFixed(d);if(/^-0\.0*$/.test(t))t=t.slice(1);return t.replace('.',',').replace('-','−');}
 function sci(v){if(typeof v!=='number'||!Number.isFinite(v))return '—';if(v===0)return '0';return v.toExponential(2).replace('.',',').replace('e-','e−').replace(/^-/,'−');}
 const detalheCasas=(t,d)=>String(t).replace(/(= |pivô )(-?\d+(?:\.\d+)?(?:e[-+]?\d+)?)/g,(m0,p,v)=>p+fx(Number(v),d));
 const SUBN=n=>String(n).replace(/[0-9]/g,c=>'₀₁₂₃₄₅₆₇₈₉'[c]);
@@ -154,16 +154,16 @@ function terminalOut(r){
   }
   if(['newton','fixedpoint'].includes(r.method)&&r.iterations[0])out.push(`    x₀ = ${fx(r.iterations[0].x,d)}`);
   if(r.method==='secant'&&Number.isFinite(r.inputs?.x0)&&Number.isFinite(r.inputs?.x1))out.push(`    x₀ = ${fx(r.inputs.x0,d)}   x₁ = ${fx(r.inputs.x1,d)}`);
-  out.push(r.precisao?`    Precisão: ${r.method==='bisection'?'(bₙ − aₙ)/2':'|xₙ₊₁ − xₙ|'} ≤ ${sci(r.precisao)}, para as ${d} casas saírem exatas${r.toleranciaPedida>r.precisao?` (a tolerância digitada, ${fx(r.toleranciaPedida,d).replace(/0+$/,'').replace(/,$/,'')}, pararia cedo demais)`:''}   Casas exibidas: ${d}`:`    Tolerância ε = ${tolTxt}   Casas exibidas: ${d}`);
+  out.push(r.precisao?`    Critério de parada: erro% = |xₙ − xₙ₋₁| / |xₙ| × 100 < ε = ${fx(r.precisao,6).replace(/0+$/,'').replace(/,$/,'')}   Casas exibidas: ${d}`:`    Tolerância ε = ${tolTxt}   Casas exibidas: ${d}`);
  }
  out.push('','[2] TABELA DE ITERAÇÕES');
  const it=r.iterations;
  if(r.method==='bisection'||r.method==='falseposition'){
-  const rows=it.filter(x=>x.i>0).map(x=>[x.i,fx(x.a,d),fx(x.b,d),fx(x.x,d),fx(x.fx,d),fx(r.method==='bisection'?x.error:x.error,d)]);
-  out.push(rows.length?grade(['n','aₙ','bₙ','xₙ','f(xₙ)',r.method==='bisection'?'(bₙ − aₙ)/2':'|xₙ − xₙ₋₁|'],rows).replace(/^/gm,'    '):'    (a ponta do intervalo já era raiz)');
+  const pct=!!r.precisao,rows=it.filter(x=>x.i>0).map(x=>[x.i,fx(x.a,d),fx(x.b,d),fx(x.x,d),fx(x.fx,d),pct?(x.erroPct==null?'—':fx(x.erroPct,4)+'%'):fx(x.error,d)]);
+  out.push(rows.length?grade(['n','aₙ','bₙ','xₙ','f(xₙ)',pct?'erro%':r.method==='bisection'?'(bₙ − aₙ)/2':'|xₙ − xₙ₋₁|'],rows).replace(/^/gm,'    '):'    (a ponta do intervalo já era raiz)');
  }else if(r.method==='newton'){
-  const rows=it.filter(x=>x.i>0).map((x,k)=>[k,fx(x.previous,d),fx(it[k].fx,d),fx(x.derivative,d),fx(x.x,d),fx(x.error,d)]);
-  out.push(rows.length?grade(['n','xₙ','f(xₙ)','f′(xₙ)','xₙ₊₁','|xₙ₊₁ − xₙ|'],rows).replace(/^/gm,'    '):'    (x₀ já satisfaz a tolerância)');
+  const pct=!!r.precisao,rows=it.filter(x=>x.i>0).map((x,k)=>[k,fx(x.previous,d),fx(it[k].fx,d),fx(x.derivative,d),fx(x.x,d),pct?(x.erroPct==null?'—':fx(x.erroPct,4)+'%'):fx(x.error,d)]);
+  out.push(rows.length?grade(['n','xₙ','f(xₙ)','f′(xₙ)','xₙ₊₁',pct?'erro%':'|xₙ₊₁ − xₙ|'],rows).replace(/^/gm,'    '):'    (x₀ já satisfaz a tolerância)');
  }else if(r.method==='gauss'){
   it.forEach((x,k)=>{out.push(`    (${k+1}) ${detalheCasas(x.detail,d)}`);if(x.matrix&&!/^Substituição/.test(x.detail)){const rows=x.matrix.map(row=>row.map(v=>fx(v,d)));const w=rows[0].map((_,j)=>Math.max(...rows.map(y=>y[j].length)));rows.forEach(y=>out.push('        [ '+y.map((c,j)=>(j===y.length-1?'| ':'')+c.padStart(w[j])).join('  ')+' ]'));}});
  }else if(sys){
@@ -184,8 +184,8 @@ function terminalOut(r){
   const fr=fn&&Number.isFinite(r.root)?fn(r.root):r.residual,n=r.method==='bisection'||r.method==='falseposition'?it[it.length-1].i:r.method==='secant'?Math.max(0,it[it.length-1].i-1):it[it.length-1].i;
   out.push(`    ${r.converged?'Raiz':r.certification?.status==='quase'?'Ponto testado: não é raiz':'Última aproximação (não validada)'}: x ≈ ${fx(r.root,d)}   (${d} casas decimais)`);
   out.push(`    Iterações: ${n}`);
-  out.push(`    Resíduo: f(${fx(r.root,d)}) = ${sci(fr)}  ${Math.abs(fr)<=Math.max(r.effectiveTolerance??1e-6,1e-6)?'≈ 0  ✓':'(acima da tolerância)'}`);
-  const ult=it[it.length-1];out.push(`    Parada: ${r.precisao?(r.converged&&ult&&Number.isFinite(ult.error)?`${r.method==='bisection'?'(bₙ − aₙ)/2':'|xₙ₊₁ − xₙ|'} = ${sci(ult.error)} ≤ ${sci(r.precisao)}: as ${d} casas exibidas estão certas`:(r.note||'limite de iterações')):r.converged?`|f(x)| ≤ ε = ${tolTxt}`:(r.note||'limite de iterações')}`);
+  out.push(`    Resíduo: f(${fx(r.root,d)}) = ${sci(fr)}  ${r.precisao?'':Math.abs(fr)<=Math.max(r.effectiveTolerance??1e-6,1e-6)?'≈ 0  ✓':'(acima da tolerância)'}`);
+  const ult=it[it.length-1];out.push(`    Parada: ${r.precisao?(ult&&ult.erroPct!=null&&ult.erroPct<r.precisao?`erro% = ${fx(ult.erroPct,4)}% < ε = ${fx(r.precisao,6).replace(/0+$/,'').replace(/,$/,'')}%`:(r.note||'limite de iterações')):r.converged?`|f(x)| ≤ ε = ${tolTxt}`:(r.note||'limite de iterações')}`);
  }
  const txt=out.join('\n');
  return `${resumoResultado(r)}${r.intervalNotes&&r.intervalNotes.length?`<div class="callout iv-notes"><strong>Sobre o intervalo ${safe(ivText(r.interval||{a:NaN,b:NaN}))}</strong>${r.intervalNotes.map(n=>`<p>${safe(n)}</p>`).join('')}${r.intervalFix&&r.intervalFix.length?`<div class="row-actions iv-fix">${r.intervalFix.map(f=>`<button type="button" class="btn ghost" data-act="use-interval" data-a="${f.a}" data-b="${f.b}">Resolver em ${safe(ivText(f))}</button>`).join('')}</div>`:''}</div>`:''}<p class="fine">Saída no formato de terminal: configuração, tabela de iterações e conclusão. ${d} casas decimais neste método${r.method==='newton'?'; a derivada é calculada de forma simbólica':''}${r.method==='gauss'?'; pivoteamento parcial em todas as etapas':''}.</p><pre class="saida-term" tabindex="0" aria-label="Saída do terminal">${safe(txt)}</pre>`;}
@@ -255,10 +255,10 @@ function iterationFunction(source,g){
 }
 function solve(){collect();let source=s.source.trim();s.error='';s.errorFix=null;s.result=null;
  if(source.startsWith('/')){if(source==='/help')s.help=true;else if(source==='/history')s.historyOpen=true;else if(source==='/clear'){s.source='';s.help=false;s.historyOpen=false;}else s.error='Comando desconhecido. Use /help, /history ou /clear.';render();return;}
- try{if(!source||source.length>4000)throw Error('Digite uma expressão de até 500 caracteres ou um sistema de até 4.000 caracteres.');const options={tolerance:numeric(s.tolerance),maxIterations:numeric(s.maxIterations)};if(!/\n|\|/.test(source)&&s.algorithm==='bisection'){options.largura=Math.min(options.tolerance,5e-7);options.maxIterations=Math.max(options.maxIterations,60);}if(!/\n|\|/.test(source)&&s.algorithm==='newton'){options.passo=Math.min(options.tolerance,5e-9);options.maxIterations=Math.max(options.maxIterations,60);}
+ try{if(!source||source.length>4000)throw Error('Digite uma expressão de até 500 caracteres ou um sistema de até 4.000 caracteres.');const options={tolerance:numeric(s.tolerance),maxIterations:numeric(s.maxIterations)};if(!/\n|\|/.test(source)&&(s.algorithm==='bisection'||s.algorithm==='newton')){options.percentual=options.tolerance;options.maxIterations=Math.max(options.maxIterations,100);}
  const system=source.includes('\n')||source.includes('|');let r;if(system){s.mode='system';const {A,b,variables}=M.parseSystem(source),initial=s.initial.trim()?s.initial.trim().split(/[;,\s]+/).map(Number):A.map(()=>0);if(initial.length!==A.length||initial.some(v=>!Number.isFinite(v)))throw Error('Vetor inicial: informe um número por incógnita, separados por espaço ou vírgula.');const alg=['gauss','seidel'].includes(s.algorithm)?s.algorithm:'auto';s.algorithm=alg;r=alg==='gauss'?M.gauss(A,b,options):alg==='seidel'?M.seidel(A,b,initial,options):M.autoSystem(A,b,initial,options);Object.assign(r,{A,b,variables});}
  else{s.mode='root';if(['gauss','seidel'].includes(s.algorithm))s.algorithm='auto';const out=solveRoot(source,options);r=out.r;source=out.source;}
- s.result={...r,source,effectiveTolerance:!system&&s.algorithm==='auto'?1e-12:options.tolerance,precisao:options.largura||options.passo||null,toleranciaPedida:options.tolerance};s.resultTab='terminal';s.guideIndex=0;s.guideAnswer='';s.guideFeedback=null;if(r.converged){p.labCount++;const summary=Array.isArray(r.root)?r.root.map(num).join('; '):'x ≈ '+num(r.root)+(r.certification?.status==='multipla'?' (raiz provável, sem troca de sinal)':'');const hsrc=r.interval?`${source} em [${String(s.a).trim()}; ${String(s.b).trim()}]`:source;p.history=[{source:hsrc,summary,method:r.method,date:new Date().toLocaleDateString('pt-BR')},...p.history.filter(h=>h.source!==hsrc)].slice(0,10);persist();}
+ s.result={...r,source,effectiveTolerance:!system&&s.algorithm==='auto'?1e-12:options.tolerance,precisao:options.percentual||null,toleranciaPedida:options.tolerance};s.resultTab='terminal';s.guideIndex=0;s.guideAnswer='';s.guideFeedback=null;if(r.converged){p.labCount++;const summary=Array.isArray(r.root)?r.root.map(num).join('; '):'x ≈ '+num(r.root)+(r.certification?.status==='multipla'?' (raiz provável, sem troca de sinal)':'');const hsrc=r.interval?`${source} em [${String(s.a).trim()}; ${String(s.b).trim()}]`:source;p.history=[{source:hsrc,summary,method:r.method,date:new Date().toLocaleDateString('pt-BR')},...p.history.filter(h=>h.source!==hsrc)].slice(0,10);persist();}
  }catch(e){s.error=e.message;}render();}
 function parseAnswer(raw){const text=String(raw).trim().replace(',','.');if(!text)throw Error('Escreva um número ou uma fração antes de conferir.');if(!/^\s*[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[+-]?\d+)?(?:\s*\/\s*[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[+-]?\d+)?)?\s*$/i.test(text))throw Error('Use um número decimal ou uma fração, como 1,416667 ou 17/12.');const a=text.split('/').map(Number),n=a.length===2?a[0]/a[1]:a[0];if(!Number.isFinite(n))throw Error('Esse número não é finito. Confira a divisão.');return n;}
 // Recompensas (v11): moedas por atividade nova, bônus a cada 3 acertos seguidos e bônus de fase e de mundo, pagos uma vez só.

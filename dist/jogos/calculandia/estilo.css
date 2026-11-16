@@ -772,3 +772,24 @@ details.hint-log summary { cursor: pointer; font-weight: 600; }
 .pq-hib-acoes { display: flex; flex-wrap: wrap; gap: 8px; }
 .pq-hib-acoes .btn { min-height: 46px; font-size: 16px; }
 .pq-hib .pq-tabela { background: #fffdf6; color: var(--ink); }
+
+/* ===== v16: região 1 com perguntas fixas e rota em ordem ===== */
+.pq-enunciado.r1-enun { font-size: 17px; line-height: 1.55; }
+.r1-enun p { margin: 0 0 10px; }
+.r1-enun .pq-tabela { margin: 8px 0 10px; }
+.r1-enun .pq-tabela td, .r1-enun .pq-tabela th { text-align: center; font-variant-numeric: tabular-nums; }
+.r1-q { display: inline-grid; place-items: center; min-width: 30px; padding: 0 6px; border-radius: 8px; background: #fff1c7; box-shadow: inset 0 0 0 2px #e0a63a; color: #a8640b; font-weight: 700; }
+.r1-ok { color: #2e8b3a; }
+.r1-pede { font-size: 18px; font-weight: 600; margin: 10px 0 0 !important; padding: 10px 14px; border-radius: 12px; background: #fff1c7; box-shadow: inset 0 0 0 2px #e8cf86; }
+.r1-itens { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 6px; }
+.r1-itens li { padding: 8px 12px; border-radius: 10px; background: #f6efdc; color: #8a7a5a; }
+.r1-itens li.agora { background: #fff1c7; color: var(--ink); font-weight: 600; box-shadow: inset 0 0 0 2px #e8cf86; }
+.r1-itens li.feita { background: #d5eee4; color: #2e8b3a; }
+.r1-sis { font-size: 19px; line-height: 1.75; text-align: center; background: #f3ecdb; border-radius: 12px; padding: 10px; margin: 0 0 12px; font-variant-numeric: tabular-nums; }
+.pq-term-ops { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding: 8px 10px; }
+.pq-term-ops span { color: #9fd79a; margin-right: 4px; }
+.pq-term-ops .btn { font-size: 15px; }
+.pv-ordem { display: inline-grid; place-items: center; min-width: 30px; height: 30px; padding: 0 4px; border-radius: 50%; background: #ffd34d; border: 2px solid var(--ink); font-size: 14px; font-weight: 700; vertical-align: middle; }
+#mapscreen .map-rota.agora circle { animation: rota-pulsa 1.2s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+@keyframes rota-pulsa { 50% { transform: scale(1.25); } }
+@media (prefers-reduced-motion: reduce) { #mapscreen .map-rota.agora circle { animation: none; } }

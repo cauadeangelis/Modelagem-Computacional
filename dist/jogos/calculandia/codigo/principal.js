@@ -36,6 +36,8 @@ import { playCinematic, landingPoint } from './sistemas/cinematica.js';
 import { playFinale } from './sistemas/final-da-usina.js';
 import { Tutorial, TutorialComandos } from './sistemas/tutorial.js';
 import { HUD, phasePreviewInfo } from './interface/painel-do-jogador.js';
+import { descricaoDaRota } from './dados/regiao-1.js';
+import { atualizarRota } from './mundo/ordem-da-rota.js';
 import { Bubbles, Dialog } from './interface/dialogos.js';
 import { Minimap } from './interface/minimapa.js';
 import { MapScreen } from './interface/tela-do-mapa.js';
@@ -391,6 +393,7 @@ function applySettlement(S, animate = false, justNivel = null) {
 function applyAll() {
   const p = G.progress;
   for (const S of G.settlements) applySettlement(S, false);
+  atualizarRota();
   for (let r = 2; r <= 5; r++) G.fog.setLocked(r, !p.regionUnlocked(r), false);
   let boosted = false;
   for (let r = 1; r <= 5; r++) if (p.bossBeaten(BOSS_OF_REGION[r])) { regionBoost[r] = true; boosted = true; }
@@ -472,6 +475,7 @@ function handleResult(S, nivel, res) {
     rz.say(rz.fala('vitoria'));
     S.animal?.celebrate();
     applySettlement(S, true, nivel);
+    atualizarRota();
     if (ev.firstWin) { G.audio.sfx('bandeira'); G.ui.caption(nivel === 'B' ? '🏆 Chefão vencido!' : `🚩 Bandeira içada: ${NIVEIS[nivel].predio}`); }
     if (ev.newStars) { G.ui.hud.pulse('stars'); }
     if (ev.seeds) setTimeout(() => G.ui.seedFly(V(B.x, B.y + 3, B.z), ev.seeds), 600);
@@ -512,6 +516,7 @@ function handleResult(S, nivel, res) {
     if (ev.finalWon) setTimeout(ending, 2500);
     if (S.def.id === 'C0.1' && nivel === 'F') { G.tutorial.advance(5); refreshHudVisibility(); }
     for (const A of G.settlements) if (A.def.tipo === 'arena') applySettlement(A, true);
+    atualizarRota();
   } else {
     G.hero.play('dizzy');
     G.audio.sfx('derrota');
@@ -585,6 +590,12 @@ function setupEvents() {
     if (!d.bells.includes(S.def.id)) { d.bells.push(S.def.id); G.progress.addSeeds(CONFIG.seeds.bell); ui.seedFly(V(S.bell.x, S.baseH + 2.5, S.bell.z), 1); G.progress.save(); }
   });
   E.on('phaseDoor', ({ s, nivel }) => {
+    // v16: a região 1 tem ordem fixa; fora da vez, o pet aponta a próxima casa da rota
+    if (!G.progress.liberadaNaRota(s.def.id, nivel)) {
+      const r = G.progress.proximaDaRota();
+      G.pet.say(`A região 1 tem uma rota: agora é a ${r ? descricaoDaRota(r) : 'próxima casa'}. Siga os números em cima das casas!`, 5);
+      return;
+    }
     if (nivel === 'B' && !G.progress.canFightBoss(s.def)) {
       G.pet.say(s.def.tipo === 'final' ? G.pet.fala('usina') : G.pet.fala('sem_estrelas', { n: G.progress.starsMissing(s.def) }), 4);
       return;
@@ -595,6 +606,7 @@ function setupEvents() {
   E.on('gateNear', (S) => {
     if (G.progress.canFightBoss(S.def) || gateCool > G.time) return;
     gateCool = G.time + 8;
+    if (S.def.regiao === 1) { const r = G.progress.proximaDaRota(); G.pet.say(`O chefão do Silo é o 10º da rota. Antes, a ${r ? descricaoDaRota(r) : 'próxima casa'}.`, 4); return; }
     G.pet.say(G.pet.fala('sem_estrelas', { n: G.progress.starsMissing(S.def) }), 4);
   });
   E.on('usinaGateNear', () => { if (!G.progress.usinaOpen() && gateCool < G.time) { gateCool = G.time + 8; G.pet.say(G.pet.fala('usina'), 4); } });

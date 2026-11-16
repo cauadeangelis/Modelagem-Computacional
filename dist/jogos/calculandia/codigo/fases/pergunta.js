@@ -14,12 +14,15 @@
 // v14 (Plano de Evolução): nas casas vermelhas, às vezes a pergunta é uma Caça ao Bug Numérico (a tabela do
 // estagiário com UMA célula errada: clique nela; js/motor/caca-ao-bug.js do site). No chefão das Raízes, o golpe
 // final é o Método Híbrido: zerar f com um orçamento de 8 avaliações, escolhendo Bisseção, Secante ou Newton.
+// v16: a região 1 tem perguntas fixas (dados/regiao-1.js) e o modo "etapas": o terminal pede um valor de cada
+// vez (um x do Gauss-Seidel, um polinômio de Lagrange, o x final do chefão) e confere número ou expressão.
 import { G } from '../jogo.js';
 import { REGIONS, NIVEIS } from '../dados/regioes-e-cidades.js';
 import { FERRAMENTAS } from '../dados/conhecimento.js';
 import { abrirDuvidas } from '../interface/casas-de-duvidas.js';
 import { abrirInventario } from '../interface/inventario.js';
 import { METODOS } from './metodos-numericos.js';
+import { perguntaFixa } from '../dados/regiao-1.js';
 
 export const esc = (t) => String(t).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 // texto com expoentes: e^(0,226t) → e<sup>0,226t</sup> (depois de escapar o HTML)
@@ -177,6 +180,7 @@ export const hibridoVenceu = (h) => !h.fora && Math.abs(HIBRIDO.f(h.x)) <= HIBRI
 
 /* ---------- resolução (formato dos slides) ---------- */
 function resolucaoHtml(q) {
+  if (q.resolucaoHtml) return `<details class="pq-resol" open><summary>Resolução</summary>${q.resolucaoHtml}<p class="pq-resp"><span>Resposta</span> <b>${tx(q.resposta)}</b></p></details>`;
   const R = globalThis.NumeraResolver;
   let resumo = q.explica || '', tabela = '';
   if (R && q.parametros) {
@@ -200,7 +204,7 @@ function abrirTela({ settlement, casa, perguntas, freeHint = false, chefe = null
   const hpMax = perguntas.length;
   let atual = null, ans = null, log = [], errosQ = 0, acertou = false;
   const usados = new Set(), promise = new Promise((r) => { resolve = r; }), $ = (id) => root.querySelector('#' + id);
-  const limiteErros = () => (atual.q.modo === 'terminal' ? 3 : atual.q.modo === 'hibrido' ? 1 : 2), vidas = chefe ? 3 : null;
+  const limiteErros = () => (atual.q.modo === 'terminal' || atual.q.modo === 'etapas' ? 3 : atual.q.modo === 'hibrido' ? 1 : 2), vidas = chefe ? 3 : null;
   let errosBug = new Set(), linhaLupa = -1;
   let riscadas = new Set(), erradas = new Set();
   function carregar(i) {
@@ -234,6 +238,7 @@ function abrirTela({ settlement, casa, perguntas, freeHint = false, chefe = null
     const q = atual.q, terminado = acertou || fim || errosQ >= limiteErros();
     if (q.modo === 'bug') return areaBug(q, terminado);
     if (q.modo === 'hibrido') return areaHibrido(q, terminado);
+    if (q.modo === 'etapas') return areaEtapas(q, terminado);
     if (q.modo === 'mc') return `<div class="pq-alts" role="group" aria-label="Alternativas">${q.alternativas.map((a, i) => {
       const est = terminado ? (a.correta ? 'certa' : erradas.has(i) ? 'errada' : riscadas.has(i) ? 'riscada' : '') : erradas.has(i) ? 'errada' : riscadas.has(i) ? 'riscada' : '';
       return `<button class="pq-alt ${est}" data-alt="${i}" ${terminado || erradas.has(i) || riscadas.has(i) ? 'disabled' : ''}><b>${'ABCD'[i]}</b><span>${tx(a.texto)}</span></button>`;
@@ -245,12 +250,50 @@ function abrirTela({ settlement, casa, perguntas, freeHint = false, chefe = null
       ${terminado ? '' : `<form class="pq-term-linha" id="pq-form" autocomplete="off"><label for="pq-in">numera&gt;</label><input id="pq-in" type="text" inputmode="text" spellcheck="false" autocapitalize="off" aria-describedby="pq-term-t"><button class="btn" type="submit" id="pq-enviar">Enviar</button></form>`}
     </div>`;
   }
+  // v16: um valor de cada vez; o que já foi aceito sobe para o histórico
+  function areaEtapas(q, terminado) {
+    const e = q.etapas[q.passo], hist = q.log.map((l) => `<div class="${l.c}">${l.h}</div>`).join('');
+    const entrada = terminado || !e ? '' : e.tipo === 'escolha'
+      ? `<div class="pq-term-ops" role="group" aria-label="${esc(e.rotulo)}"><span>${esc(e.rotulo)}</span>${e.opcoes.map(([t], i) => `<button type="button" class="btn" data-op="${i}">${esc(t)}</button>`).join('')}</div>`
+      : `<form class="pq-term-linha" id="pq-form" autocomplete="off"><label for="pq-in">${esc(e.rotulo)} =</label><input id="pq-in" type="text" inputmode="text" spellcheck="false" autocapitalize="off" aria-describedby="pq-term-t"><button class="btn" type="submit" id="pq-enviar">Enviar</button></form>`;
+    return `<div class="pq-term" role="group" aria-labelledby="pq-term-t">
+      <div class="pq-term-topo"><span id="pq-term-t">Terminal de resposta${q.etapas.length > 1 ? ` · ${Math.min(q.passo + 1, q.etapas.length)} de ${q.etapas.length}` : ''}</span><span class="pq-tentativas" aria-label="Tentativas">${'●'.repeat(Math.max(0, limiteErros() - errosQ))}${'○'.repeat(Math.min(limiteErros(), errosQ))}</span></div>
+      <div class="pq-term-log" id="pq-log" aria-live="polite">${hist || `<div class="dim">${esc(q.ajuda || 'Digite a resposta e aperte Enter.')}</div>`}</div>
+      ${entrada}
+    </div>`;
+  }
+  function confereEtapa(e, texto) {
+    if (e.tipo === 'expr') {
+      const M = globalThis.NumeraMath; let f;
+      try { f = M.parseExpression(String(texto).replace(/(\d),(?=\d)/g, '$1.').replace(/[−–]/g, '-').replace(/[·×]/g, '*'), ['x']); } catch (err) { return { ok: null }; }
+      try { const ok = [-1.3, 0, 0.5, 1, 2, 3.7].every((x) => Math.abs(f({ x }) - e.fn(x)) <= 1e-6 * (1 + Math.abs(e.fn(x)))); return { ok }; } catch (err) { return { ok: null }; }
+    }
+    let v; try { v = avaliarConta(String(texto).replace('%', ''), {}); } catch (err) { return { ok: null }; }
+    return { ok: Math.abs(v - e.alvo) <= e.tol, v };
+  }
+  function aceitarEtapa(q, valorMostrado) {
+    const e = q.etapas[q.passo];
+    q.log.push({ c: 'certo', h: `${esc(e.rotulo)} = ${esc(valorMostrado || e.mostra)}  ✔` });
+    q.passo++;
+    if (q.passo >= q.etapas.length) acerto(); else { G.audio?.sfx?.('acerto'); msg = { tipo: 'ok', html: `<b>${esc(e.rotulo)} certo.</b> Agora: ${esc(q.etapas[q.passo].rotulo)}.` }; }
+  }
+  function enviarEtapa(texto, opcao = null) {
+    const q = atual.q, e = q.etapas[q.passo], t = String(texto || '').trim();
+    if (!e || acertou || fim) return;
+    if (e.tipo === 'escolha') { const [rot, certa] = e.opcoes[opcao] || []; if (rot == null) return; if (certa) aceitarEtapa(q, rot); else { q.log.push({ c: 'errado', h: `${esc(e.rotulo)} ${esc(rot)}  ✘` }); erro(e.dica()); } desenhar(); focoPadrao(); return; }
+    if (!t) return;
+    const r = confereEtapa(e, t);
+    if (r.ok) aceitarEtapa(q, e.tipo === 'expr' ? t : e.mostra);
+    else { q.log.push({ c: 'errado', h: `${esc(e.rotulo)} = ${esc(t)}  ✘` }); erro(e.dica(r.v, r.ok)); }
+    desenhar(); focoPadrao();
+  }
   function cabecalhoChefe() {
     if (!chefe) return '';
     return `<div class="pq-chefe" aria-label="Batalha"><span class="pq-chefe-nome">☠ ${esc(chefe.nome)}</span><span class="pq-hp" role="img" aria-label="Vida do chefão: ${vida} de ${hpMax}"><i style="width:${(100 * vida) / hpMax}%"></i></span><span class="pq-vidas" aria-label="Suas vidas: ${Math.max(0, vidas - erros)} de ${vidas}">${'❤️'.repeat(Math.max(0, vidas - erros))}${'🖤'.repeat(Math.min(vidas, erros))}</span></div>`;
   }
   function desenhar() {
     const q = atual.q, sementes = G.progress.seeds, [selo, seloT] = SELO[casa], terminado = acertou || fim || errosQ >= limiteErros();
+    q.final = !!terminado;
     root.innerHTML = `<section class="fase-box pq pq-casa-${casa}" role="dialog" aria-modal="true" aria-labelledby="pq-t">
       <header class="pq-topo"><div class="pq-id"><small>${esc(REGIONS[regiao]?.nome || '')} · ${esc(settlement.nome)}${chefe ? ` · golpe ${idx + 1}` : ''}</small><h2 id="pq-t">${esc(atual.nome || settlement.metodoNome || 'Pergunta')}</h2></div>
         <span class="pq-selo pq-selo-${casa}" title="${esc(seloT)}">${selo}</span><button class="btn" data-pq="sair" id="fz-quit">Sair</button></header>
@@ -259,12 +302,12 @@ function abrirTela({ settlement, casa, perguntas, freeHint = false, chefe = null
         <span class="tq-sementes" title="Sementes: você ganha nos baús e ao vencer fases">🌰 <b>${sementes}</b></span>
         ${disp('conceito', '📘 Conceito', 0, 'Casa de Dúvidas da região: ideia, fórmula e erros comuns')}
         ${disp('dica', '💡 Dica', dicaGratis ? 0 : CUSTO.dica, 'Mostra a fórmula e a ideia do método (tira 1 estrela)', usados.has('dica') || terminado ? 'disabled' : '')}
-        ${disp('lupa', '🔍 Lupa', CUSTO.lupa, q.modo === 'terminal' ? 'Mostra 4 alternativas no lugar do terminal (tira 1 estrela)' : 'Risca uma alternativa errada (tira 1 estrela)', riscadas.size || usados.has('lupa') || terminado ? 'disabled' : '')}
+        ${disp('lupa', '🔍 Lupa', CUSTO.lupa, q.modo === 'terminal' ? 'Mostra 4 alternativas no lugar do terminal (tira 1 estrela)' : q.modo === 'etapas' ? 'Preenche o valor da vez (tira 1 estrela)' : 'Risca uma alternativa errada (tira 1 estrela)', riscadas.size || usados.has('lupa') || terminado ? 'disabled' : '')}
         ${temReliquia ? disp('escudo', `🛡️ Escudo${escudo ? ' ativo' : ''}`, null, 'Relíquia: o primeiro erro não tira estrela', escudo ? 'disabled' : '') : ''}
         ${disp('inventario', '🎒 Inventário', null, 'Ferramentas, cartas e relíquias')}
         ${laboratorio ? disp('laboratorio', '🧪 Laboratório', null, 'Troca a pergunta pelo simulador da fase (modo antigo, com bateria e ferramentas)') : ''}
       </div>
-      <div class="pq-pergunta"><span class="pq-fonte">${esc(q.fonte)}</span><p class="pq-enunciado">${tx(q.enunciado)}</p></div>
+      <div class="pq-pergunta"><span class="pq-fonte">${esc(q.fonte)}</span>${q.html ? `<div class="pq-enunciado r1-enun">${typeof q.html === 'function' ? q.html(q) : q.html}</div>` : `<p class="pq-enunciado">${tx(q.enunciado)}</p>`}</div>
       ${areaResposta()}
       <div id="pq-msg" class="pq-msg ${msg ? msg.tipo : ''}" role="status" aria-live="polite">${msg ? msg.html : ''}</div>
       ${terminado ? resolucaoHtml(q) : ''}
@@ -274,7 +317,7 @@ function abrirTela({ settlement, casa, perguntas, freeHint = false, chefe = null
     const lg = $('pq-log'); if (lg) lg.scrollTop = lg.scrollHeight;
   }
   function focar(sel) { requestAnimationFrame(() => root.querySelector(sel)?.focus?.()); }
-  function focoPadrao() { const terminado = acertou || fim || errosQ >= limiteErros(), m = atual.q.modo; focar(terminado ? (fim ? '#fz-back' : '#pq-proxima') : m === 'terminal' ? '#pq-in' : m === 'bug' ? '.pq-cel:not([disabled])' : m === 'hibrido' ? '[data-hib]:not([disabled])' : '.pq-alt:not([disabled])'); }
+  function focoPadrao() { const terminado = acertou || fim || errosQ >= limiteErros(), m = atual.q.modo; focar(terminado ? (fim ? '#fz-back' : '#pq-proxima') : m === 'terminal' ? '#pq-in' : m === 'etapas' ? '#pq-in, [data-op]' : m === 'bug' ? '.pq-cel:not([disabled])' : m === 'hibrido' ? '[data-hib]:not([disabled])' : '.pq-alt:not([disabled])'); }
   function pagar(qtd) { if (qtd === 0) return true; if (G.progress.spendSeeds(qtd)) { G.audio?.sfx?.('semente'); return true; } msg = { tipo: 'no', html: `Faltam sementes (${qtd} 🌰). Abra os baús espalhados pelo mapa para ganhar mais.` }; return false; }
 
   // acerto/erro de uma pergunta (vale para alternativa e terminal)
@@ -360,6 +403,7 @@ function abrirTela({ settlement, casa, perguntas, freeHint = false, chefe = null
         usados.add('lupa'); pagas++;
         if (q.modo === 'bug') { linhaLupa = q.bug.bug.linha; msg = { tipo: 'dica', html: `🔍 A Lupa encontrou a linha do erro: a linha ${linhaLupa + 1}.` }; }
         else if (q.modo === 'hibrido') msg = { tipo: 'dica', html: '🔍 A Lupa sussurra: comece com a Bisseção até chegar perto da raiz e só então troque para Newton ou Secante.' };
+        else if (q.modo === 'etapas') { const e = q.etapas[q.passo]; if (e) { msg = { tipo: 'dica', html: `🔍 A Lupa preencheu ${esc(e.rotulo)} = ${esc(e.mostra)}.` }; const m = msg; aceitarEtapa(q, e.mostra + ' (Lupa)'); if (!acertou) msg = m; } }
         else if (q.modo === 'terminal') { q.modo = 'mc'; msg = { tipo: 'dica', html: '🔍 A Lupa trocou o terminal por 4 alternativas.' }; }
         else { const livres = q.alternativas.map((a, i) => i).filter((i) => !q.alternativas[i].correta && !erradas.has(i)); const r = livres[Math.floor(Math.random() * livres.length)]; if (r != null) riscadas.add(r); msg = { tipo: 'dica', html: `🔍 A Lupa riscou a alternativa ${'ABCD'[r]}.` }; }
       }
@@ -384,8 +428,8 @@ function abrirTela({ settlement, casa, perguntas, freeHint = false, chefe = null
     else msg = { tipo: 'dica', html: `${{ bis: 'Bisseção', sec: 'Secante', nwt: 'Newton' }[m]}: x = ${esc(fmtTerm(q.h.x, 8))}, |f(x)| = ${esc(fmtTerm(Math.abs(HIBRIDO.f(q.h.x)), 3))}. Restam ${HIBRIDO.orcamento - q.h.ev} ⚡.` };
     desenhar(); focoPadrao();
   }
-  function clique(e) { const cb = e.target.closest('[data-bug]'); if (cb && !cb.disabled) { const [i, j] = cb.dataset.bug.split(',').map(Number); cliqueBug(i, j); return; } const hb = e.target.closest('[data-hib]'); if (hb && !hb.disabled) { cliqueHibrido(hb.dataset.hib); return; } const alt = e.target.closest('[data-alt]'); if (alt && !alt.disabled) { responderAlt(Number(alt.dataset.alt)); return; } const b = e.target.closest('[data-pq]'); if (b && !b.disabled) acao(b.dataset.pq); }
-  function envio(e) { if (e.target.id !== 'pq-form') return; e.preventDefault(); enviarTerminal($('pq-in')?.value); }
+  function clique(e) { const op = e.target.closest('[data-op]'); if (op && !op.disabled) { enviarEtapa('', Number(op.dataset.op)); return; } const cb = e.target.closest('[data-bug]'); if (cb && !cb.disabled) { const [i, j] = cb.dataset.bug.split(',').map(Number); cliqueBug(i, j); return; } const hb = e.target.closest('[data-hib]'); if (hb && !hb.disabled) { cliqueHibrido(hb.dataset.hib); return; } const alt = e.target.closest('[data-alt]'); if (alt && !alt.disabled) { responderAlt(Number(alt.dataset.alt)); return; } const b = e.target.closest('[data-pq]'); if (b && !b.disabled) acao(b.dataset.pq); }
+  function envio(e) { if (e.target.id !== 'pq-form') return; e.preventDefault(); if (atual.q.modo === 'etapas') enviarEtapa($('pq-in')?.value); else enviarTerminal($('pq-in')?.value); }
   function tecla(e) {
     if (fechado || modal || !$('pq-t')) return;
     const alvo = e.target?.tagName, terminado = acertou || fim || errosQ >= limiteErros();
@@ -404,10 +448,13 @@ function abrirTela({ settlement, casa, perguntas, freeHint = false, chefe = null
 
 /* ---------- casas ---------- */
 export function runPergunta({ s: settlement, nivel = 'F', freeHint = false, laboratorio = true }) {
-  const casa = CASA_DO_NIVEL[nivel] || 'verde', metodo = settlement.metodo, q = (G.debug && G.forcarPergunta && G.forcarPergunta(metodo, nivel)) || escolherPergunta(metodo, nivel);
+  const casa = CASA_DO_NIVEL[nivel] || 'verde', fixa = perguntaFixa(settlement.id, nivel), metodo = fixa ? METODO_FIXA(fixa) : settlement.metodo, q = (G.debug && G.forcarPergunta && G.forcarPergunta(metodo, nivel)) || fixa || escolherPergunta(metodo, nivel);
   if (!q) return Promise.resolve({ vitoria: false, abandonou: true, estrelas: 0, semPergunta: true });
-  return abrirTela({ settlement, casa, perguntas: [{ q, metodo, nome: settlement.metodoNome || FERRAMENTAS[metodo]?.nome }], freeHint, laboratorio: laboratorio && casa !== 'verde' });
+  return abrirTela({ settlement, casa, perguntas: [{ q, metodo, nome: fixa ? FERRAMENTAS[metodo]?.nome : settlement.metodoNome || FERRAMENTAS[metodo]?.nome }], freeHint, laboratorio: laboratorio && casa !== 'verde' && !fixa });
 }
+// método da pergunta fixa (para a Dica e o Conceito mostrarem a fórmula certa)
+const METODO_FIXA = (q) => (/seidel/.test(q.id) ? 'seidel' : /lagrange/.test(q.id) ? 'lagrange' : 'bissecao');
+export { perguntaFixa };
 
 /* ---------- chefões: 3 golpes de métodos diferentes da região ---------- */
 export const METODOS_DO_CHEFE = {
@@ -432,7 +479,8 @@ export function golpesDoChefe(id, n = 3) {
   return out;
 }
 export function runChefe({ s: settlement, freeHint = false }) {
-  const golpes = golpesDoChefe(settlement.metodo);
+  const fixa = perguntaFixa(settlement.id, 'B');
+  const golpes = fixa ? [{ q: fixa, metodo: 'bissecao', nome: 'Bisseção: quando parar?' }] : golpesDoChefe(settlement.metodo);
   if (!golpes.length) return Promise.resolve({ vitoria: false, abandonou: true, estrelas: 0, semPergunta: true });
   return abrirTela({ settlement, casa: 'chefe', perguntas: golpes, freeHint, chefe: { nome: NOME_CHEFE[settlement.metodo] || settlement.nome } });
 }

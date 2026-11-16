@@ -11,7 +11,7 @@
     "gerar-treino": "python3 tests/treino/gerar-treino.py dist/dados/treino-exercicios.js",
     "atualizar": "node tests/atualizar.cjs",
     "testar-navegador": "cd tests/e2e && node checar-compat.mjs && node testar-fluxos.mjs http://127.0.0.1:8000/ && node testar-offline.mjs http://127.0.0.1:8000/ && node auditar-a11y.mjs http://127.0.0.1:8000/ && node testar-experimentos.mjs http://127.0.0.1:8000/",
-    "testar-calculandia": "node tests/calculandia/browser-smoke.cjs && node tests/calculandia/world-reach.cjs"
+    "testar-calculandia": "node tests/calculandia/browser-smoke.cjs && node tests/calculandia/regiao-1.cjs && node tests/calculandia/world-reach.cjs"
   },
   "engines": {
     "node": ">=18"

@@ -30,6 +30,7 @@ Modelagem-Computacional/
 | os bonecos Raiz e Pivô (site) | `dist/js/personagens/raiz-e-pivo.js` e `dist/css/personagens.css` |
 | o herói, a Raizinha, as gatas e os bichos (Calculândia) | `dist/jogos/calculandia/codigo/personagens/` |
 | a tela de perguntas das casas e dos chefões (Calculândia) | `dist/jogos/calculandia/codigo/fases/pergunta.js` |
+| as perguntas fixas e a rota numerada da região 1 (Calculândia) | `dist/jogos/calculandia/codigo/dados/regiao-1.js` e os números em cima das casas em `codigo/mundo/ordem-da-rota.js` |
 | a fase final da Usina (três reatores) e a explosão | `dist/jogos/calculandia/codigo/fases/usina-final.js` e `codigo/sistemas/final-da-usina.js` |
 | em que casa cada questão entra (verde, azul, vermelha) | coluna `casa` do `banco-de-questoes/questoes.sql` |
 | o simulador antigo (botão 🧪 Laboratório das casas) | `dist/jogos/calculandia/codigo/fases/tela-da-questao.js` |
@@ -119,7 +120,7 @@ Os arquivos de `js/site/` e `js/paginas/` são scripts comuns que compartilham a
 | `verify.cjs` | motor, conteúdo, interface, Treino, Laboratório, Caça ao Bug, PWA e Bobo da Corte (milhares de verificações no Node) |
 | `atualizar.cjs` | acerta o número de verificações mostrado no site e a versão do cache offline |
 | `banco/conferir-banco.cjs` | refaz todas as questões do banco e confere respostas, alternativas e observações |
-| `calculandia/` | regras das fases, fumaça no navegador (todas as casas, terminal, chefões, Método Híbrido e Usina) e alcance do mapa |
+| `calculandia/` | regras das fases, fumaça no navegador (todas as casas, terminal, chefões, Método Híbrido e Usina), a rota da região 1 (`regiao-1.cjs`) e alcance do mapa |
 | `e2e/` | navegador: fluxos, offline, acessibilidade, compatibilidade, WebKit e capturas |
 | `treino/` | gerador e conferência do Treino |
 | `terminal/`, `pwa/`, `a11y/`, `rendered/` | Terminal, cache offline, resultado do axe e páginas renderizadas |

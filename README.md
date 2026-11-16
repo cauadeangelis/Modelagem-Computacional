@@ -6,14 +6,14 @@ Jogo e laboratório de **métodos numéricos** para a disciplina de Modelagem Co
 - **Listas:** os Testes 1 a 6 e as listas da disciplina num **banco de questões em SQL** ([`banco-de-questoes/`](banco-de-questoes/README.md)), com correção na hora, resolução no formato dos slides e explicação quando o gabarito impresso não confere com a conta. Questão errada vai para a **Revisão**.
 - **Jogos:**
   - **Relâmpago:** 10 perguntas rápidas de múltipla escolha, com cronômetro e combo, e o modo **Caça ao Bug Numérico** (ache a célula errada da tabela).
-  - **Calculândia — Caçadores de Raízes:** aventura 3D com 63 fases, 21 métodos, cinco chefões e a Usina. Todas as perguntas usam a mesma tela: casa verde com múltipla escolha básica, casa azul com os Testes e as listas da Profa. Danielle e casa vermelha com as listas de Cálculo Numérico, as duas com o **terminal** para digitar a conta. No fim, os três reatores da Usina (Bisseção com 10 iterações, Gauss 4×4 e Newton com 6 iterações) e a explosão.
+  - **Calculândia — Caçadores de Raízes:** aventura 3D com 63 fases, 21 métodos, cinco chefões e a Usina. Todas as perguntas usam a mesma tela: casa verde com múltipla escolha básica, casa azul com os Testes e as listas da Profa. Danielle e casa vermelha com as listas de Cálculo Numérico, as duas com o **terminal** para digitar a conta. No fim, os três reatores da Usina (Bisseção com 10 iterações, Gauss 4×4 e Newton com 6 iterações) e a explosão. Na região 1, as 9 casas e o chefão do Silo têm perguntas fixas e seguem uma rota numerada (1ª a 9ª e o 10º), com o número em cima de cada lugar.
   - **Bobo da Corte** (antigo Quem Divergiu?): jogo de sala para o telão. Cada aluno faz um palpite em segredo, a turma vota em quem divergiu e o mais votado vira o **Bobo da Corte** da rodada, com cortina, dança e roleta de prendas.
 - **Laboratório** (aberto pelo Terminal): arraste o x₀ e veja para qual raiz o Newton vai (bacias de convergência), a **Corrida de Convergência**, troque linhas de um sistema até ele convergir (Sassenfeld), teste a sensibilidade (κ) e resolva dois fenômenos (comporta e treliça).
 - **Treino de diagnóstico** com 120 exercícios, **modo prova** e um **Terminal** que mostra cada passo do cálculo, com a aba **Slides** (tabela no formato da professora), o **Modo Lousa** (a tabela construída célula por célula) e gráfico de convergência.
 
 É um site estático: HTML, CSS e JavaScript puros, sem build, sem servidor, sem conta e sem rastreadores. Funciona offline e pode ser instalado como app.
 
-**Versão 15** · [Mapa do projeto (onde fica cada arquivo)](MAPA-DO-PROJETO.md) · [O que mudou](CHANGELOG.md) · [Banco de questões](banco-de-questoes/README.md) · [Relatório técnico](docs/RELATORIO-TECNICO.md) · [Roteiro de apresentação](docs/APRESENTACAO.md) · [Qualidade](docs/QUALIDADE.md) · [Calculândia](docs/calculandia/README.md)
+**Versão 16** · [Mapa do projeto (onde fica cada arquivo)](MAPA-DO-PROJETO.md) · [O que mudou](CHANGELOG.md) · [Banco de questões](banco-de-questoes/README.md) · [Relatório técnico](docs/RELATORIO-TECNICO.md) · [Roteiro de apresentação](docs/APRESENTACAO.md) · [Qualidade](docs/QUALIDADE.md) · [Calculândia](docs/calculandia/README.md)
 
 | Listas: resolução no formato dos slides e o gabarito da lista que não confere | Calculândia: a casa verde com os dispositivos no topo |
 |---|---|

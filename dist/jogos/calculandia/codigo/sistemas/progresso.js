@@ -3,6 +3,7 @@ import { G } from '../jogo.js';
 import { CONFIG } from '../configuracao.js';
 import { SETTLEMENTS, SETTLEMENT_BY_ID, CITIES, BOSSES, STAR_REQ, UNLOCK_BY, BOSS_OF_REGION, NIVEIS, REGIONS } from '../dados/regioes-e-cidades.js';
 import { writeSave } from './salvamento.js';
+import { ROTA_R1, liberadaNaRota, proximaDaRota, descricaoDaRota } from '../dados/regiao-1.js';
 
 export const STICKERS = [...CITIES.map((c) => c.id), 'S1', 'S2', 'S3'];
 export const STICKER_INFO = {
@@ -55,9 +56,14 @@ export class Progress {
   }
   canFightBoss(s) {
     if (s.tipo === 'final') return this.usinaOpen();
+    // v16: na região 1 o chefão é o 10º da rota: abre quando as 9 casas estão vencidas, em ordem
+    if (s.regiao === 1) return liberadaNaRota(this, s.id, 'B');
     return this.regionStars(s.regiao) >= STAR_REQ[s.regiao];
   }
   starsMissing(s) { return Math.max(0, STAR_REQ[s.regiao] - this.regionStars(s.regiao)); }
+  // v16: região 1 em ordem fixa (1ª … 9ª casa e o chefão, 10º)
+  liberadaNaRota(sid, nivel) { return liberadaNaRota(this, sid, nivel); }
+  proximaDaRota() { return proximaDaRota(this); }
   usinaOpen() { return ['B0', 'B1', 'B2', 'B3', 'B4'].every((b) => this.bossBeaten(b)); }
 
   rootsCaught() { return Object.keys(this.d.roots).length; }
@@ -127,6 +133,13 @@ export class Progress {
     for (let r = 1; r <= 5; r++) {
       const bid = BOSS_OF_REGION[r];
       if (this.bossBeaten(bid)) continue;
+      if (r === 1) {
+        const prox = proximaDaRota(this);
+        if (prox) {
+          const S = G.settlements?.find((x) => x.def.id === prox.sid), door = S?.buildings[prox.nivel]?.door || SETTLEMENT_BY_ID[prox.sid];
+          return { text: `Rota da região 1: <b>${descricaoDaRota(prox)}</b>`, x: door.x, z: door.z, sid: prox.sid };
+        }
+      }
       const boss = SETTLEMENT_BY_ID[bid];
       if (this.regionStars(r) < STAR_REQ[r]) {
         for (const nivel of ['F', 'M', 'D']) {

@@ -1,5 +1,6 @@
 // Tela de mapa (tecla M): pergaminho em SVG com a ilha, caminhos, cidades e viagem rápida (seção 12).
 import { G, lock, unlock } from '../jogo.js';
+import { naRota, proximaDaRota } from '../dados/regiao-1.js';
 import { CONFIG } from '../configuracao.js';
 import { REGIONS, SETTLEMENTS, NIVEIS, DUVIDAS } from '../dados/regioes-e-cidades.js';
 import { baseMap, fogMap } from './minimapa.js';
@@ -22,6 +23,11 @@ function formaSVG(lvl, x, y, won) {
   if (lvl === 'M') return `<rect x="${x - r * 0.9}" y="${y - r * 0.9}" width="${r * 1.8}" height="${r * 1.8}" ${st}/>`;
   if (lvl === 'D') return `<path d="M${x} ${y - r * 1.1} L${x + r} ${y + r * 0.8} L${x - r} ${y + r * 0.8} Z" ${st}/>`;
   return `<circle cx="${x}" cy="${y}" r="${r}" ${st}/><text x="${x}" y="${y + 1.1}" font-size="3" text-anchor="middle" font-weight="700" fill="#3a2a1a">?</text>`;
+}
+// v16: número da rota da região 1 (amarelo = a próxima; verde ✓ = feita; cinza = fechada)
+function seloSVG(rota, x, y, p) {
+  const prox = proximaDaRota(p), feita = p.won(rota.chave), agora = prox && prox.chave === rota.chave;
+  return `<g class="map-rota${agora ? ' agora' : ''}" opacity="${feita || agora ? 1 : 0.6}"><circle cx="${x}" cy="${y}" r="3.4" fill="${feita ? '#d5eee4' : agora ? '#ffd34d' : '#e6dcc6'}" stroke="#3a2a1a" stroke-width="0.6"/><text x="${x}" y="${y + 1.15}" font-size="${feita ? 4 : 3.1}" text-anchor="middle" font-weight="700" fill="${feita ? '#2e8b3a' : '#3a2a1a'}">${feita ? '✓' : rota.rotulo}</text></g>`;
 }
 // rótulo vai para baixo do círculo quando um vizinho anterior na lista está quase na mesma altura
 const labelBelow = (s) => {
@@ -67,6 +73,7 @@ export class MapScreen {
           <circle cx="${x}" cy="${y}" r="${boss ? 4.2 : 3.4}" fill="${boss ? '#3a2a1a' : col}" stroke="#3a2a1a" stroke-width="1"/>
           <circle cx="${x}" cy="${y}" r="${Math.max(6, 22 / px)}" fill="transparent"/>
           ${st ? Object.entries(st.buildings).filter(([l, B]) => B.door && l !== 'B').map(([l, B]) => formaSVG(l, S(B.x), S(B.z), l !== 'Q' && p.won(`${s.id}-${l}`))).join('') : ''}
+          ${st ? Object.entries(st.buildings).filter(([l]) => naRota(s.id, l)).map(([l, B]) => seloSVG(naRota(s.id, l), l === 'B' ? x + 6 : S(B.x), l === 'B' ? y - 2 : S(B.z) - 5.2, p)).join('') : ''}
           ${p.cityComplete?.(s.id) && s.id.startsWith('C') ? `<text x="${x}" y="${y + 1.4}" font-size="4" text-anchor="middle" fill="#fff">✓</text>` : ''}
           ${showLabels ? `<text x="${x}" y="${labelBelow(s) ? y + 5 + fu * 0.8 : y - 5}" font-size="${fu.toFixed(2)}" text-anchor="middle" font-weight="700" fill="#3a2a1a" stroke="#f3e2b8" stroke-width="${(fu * 0.28).toFixed(2)}" paint-order="stroke">${shortName(s.nome)} ${sub}</text>` : ''}
         </g>`;

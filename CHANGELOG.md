@@ -1,5 +1,15 @@
 # Histórico de versões
 
+## v16 — Região 1 da Calculândia com perguntas fixas e rota numerada
+
+- **Perguntas fixas** nas 9 casas dos Campos do Arredondamento e no chefão do Silo (`codigo/dados/regiao-1.js`). As outras regiões continuam sorteando do banco.
+- **Rota em ordem**, com o número em cima de cada lugar (no mundo 3D, no minimapa e no mapa M): 1ª, 2ª e 3ª no Cancelamento, 4ª, 5ª e 6ª na Padaria, 7ª, 8ª e 9ª no Galinheiro e o 10º no Silo. Só a próxima abre; amarelo pulando = a próxima, ✓ = vencida, cadeado = fechada. O objetivo da tela aponta a casa certa.
+- **Casas verdes** (múltipla escolha, Bisseção, 3ª iteração): x médio (0,180; 2,687500), f(x médio) (0,220; −0,007014) e erro percentual (0,250; 2,92%), com a tabela até a 2ª iteração e a célula pedida marcada com ?.
+- **Casas azuis** (Lagrange, Questão 01 do smartwatch, sem a pontuação): letra a no Cancelamento (L₀, L₁ e L₂, uma de cada vez), letra b na Padaria (P₂) e letra c no Galinheiro (f(1,35) = 3,7506 e a pergunta da coerência). As expressões são conferidas pela conta, então (x−1)(x−2)/2 e x²/2 − 3x/2 + 1 valem igual.
+- **Casas vermelhas** (Gauss-Seidel 4×4, só a 1ª iteração a partir de X⁰ = 0, 4 casas): o terminal pede x₁, depois x₂, x₃ e x₄, e a tabela vai se preenchendo; usar os zeros no lugar do valor novo avisa que aquilo é Jacobi.
+- **Chefão do Silo:** Bisseção de x·e⁻ˣ − 0,200 em [2,25; 2,75] com a 2ª iteração dada, N = 15 e ε = 0,80%. A pessoa descobre sozinha onde parar e digita só o x final (2,546875, na 5ª iteração); parar antes ou depois dá uma dica.
+- Teste novo no navegador: `tests/calculandia/regiao-1.cjs` joga a rota inteira (35 verificações).
+
 ## v15 — Terminal com saída de terminal: 6 casas na Bisseção, 8 no Newton e Gauss 4×4 com pivoteamento
 
 - **Aba "Saída do terminal"** (abre primeiro depois de resolver): sempre na mesma ordem, [1] configuração inicial, [2] tabela de iterações e [3] conclusão analítica com o resíduo.

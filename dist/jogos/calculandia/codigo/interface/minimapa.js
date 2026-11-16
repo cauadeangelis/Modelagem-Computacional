@@ -1,5 +1,6 @@
 // Minimapa circular 140×140 em Canvas 2D (seção 12) + imagem-base da ilha compartilhada com o mapa.
 import * as THREE from 'three';
+import { naRota, proximaDaRota } from '../dados/regiao-1.js';
 import { G } from '../jogo.js';
 import { CONFIG } from '../configuracao.js';
 import { REGIONS, NIVEIS, DUVIDAS } from '../dados/regioes-e-cidades.js';
@@ -108,6 +109,8 @@ export class Minimap {
       if (boss) {
         g.font = '15px system-ui'; g.textAlign = 'center'; g.textBaseline = 'middle';
         g.fillStyle = '#3a2a1a'; g.fillText(G.progress.won(S.def.id) ? '✓' : '☠', X, Y);
+        const rota = naRota(S.def.id, 'B');
+        if (rota) seloRota(g, rota, X, Y - 15, t);
         continue;
       }
       g.fillStyle = REGIONS[S.def.regiao].pal.destaque;
@@ -119,6 +122,8 @@ export class Minimap {
         if (!B.door) continue;
         const [bx, by] = toScreen(B.x, B.z);
         formaNivel(g, lvl, bx, by, 4.5, lvl !== 'Q' && G.progress.won(`${S.def.id}-${lvl}`));
+        const rota = naRota(S.def.id, lvl);
+        if (rota) seloRota(g, rota, bx, by - 11, t);
       }
     }
     // Raízes Fugitivas próximas (< 15): pontos verdes piscando
@@ -167,5 +172,18 @@ export function formaNivel(g, lvl, x, y, r, won) {
   else g.arc(x, y, r, 0, Math.PI * 2);
   g.fill(); g.stroke();
   if (lvl === 'Q') { g.fillStyle = '#3a2a1a'; g.font = `bold ${Math.round(r * 1.8)}px system-ui`; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText('?', x, y + 0.5); }
+  g.restore();
+}
+
+// v16: número da rota da região 1 em cima de cada casa (amarelo = a próxima; verde ✓ = feita; cinza = fechada)
+export function seloRota(g, rota, x, y, t = 0) {
+  const p = G.progress, prox = proximaDaRota(p), feita = p.won(rota.chave), agora = prox && prox.chave === rota.chave;
+  const r = agora ? 8 + Math.abs(Math.sin(t * 4)) * 1.2 : 7;
+  g.save();
+  g.globalAlpha = feita || agora ? 1 : 0.6;
+  g.fillStyle = feita ? '#d5eee4' : agora ? '#ffd34d' : '#e6dcc6'; g.strokeStyle = '#3a2a1a'; g.lineWidth = 2;
+  g.beginPath(); g.arc(x, y, r, 0, Math.PI * 2); g.fill(); g.stroke();
+  g.fillStyle = feita ? '#2e8b3a' : '#3a2a1a'; g.font = `bold ${feita ? 10 : 8}px system-ui`; g.textAlign = 'center'; g.textBaseline = 'middle';
+  g.fillText(feita ? '✓' : rota.rotulo, x, y + 0.5);
   g.restore();
 }

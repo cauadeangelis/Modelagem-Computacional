@@ -1,5 +1,6 @@
 // HUD do overworld (seção 12): estrelas, sementes, faixa de região, botão contextual, prévia de fase, legendas.
 import * as THREE from 'three';
+import { naRota } from '../dados/regiao-1.js';
 import { G } from '../jogo.js';
 import { CONFIG } from '../configuracao.js';
 import { NIVEIS } from '../dados/regioes-e-cidades.js';
@@ -68,7 +69,7 @@ export class HUD {
   showPreview(info) {
     if (!info) { this.preview.classList.add('hidden'); return; }
     const st = '★'.repeat(info.stars) + '☆'.repeat(3 - info.stars);
-    this.preview.innerHTML = `<div class="pv-title">${info.title}</div>
+    this.preview.innerHTML = `<div class="pv-title">${info.ordem ? `<span class="pv-ordem">${info.ordem}</span> ` : ''}${info.title}</div>
       <div class="pv-diff diff-${info.nivel}">${info.diff}</div>
       <div class="pv-row"><span title="Estrelas atuais">${st}</span><span title="Bateria disponível">🔋 ${info.battery}</span></div>
       ${info.won ? '<div class="pv-diff pv-won">✔ Fase concluída (pode repetir)</div>' : ''}${info.locked ? `<div class="pv-diff">🔒 ${info.locked}</div>` : ''}`;
@@ -124,6 +125,9 @@ export function phasePreviewInfo(S, nivel) {
     won: p.won(key),
     battery: G.fases?.batteryFor(S.def.metodo, boss ? 'B' : nivel) ?? (boss ? B.boss : B[nivel]),
   };
-  if (boss && !p.canFightBoss(S.def)) info.locked = S.def.tipo === 'final' ? 'Vença os 5 chefões' : `Faltam ${p.starsMissing(S.def)} estrelas`;
+  if (boss && !p.canFightBoss(S.def)) info.locked = S.def.tipo === 'final' ? 'Vença os 5 chefões' : S.def.regiao === 1 ? 'Vença as 9 casas da rota primeiro' : `Faltam ${p.starsMissing(S.def)} estrelas`;
+  // v16: região 1 em ordem fixa
+  const rota = naRota(S.def.id, nivel);
+  if (rota) { info.ordem = rota.rotulo; if (!boss && !p.liberadaNaRota(S.def.id, nivel)) info.locked = `Siga a rota: esta é a ${rota.rotulo}. Agora é a ${p.proximaDaRota()?.rotulo || ''}`; }
   return info;
 }

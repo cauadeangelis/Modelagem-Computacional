@@ -1,5 +1,9 @@
 # Histórico de versões
 
+## v16.2 — Bobo da Corte: a apresentadora agora é a professora Dani
+
+- A anfitriã do Bobo da Corte passou a se chamar **Dani** (antes Épsilon): balão "Dani · professora", "Oi, turma! Eu sou a Dani", "💡 Dica da Dani" e o evento **🌪️ Perturbação da Dani**. O símbolo ε no crachá continua.
+
 ## v16.1 — Casas azuis da região 1 em múltipla escolha
 
 - As três casas azuis (Lagrange) agora são de **múltipla escolha**, uma etapa de cada vez, com 4 alternativas e a explicação do erro em cada alternativa errada: Cancelamento escolhe L₀, L₁ e L₂; Padaria escolhe o P₂; Galinheiro escolhe f(1,35) e responde se é coerente.

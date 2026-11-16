@@ -110,7 +110,7 @@ Os arquivos de `js/site/` e `js/paginas/` são scripts comuns que compartilham a
 | Arquivo | O que faz |
 |---|---|
 | `index.html`, `bobo-da-corte.css` | página e estilos (sala de aula, quadro, show do bobo, roleta) |
-| `bobo-da-corte.js` | telas do jogo (turma, palpites, votos, revelação, Bobo da Corte, Bolão, Perturbação) e os desenhos da Épsilon e do bobo |
+| `bobo-da-corte.js` | telas do jogo (turma, palpites, votos, revelação, Bobo da Corte, Bolão, Perturbação) e os desenhos da Dani e do bobo |
 | `perguntas.js` | perguntas próprias, desafios da Arena, questões do banco, pontuação, prendas, Bolão da Convergência e Perturbação |
 
 ## `tests/`

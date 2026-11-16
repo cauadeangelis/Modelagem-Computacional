@@ -25,7 +25,7 @@ Na hora:
 6. **O Bobo da Corte:** a fileira mais votada vira o bobo da rodada. Cortina, holofote, o bobo dança e a roleta sorteia a prenda (explicar o método como narrador de futebol, imitar a Bisseção andando pela sala…). Se o mais votado não tinha divergido, ele ganha o selo de injustiçado.
 7. Mostre o **placar** e, na última rodada, o **pódio** com os títulos (Olho de Newton, Na mosca, Detetive do erro…) e a prenda do Bobo da partida.
 
-Se sobrar tempo, uma rodada especial: no **Bolão da Convergência** cada fileira aposta se a Bisseção ou a Falsa Posição chega antes; na **Perturbação da Épsilon** (depois de um sistema linear), a turma diz se 0,01 a mais no b₁ muda tudo ou quase nada, e o κ explica.
+Se sobrar tempo, uma rodada especial: no **Bolão da Convergência** cada fileira aposta se a Bisseção ou a Falsa Posição chega antes; na **Perturbação da Dani** (depois de um sistema linear), a turma diz se 0,01 a mais no b₁ muda tudo ou quase nada, e o κ explica.
 
 Frase de fechamento: "a pontuação é o critério de parada dos métodos: quanto menor o erro relativo, mais perto de convergir".
 

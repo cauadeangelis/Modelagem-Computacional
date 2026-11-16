@@ -325,7 +325,7 @@
     while (fp < 500) { const xn = (A * f(B) - B * f(A)) / (f(B) - f(A)); fp++; const fx = f(xn); if (Math.abs(fx) < tol || (x !== null && Math.abs(xn - x) < tol)) break; if (f(A) * fx < 0) B = xn; else A = xn; x = xn; }
     return { bis, fp, vencedor: bis < fp ? 'bis' : fp < bis ? 'fp' : 'empate' };
   }
-  // ---------- v14: Perturbação da Épsilon (b₁ + 0,01: a solução quase não muda ou muda tudo?) ----------
+  // ---------- v14: Perturbação da Dani (b₁ + 0,01: a solução quase não muda ou muda tudo?) ----------
   const PERTURBACOES = [
     { id: 'p-bom', texto: '4x + y = 5; x + 3y = 4', A: [[4, 1], [1, 3]], b: [5, 4] },
     { id: 'p-quase', texto: 'x + y = 2; x + 1,001y = 2,001', A: [[1, 1], [1, 1.001]], b: [2, 2.001] },

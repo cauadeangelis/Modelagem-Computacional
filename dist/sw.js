@@ -5,7 +5,7 @@
    v12: o jogo de sala (v14: Bobo da Corte, antes Quem Divergiu?) entra no cache inicial (é leve e precisa abrir sem internet na sala). A Calculândia (≈ 1,5 MB, 3D)
    não pesa no primeiro acesso: cada arquivo dela é guardado na primeira vez que o jogo abre e, daí em diante, ele também
    funciona offline. Uma versão nova do site apaga esse cache junto com o resto. */
-const VERSION = 'numera-v14-fbcc62c5c3';
+const VERSION = 'numera-v14-d1b8f15d0b';
 const ASSETS = [
   './',
   'index.html',

@@ -3,7 +3,7 @@
    deve ter divergido; a reta numérica revela a resposta com as faixas de tolerância (1%, 5% e 20%). O mais votado vira
    o BOBO DA CORTE da rodada: cortina, holofote, a dança do bobo e a roleta de prendas.
    Eventos especiais (v14): Bolão da Convergência (Bisseção × Falsa Posição, ×1,5 para quem acertar), Perturbação da
-   Épsilon (b₁ + 0,01 num sistema: quase não muda ou muda tudo?) e Na Mosca (4 decimais certos: carimbo dourado).
+   Dani (b₁ + 0,01 num sistema: quase não muda ou muda tudo?) e Na Mosca (4 decimais certos: carimbo dourado).
    Dois modos: TELÃO (palpites no papel, quem comanda o telão digita na revelação) e PASSA O APARELHO (cada um digita
    escondido, num terminal). Tudo roda neste computador: sem servidor, sem conta, sem internet. Personagens em SVG. */
 (function () {
@@ -125,8 +125,8 @@
       <path class="boca" d="M35 44q5 4 10 0" fill="none" stroke="#7A2E1F" stroke-width="2" stroke-linecap="round"/>
     </svg>`;
   }
-  // Épsilon, a anfitriã da corte (ε é a tolerância): uma estudante jovem, de rabo de cavalo, moletom e fone com
-  // microfone. Desenho original; substitui a Profa. Épsilon das versões anteriores.
+  // Dani, a professora da corte (ε é a tolerância): uma estudante jovem, de rabo de cavalo, moletom e fone com
+  // microfone. Desenho original; substitui a Profa. Épsilon das versões anteriores (v16.2: agora se chama Dani).
   function anfitria() {
     return `<svg class="prof-svg" viewBox="0 0 160 230" aria-hidden="true" focusable="false">
       <ellipse cx="80" cy="224" rx="46" ry="6" fill="rgba(0,0,0,.12)"/>
@@ -204,7 +204,7 @@
       </div></header>`;
   }
   const FALAS = {
-    montar: ['Oi, turma! Eu sou a Épsilon. Hoje a corte vai escolher um Bobo… Coloquem os nomes aí embaixo!'],
+    montar: ['Oi, turma! Eu sou a Dani. Hoje a corte vai escolher um Bobo… Coloquem os nomes aí embaixo!'],
     bolao: ['Bolão relâmpago! Quem chega antes na raiz: a Bisseção ou a Falsa Posição?', 'Façam suas apostas! Acertou, a rodada vale ×1,5.'],
     perturbacao: ['Agora eu vou mexer só um pouquinho no b…', 'Sistema bem-comportado ou cheio de drama? Vamos ver.'],
     pergunta: ['Leiam em voz alta! Depois, cada um faz o seu palpite em segredo.', 'Valendo! Palpite no papel, sem colar do vizinho.', 'Dá pra estimar antes de calcular. Confiem no método!'],
@@ -238,7 +238,7 @@
     return ap.acertouTurma ? `A turma acertou: ${ap.divergiram.map(n).join(' e ')} divergi${ap.divergiram.length > 1 ? 'ram' : 'u'} mesmo! ${r}` : `Injustiça! ${ap.maisVotados.map(n).join(' e ')} levou os votos, mas quem divergiu foi ${ap.divergiram.map(n).join(' e ')}. ${r}`;
   }
   function prof(fala) {
-    return `<aside class="prof" aria-label="Épsilon, a anfitriã"><div class="balao" id="balao"><span class="balao-nome">Épsilon · anfitriã</span><p id="fala">${fala}</p></div>${anfitria()}</aside>`;
+    return `<aside class="prof" aria-label="Dani, a professora"><div class="balao" id="balao"><span class="balao-nome">Dani · professora</span><p id="fala">${fala}</p></div>${anfitria()}</aside>`;
   }
   function chips() {
     const p = pergunta(); if (!p) return '';
@@ -275,10 +275,10 @@
       <div class="bolao-opcoes"><div class="bolao-op"><b>Bisseção</b><span>corta o intervalo ao meio</span><em>${nb} ${nb === 1 ? 'aposta' : 'apostas'}</em></div><div class="bolao-op"><b>Falsa Posição</b><span>usa a reta entre as pontas</span><em>${nf} ${nf === 1 ? 'aposta' : 'apostas'}</em></div></div>
       <p class="giz-rodape">Toque em B ou FP na carteira de cada um. Quem acertar ganha ×${String(Q.BOLAO_MULT).replace('.', ',')} nos pontos desta rodada. O resultado sai na revelação.</p>`;
   }
-  // v14: Perturbação da Épsilon — b₁ + 0,01 num sistema; a turma decide se a solução quase não muda ou muda tudo.
+  // v14: Perturbação da Dani — b₁ + 0,01 num sistema; a turma decide se a solução quase não muda ou muda tudo.
   function quadroPerturbacao() {
     const pt = S.perturb, r = pt.r, v = x => '(' + x.map(t => fmt(t, 4)).join('; ') + ')';
-    return `<div class="quadro-chips"><span class="giz-chip amarelo">🌪️ Perturbação da Épsilon</span><span class="giz-chip">Eliminação de Gauss</span></div>
+    return `<div class="quadro-chips"><span class="giz-chip amarelo">🌪️ Perturbação da Dani</span><span class="giz-chip">Eliminação de Gauss</span></div>
       <p class="giz-pergunta pequena">Sistema: ${esc(pt.item.texto)}. Solução: x = ${v(r.x)}.</p>
       <p class="giz-pergunta" id="pergunta-t">Vou somar <b>0,01</b> só no b₁. A solução quase não muda ou <span class="sublinha">muda tudo</span>?</p>
       ${pt.palpite ? `<div class="perturb-res"><p>Com b₁ + 0,01: x = <b>${v(r.x2)}</b></p><p>O b mudou ${fmt(r.variacaoB * 100, 2)}%; o x mudou <b>${fmt(r.variacao * 100, 2)}%</b>. Número de condição κ(A) ≈ ${fmt(r.kappa, 1)}.</p><p class="giz-rodape">${r.mudaTudo ? 'κ grande: o sistema é mal condicionado e amplia qualquer erro do b (até o arredondamento).' : 'κ pequeno: o sistema é bem condicionado; o erro do x fica do tamanho do erro do b.'}</p></div>` : '<p class="giz-rodape">A turma decide no grito (ou levantando a mão) e quem comanda o telão toca na resposta.</p>'}`;
@@ -399,12 +399,12 @@
       case 'bolao': return btn('Fechar o bolão → pergunta', 'fechar-bolao');
       case 'perturbacao': return S.perturb.palpite ? btn(depoisDaRevelacao(), 'pos-revelar') : `${btn('😌 Quase não muda', 'perturb', 'sec', 'data-v="quase"')}${btn('💥 Muda tudo', 'perturb', 'sec', 'data-v="muda"')}`;
       case 'pergunta':
-        if (S.cfg.modo === 'passa') return `${btn(S.dica ? 'Esconder dica' : '💡 Dica da Épsilon', 'dica', 'sec')}${btn(`Começar: vez de ${esc(S.jogadores[S.vez]?.nome || '')}`, 'abrir-segredo')}`;
-        return `${btn(S.dica ? 'Esconder dica' : '💡 Dica da Épsilon', 'dica', 'sec')}${btn('Todo mundo escreveu → votar', 'ir-voto')}`;
+        if (S.cfg.modo === 'passa') return `${btn(S.dica ? 'Esconder dica' : '💡 Dica da Dani', 'dica', 'sec')}${btn(`Começar: vez de ${esc(S.jogadores[S.vez]?.nome || '')}`, 'abrir-segredo')}`;
+        return `${btn(S.dica ? 'Esconder dica' : '💡 Dica da Dani', 'dica', 'sec')}${btn('Todo mundo escreveu → votar', 'ir-voto')}`;
       case 'voto': return `${btn('Desfazer voto', 'desfazer', 'sec', Object.keys(S.votos).length ? '' : 'disabled')}${btn(`${esc(S.jogadores[S.vez]?.nome || '')} não vota`, 'pular-voto', 'sec', S.vez < S.jogadores.length ? '' : 'disabled')}${btn('Revelar votos', 'revelar-votos', 'prim', S.vez >= S.jogadores.length ? '' : 'disabled')}`;
       case 'votos': return S.cfg.modo === 'telao' ? btn('Anotar os palpites →', 'ir-anotar') : btn('Revelar a resposta 🥁', 'revelar');
       case 'anotar': return btn('Revelar a resposta 🥁', 'revelar');
-      case 'revelar': return `${btn(S.passos ? 'Esconder o cálculo' : '📐 Como se calcula', 'passos', 'sec', S.revAnim ? 'disabled' : '')}${btn(S.eventos[S.r]?.perturb ? '🌪️ Perturbação da Épsilon →' : depoisDaRevelacao(), S.eventos[S.r]?.perturb ? 'ir-perturbacao' : 'pos-revelar', 'prim', S.revAnim ? 'disabled' : '')}`;
+      case 'revelar': return `${btn(S.passos ? 'Esconder o cálculo' : '📐 Como se calcula', 'passos', 'sec', S.revAnim ? 'disabled' : '')}${btn(S.eventos[S.r]?.perturb ? '🌪️ Perturbação da Dani →' : depoisDaRevelacao(), S.eventos[S.r]?.perturb ? 'ir-perturbacao' : 'pos-revelar', 'prim', S.revAnim ? 'disabled' : '')}`;
       case 'placar': return S.r + 1 < S.perguntas.length ? btn(`Próxima pergunta (${S.r + 2}/${S.perguntas.length}) →`, 'proxima') : btn('Ver o pódio 🏆', 'podio');
       case 'podio': return `<a class="b sec" href="../../index.html#jogos">← Voltar ao Numera</a>${boboDaPartida() && S.cfg.prendas !== 'nao' ? btn('🎡 Prenda do Bobo da partida', 'prenda-final', 'sec') : ''}${btn('Nova turma', 'nova-turma', 'sec')}${btn('Jogar de novo', 'de-novo')}`;
     }
@@ -431,7 +431,7 @@
         <fieldset><legend>Rodadas</legend><div class="chips">${[5, 8, 10].map(v => chip('rodadas', v, v, S.cfg.rodadas === v)).join('')}</div></fieldset>
         ${S.cfg.modo === 'telao' ? `<fieldset><legend>Tempo para pensar</legend><div class="chips">${[[0, 'Sem relógio'], [30, '30 s'], [60, '1 min'], [90, '1 min 30']].map(([v, r]) => chip('tempo', v, r, S.cfg.tempo === v)).join('')}</div></fieldset>` : ''}
         <fieldset><legend>Prenda do Bobo da Corte</legend><div class="chips">${[['rodada', '🎡 Toda rodada'], ['fim', 'Só no fim'], ['nao', 'Sem prenda']].map(([v, r]) => chip('prendas', v, r, S.cfg.prendas === v)).join('')}</div></fieldset>
-        <label class="troca"><input type="checkbox" data-a="eventos" ${S.cfg.eventos ? 'checked' : ''}> Eventos especiais: 🎰 Bolão da Convergência e 🌪️ Perturbação da Épsilon</label>
+        <label class="troca"><input type="checkbox" data-a="eventos" ${S.cfg.eventos ? 'checked' : ''}> Eventos especiais: 🎰 Bolão da Convergência e 🌪️ Perturbação da Dani</label>
       </div>
       <div class="cartao"><h2>3. A matéria</h2>
         <fieldset><legend>Temas que a turma já viu</legend><div class="chips">${temas.map(([id, rot]) => chip('tema', id, rot, S.cfg.temas.includes(id))).join('')}</div></fieldset>
@@ -649,7 +649,7 @@
       case 'passos': S.passos = !S.passos; render(); return;
       case 'placar': irPara('placar'); return;
       case 'pos-revelar': if (S.ap && S.ap.bobo) abrirShow(S.ap.bobo); else irPara('placar'); return;
-      case 'ir-perturbacao': { const it = (S.eventos[S.r] || {}).perturb; S.perturb = { item: it, r: Q.perturbar(it), palpite: null }; irPara('perturbacao'); som('rufar'); anunciar('Perturbação da Épsilon. ' + it.texto + '. Somando 0,01 no b um: a solução quase não muda ou muda tudo?'); return; }
+      case 'ir-perturbacao': { const it = (S.eventos[S.r] || {}).perturb; S.perturb = { item: it, r: Q.perturbar(it), palpite: null }; irPara('perturbacao'); som('rufar'); anunciar('Perturbação da Dani. ' + it.texto + '. Somando 0,01 no b um: a solução quase não muda ou muda tudo?'); return; }
       case 'perturb': { S.perturb.palpite = v === 'muda' ? 'muda' : 'quase'; const acertou = S.perturb.r.mudaTudo === (S.perturb.palpite === 'muda'); som(acertou ? 'ding' : 'carimbo'); render(); anunciar(falaAtual().replace(/<[^>]+>/g, '')); app.querySelector('[data-a="pos-revelar"]')?.focus(); return; }
       case 'apostar': { const b = S.bolao; if (!b || !jog(id)) return; if (b.apostas[id] === v) delete b.apostas[id]; else b.apostas[id] = v; som('voto'); render(); return; }
       case 'fechar-bolao': clearInterval(relogio); S.bolao.fechado = true; irPergunta(); return;

@@ -13,7 +13,7 @@ Jogo e laboratório de **métodos numéricos** para a disciplina de Modelagem Co
 
 É um site estático: HTML, CSS e JavaScript puros, sem build, sem servidor, sem conta e sem rastreadores. Funciona offline e pode ser instalado como app.
 
-**Versão 16.1** · [Mapa do projeto (onde fica cada arquivo)](MAPA-DO-PROJETO.md) · [O que mudou](CHANGELOG.md) · [Banco de questões](banco-de-questoes/README.md) · [Relatório técnico](docs/RELATORIO-TECNICO.md) · [Roteiro de apresentação](docs/APRESENTACAO.md) · [Qualidade](docs/QUALIDADE.md) · [Calculândia](docs/calculandia/README.md)
+**Versão 16.2** · [Mapa do projeto (onde fica cada arquivo)](MAPA-DO-PROJETO.md) · [O que mudou](CHANGELOG.md) · [Banco de questões](banco-de-questoes/README.md) · [Relatório técnico](docs/RELATORIO-TECNICO.md) · [Roteiro de apresentação](docs/APRESENTACAO.md) · [Qualidade](docs/QUALIDADE.md) · [Calculândia](docs/calculandia/README.md)
 
 | Listas: resolução no formato dos slides e o gabarito da lista que não confere | Calculândia: a casa verde com os dispositivos no topo |
 |---|---|
@@ -90,7 +90,7 @@ Em todas as perguntas: no máximo 4 iterações, Lupa (no terminal, troca por al
 
 Rodadas especiais (dá para desligar nos ajustes):
 - **🎰 Bolão da Convergência** (a cada 3 rodadas): antes da pergunta, cada um aposta se a Bisseção ou a Falsa Posição chega antes; quem acerta ganha ×1,5 nos pontos da rodada.
-- **🌪️ Perturbação da Épsilon** (depois de um sistema linear): soma 0,01 no b₁; a turma diz se a solução quase não muda ou muda tudo, e o κ∞ explica.
+- **🌪️ Perturbação da Dani** (depois de um sistema linear): soma 0,01 no b₁; a turma diz se a solução quase não muda ou muda tudo, e o κ∞ explica.
 - **✨ Na mosca:** palpite com 4 decimais certos ganha +25.
 
 Pontos: até 1% de erro vale 100, até 5% vale 60, até 20% vale 30 e até 50% vale 10. Há bônus para quem acertar o voto (+30), para quem chegar mais perto (+20), para quem foi votado sem ter divergido (+20) e na mosca (+25). No fim, pódio, títulos (Olho de Newton, Na mosca, Detetive do erro, Mais divergente, Alvo da turma) e a prenda do Bobo da partida.
@@ -185,7 +185,7 @@ Fontes, Three.js e imagens vêm do próprio site. A única coisa de fora são as
 - **Numera Academy** e **Bobo da Corte:** Cauã De Angelis (Engenharia de Computação, Ibmec), para Modelagem Computacional.
 - **Conteúdo e questões:** slides do Cap. 2 e do Cap. 3, os Testes 1 a 6 e a 4ª e a 5ª Listas da Profa. Danielle Teixeira; Listas 1 a 10 de Cálculo Numérico (UERJ).
 - **Calculândia:** Igor Mariano.
-- **Personagens:** Raiz, Pivô, a Épsilon (a apresentadora do Bobo da Corte), o bobo e os alunos são desenhos originais em SVG.
+- **Personagens:** Raiz, Pivô, a professora Dani (a apresentadora do Bobo da Corte), o bobo e os alunos são desenhos originais em SVG.
 - **Bibliotecas:** Three.js (MIT) e as fontes Figtree, Newsreader, JetBrains Mono e Fredoka (SIL OFL), com as licenças junto dos arquivos.
 
 Fórmulas e condições dos métodos conferidas nas referências do [relatório técnico](docs/RELATORIO-TECNICO.md).

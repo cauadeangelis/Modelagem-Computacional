@@ -280,7 +280,7 @@ function abrirTela({ settlement, casa, perguntas, freeHint = false, chefe = null
   function enviarEtapa(texto, opcao = null) {
     const q = atual.q, e = q.etapas[q.passo], t = String(texto || '').trim();
     if (!e || acertou || fim) return;
-    if (e.tipo === 'escolha') { const [rot, certa] = e.opcoes[opcao] || []; if (rot == null) return; if (certa) aceitarEtapa(q, rot); else { q.log.push({ c: 'errado', h: `${esc(e.rotulo)} ${esc(rot)}  ✘` }); erro(e.dica()); } desenhar(); focoPadrao(); return; }
+    if (e.tipo === 'escolha') { const [rot, certa] = e.opcoes[opcao] || []; if (rot == null) return; if (certa) aceitarEtapa(q, rot); else { q.log.push({ c: 'errado', h: `${esc(e.rotulo)}${/\?$/.test(e.rotulo) ? ' ' : ' = '}${esc(rot)}  ✘` }); erro(e.dica(opcao)); } desenhar(); focoPadrao(); return; }
     if (!t) return;
     const r = confereEtapa(e, t);
     if (r.ok) aceitarEtapa(q, e.tipo === 'expr' ? t : e.mostra);

@@ -37,13 +37,15 @@ let n = 0; const ok = (c, m) => { assert.ok(c, m); n++; };
   await page.locator('.pq-alt', { hasText: '2,687500' }).click();
   let r = await fechar(); ok(r.vitoria && r.estrelas === 2, 'verde 1 vencida com 2 estrelas (1 erro)');
 
-  // 2ª azul do Cancelamento: Lagrange a, três expressões, uma de cada vez
+  // 2ª azul do Cancelamento: Lagrange letra a, L₀, L₁ e L₂ em múltipla escolha, uma de cada vez
+  const opcao = (i) => page.locator(`[data-op="${i}"]`).click();
   await abrir('C0.2', 'M');
-  ok((await page.locator('.r1-itens li.agora').innerText()).startsWith('a)'), 'azul 1 destaca a letra a');
-  await digita('(x-1)(x-2)'); ok((await log()).includes('✘'), 'L₀ errado é recusado');
-  await digita('(x-1)(x-2)/2'); { const t = await log(), certo = t.includes('(x-1)(x-2)/2') && (t.match(/✔/g) || []).length === 1; if (!certo) console.log('LOG:', JSON.stringify(t)); ok(certo, 'L₀ certo sobe para o histórico'); }
-  ok((await page.locator('.pq-term-linha label').innerText()).startsWith('L₁(x)'), 'depois do L₀ o terminal pede o L₁');
-  await digita('-x²+2x'); await digita('x^2/2 - x/2');
+  ok((await page.locator('.r1-itens li').count()) === 1 && (await page.locator('.r1-itens li').innerText()).startsWith('a)'), 'azul 1 mostra só a letra a');
+  ok(await page.locator('[data-op]').count() === 4, 'L₀ tem 4 alternativas');
+  await opcao(0); ok((await page.locator('#pq-msg').innerText()).includes('Sinal trocado'), 'alternativa errada do L₀ explica o erro');
+  await opcao(1); ok((await log()).includes('(x² − 3x + 2)/2 ✔'), 'L₀ certo sobe para o histórico');
+  ok((await page.locator('.pq-term-ops span').innerText()).startsWith('L₁(x)'), 'depois do L₀ vem o L₁');
+  await opcao(2); await opcao(0);
   r = await fechar(); ok(r.vitoria && r.estrelas === 2, 'azul 1 vencida');
 
   // 3ª vermelha do Cancelamento: Gauss-Seidel, um x de cada vez
@@ -57,13 +59,13 @@ let n = 0; const ok = (c, m) => { assert.ok(c, m); n++; };
 
   // a 4ª abre agora; 5ª e 6ª, 7ª, 8ª (com coerência) e 9ª
   await abrir('C0.1', 'F'); await page.locator('.pq-alt', { hasText: /^D−0,007014$/ }).click(); r = await fechar(); ok(r.vitoria && r.estrelas === 3, 'verde 2 (f do x médio) com 3 estrelas');
-  await abrir('C0.1', 'M'); await digita('0,25x² + 1,7x + 1'); r = await fechar(); ok(r.vitoria, 'azul 2 (P₂) aceita vírgula e x²');
+  await abrir('C0.1', 'M'); ok((await page.locator('.r1-itens li').innerText()).startsWith('b)'), 'azul 2 mostra só a letra b'); await opcao(3); r = await fechar(); ok(r.vitoria && r.estrelas === 3, 'azul 2 (P₂) vencida');
   await abrir('C0.1', 'D'); for (const v of ['2,3', '-0,4778', '0,6253', '2,963']) await digita(v); r = await fechar(); ok(r.vitoria, 'vermelha 2 vencida');
   await abrir('C0.3', 'F'); await page.locator('.pq-alt', { hasText: '2,92%' }).click(); r = await fechar(); ok(r.vitoria, 'verde 3 (Er%) vencida');
-  await abrir('C0.3', 'M'); await digita('3,75');
-  ok((await page.locator('#pq-msg').innerText()).includes('Quase'), 'f(1,35) com poucas casas pede 4 casas');
-  await digita('3,7506'); ok(await page.locator('[data-op]').count() === 2, 'depois do valor vem a pergunta da coerência');
-  await page.locator('[data-op="0"]').click(); r = await fechar(); ok(r.vitoria && r.estrelas === 2, 'azul 3 (f(1,35) e coerência) vencida');
+  await abrir('C0.3', 'M'); ok((await page.locator('.r1-itens li').innerText()).startsWith('c)'), 'azul 3 mostra só a letra c');
+  await opcao(0); ok((await page.locator('#pq-msg').innerText()).includes('0,455625'), 'f(1,35) sem o x² explica o erro');
+  await opcao(1); ok(await page.locator('[data-op]').count() === 2, 'depois do valor vem a pergunta da coerência');
+  await opcao(0); r = await fechar(); ok(r.vitoria && r.estrelas === 2, 'azul 3 (f(1,35) e coerência) vencida');
   await abrir('C0.3', 'D'); for (const v of ['1,75', '1,2955', '2,6795', '-0,7672']) await digita(v); r = await fechar(); ok(r.vitoria, 'vermelha 3 aceita 2,6795 (o meio exato 2,67955)');
 
   // 10º: o chefão do Silo

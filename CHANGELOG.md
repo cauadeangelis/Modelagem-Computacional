@@ -1,5 +1,11 @@
 # Histórico de versões
 
+## v16.1 — Casas azuis da região 1 em múltipla escolha
+
+- As três casas azuis (Lagrange) agora são de **múltipla escolha**, uma etapa de cada vez, com 4 alternativas e a explicação do erro em cada alternativa errada: Cancelamento escolhe L₀, L₁ e L₂; Padaria escolhe o P₂; Galinheiro escolhe f(1,35) e responde se é coerente.
+- Cada casa mostra **só a sua letra** (a no Cancelamento, b na Padaria, c no Galinheiro), sem as outras.
+- Gabarito: L₀ = 2ª, L₁ = 3ª, L₂ = 1ª; P₂ = 4ª; f(1,35) = 2ª e coerente = 1ª (Sim).
+
 ## v16 — Região 1 da Calculândia com perguntas fixas e rota numerada
 
 - **Perguntas fixas** nas 9 casas dos Campos do Arredondamento e no chefão do Silo (`codigo/dados/regiao-1.js`). As outras regiões continuam sorteando do banco.

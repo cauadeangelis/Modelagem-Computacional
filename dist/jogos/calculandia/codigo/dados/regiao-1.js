@@ -50,15 +50,39 @@ const LAG_TXT = `<p>Você é responsável pela engenharia de software do firmwar
 ${tabela(['x', '0', '1', '2'], [['<b>f(x)</b>', '1,0000', '2,9500', '5,4000']])}
 <p>O sistema precisa estimar a resposta térmica no instante <b>x = 1,35 s</b>, para prever aquecimento e acionar o mecanismo de proteção do dispositivo. Como os recursos de hardware são limitados, resolva analiticamente com os polinômios base de Lagrange.</p>`;
 const ITENS = ['a) Desenvolva os três polinômios base de Lagrange L₀(x), L₁(x) e L₂(x).', 'b) Determine o polinômio interpolador final P₂(x), simplificado e ordenado por grau.', 'c) Calcule f(1,35) com 4 casas decimais e avalie se a estimativa é coerente com os dados vizinhos.'];
-const L0 = (x) => ((x - 1) * (x - 2)) / 2, L1 = (x) => -x * (x - 2), L2 = (x) => (x * (x - 1)) / 2, P2 = (x) => 0.25 * x * x + 1.7 * x + 1;
-const dicaPoli = (nome) => (v, ok) => (ok === null ? 'Não entendi a expressão. Use x, + − * / ^ e parênteses: (x-1)(x-2)/2.' : `${nome} não confere: teste em x = 0, 1 e 2 (cada Lᵢ vale 1 no seu ponto e 0 nos outros).`);
+// cada etapa é múltipla escolha (v16.1): a alternativa errada explica o engano mais comum
+const op = (rotulo, mostra, opcoes) => ({ rotulo, tipo: 'escolha', mostra, opcoes: opcoes.map(([t, certa]) => [t, certa]), dica: (i) => (opcoes[i] && opcoes[i][2]) || 'Não confere.' });
 function azul(letra) {
   const k = 'abc'.indexOf(letra);
   const etapas = [
-    [{ rotulo: 'L₀(x)', tipo: 'expr', fn: L0, mostra: '(x² − 3x + 2)/2', dica: dicaPoli('L₀(x)') }, { rotulo: 'L₁(x)', tipo: 'expr', fn: L1, mostra: '−x² + 2x', dica: dicaPoli('L₁(x)') }, { rotulo: 'L₂(x)', tipo: 'expr', fn: L2, mostra: '(x² − x)/2', dica: dicaPoli('L₂(x)') }],
-    [{ rotulo: 'P₂(x)', tipo: 'expr', fn: P2, mostra: '0,25x² + 1,7x + 1', dica: (v, ok) => (ok === null ? 'Não entendi a expressão. Exemplo: 0,25x^2 + 1,7x + 1.' : 'P₂(x) não confere: monte 1·L₀ + 2,95·L₁ + 5,4·L₂ e confira P₂(0) = 1, P₂(1) = 2,95, P₂(2) = 5,4.') }],
-    [{ rotulo: 'f(1,35)', tipo: 'num', alvo: 3.7506, tol: 6e-5, mostra: '3,7506', dica: (v) => (Math.abs(v - 3.750625) < 1e-3 ? 'Quase: arredonde para 4 casas.' : 'Não confere: calcule P₂(1,35) = 0,25·1,35² + 1,7·1,35 + 1.') },
-      { rotulo: 'Coerente?', tipo: 'escolha', opcoes: [['Sim: fica entre f(1) = 2,95 e f(2) = 5,40', true], ['Não: foge dos dados vizinhos', false]], mostra: 'sim, fica entre 2,95 e 5,40', dica: () => '1,35 está entre x = 1 e x = 2; olhe se o valor está entre f(1) e f(2).' }],
+    [op('L₀(x)', '(x² − 3x + 2)/2', [
+      ['(x² + 3x + 2)/2', false, 'Sinal trocado: o numerador é (x − 1)(x − 2) = x² − 3x + 2.'],
+      ['(x² − 3x + 2)/2', true],
+      ['−(x² − 3x + 2)', false, 'Denominador errado: (0 − 1)(0 − 2) = +2, não −1.'],
+      ['x² − 3x + 2', false, 'Faltou dividir por (0 − 1)(0 − 2) = 2. Teste: L₀(0) tem que dar 1.']]),
+    op('L₁(x)', '−x² + 2x', [
+      ['x² − 2x', false, 'Faltou o sinal do denominador: (1 − 0)(1 − 2) = −1.'],
+      ['(x² − 2x)/2', false, 'O denominador é (1 − 0)(1 − 2) = −1, não 2. Teste: L₁(1) tem que dar 1.'],
+      ['−x² + 2x', true],
+      ['−x² − 2x', false, 'O numerador é (x − 0)(x − 2) = x² − 2x; dividido por −1 dá −x² + 2x.']]),
+    op('L₂(x)', '(x² − x)/2', [
+      ['(x² − x)/2', true],
+      ['x² − x', false, 'Faltou dividir por (2 − 0)(2 − 1) = 2. Teste: L₂(2) tem que dar 1.'],
+      ['(x² + x)/2', false, 'Sinal trocado: o numerador é (x − 0)(x − 1) = x² − x.'],
+      ['−(x² − x)/2', false, 'O denominador (2 − 0)(2 − 1) = 2 é positivo.']])],
+    [op('P₂(x)', '0,25x² + 1,7x + 1', [
+      ['2,2x + 1', false, 'Essa é só a reta entre x = 0 e x = 2: com 3 pontos o polinômio é de grau 2.'],
+      ['0,25x² + 2,7x + 1', false, 'Confira o termo em x: −1,5 + 5,9 − 2,7 = 1,7. Teste: P₂(1) tem que dar 2,95.'],
+      ['1,7x² + 0,25x + 1', false, 'Os coeficientes de x² e de x estão trocados.'],
+      ['0,25x² + 1,7x + 1', true]])],
+    [op('f(1,35)', '3,7506', [
+      ['3,2950', false, 'Faltou o termo 0,25·(1,35)² = 0,455625.'],
+      ['3,7506', true],
+      ['3,8075', false, 'Essa é a reta entre x = 1 e x = 2; use o P₂(x) da letra b.'],
+      ['3,7056', false, 'Confira a conta: 0,455625 + 2,295 + 1 = 3,750625 ≈ 3,7506.']]),
+      op('Coerente?', 'sim, fica entre 2,95 e 5,40', [
+        ['Sim: fica entre f(1) = 2,95 e f(2) = 5,40', true],
+        ['Não: foge dos dados vizinhos', false, '1,35 está entre x = 1 e x = 2; olhe se o valor está entre f(1) e f(2).']])],
   ][k];
   const passos = [
     ['L₀(x) = (x − 1)(x − 2) / ((0 − 1)(0 − 2)) = (x² − 3x + 2)/2.', 'L₁(x) = (x − 0)(x − 2) / ((1 − 0)(1 − 2)) = −x² + 2x.', 'L₂(x) = (x − 0)(x − 1) / ((2 − 0)(2 − 1)) = (x² − x)/2.', 'Conferência: cada Lᵢ vale 1 no seu ponto e 0 nos outros dois.'],
@@ -67,9 +91,9 @@ function azul(letra) {
   ][k];
   return () => ({
     id: `r1-lagrange-${letra}`, fixa: true, modo: 'etapas', tipo: 'etapas', fonte: `Questão 01 · Teste (Interpolação de Lagrange) · letra ${letra}`,
-    resposta: etapas.filter((e) => e.tipo !== 'escolha').map((e) => `${e.rotulo} = ${e.mostra}`).join('; '),
-    ajuda: k < 2 ? 'Digite a expressão como no papel: (x-1)(x-2)/2, -x^2+2x… O jogo confere a expressão, não o jeito de escrever.' : 'Use o P₂(x) da letra b. Pode digitar a conta: 0,25*1,35^2 + 1,7*1,35 + 1.',
-    html: () => `${LAG_TXT}<ul class="r1-itens">${ITENS.map((t, j) => `<li class="${j < k ? 'feita' : j === k ? 'agora' : ''}">${j < k ? '✓ ' : ''}${t}</li>`).join('')}</ul>`,
+    resposta: etapas.map((e) => `${e.rotulo} = ${e.mostra}`).join('; '),
+    ajuda: ['Escolha um polinômio de cada vez: L₀, depois L₁ e L₂. Teste cada um em x = 0, 1 e 2.', 'Monte 1·L₀ + 2,95·L₁ + 5,4·L₂ e confira nos três pontos.', 'Calcule P₂(1,35) com P₂(x) = 0,25x² + 1,7x + 1 e depois diga se é coerente.'][k],
+    html: () => `${LAG_TXT}<ul class="r1-itens"><li class="agora">${ITENS[k]}</li></ul>`,
     etapas, passo: 0, log: [],
     resolucaoHtml: `<ol>${passos.map((p) => `<li>${p}</li>`).join('')}</ol>`,
   });

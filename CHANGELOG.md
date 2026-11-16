@@ -1,5 +1,10 @@
 # Histórico de versões
 
+## v16.3 — Sem o modo Relâmpago: a página Jogos fica só com a Calculândia e o Bobo da Corte
+
+- Saiu o modo Relâmpago (`js/paginas/relampago.js`, o cartão na página Jogos, o botão ⚡ nas Listas e os estilos). O endereço antigo `#relampago` abre a página Jogos.
+- A Caça ao Bug Numérico continua nas casas vermelhas da Calculândia, e os desafios "relâmpago" do Bobo da Corte (contas rápidas da antiga Arena) continuam como opção nos ajustes do Bobo.
+
 ## v16.2 — Bobo da Corte: a apresentadora agora é a professora Dani
 
 - A anfitriã do Bobo da Corte passou a se chamar **Dani** (antes Épsilon): balão "Dani · professora", "Oi, turma! Eu sou a Dani", "💡 Dica da Dani" e o evento **🌪️ Perturbação da Dani**. O símbolo ε no crachá continua.

@@ -3,7 +3,7 @@
    Cada gerador monta a tabela certa e a sabotada (exatamente uma célula diferente) com um erro típico das provas:
    metade errada na Bisseção (olhou o sinal de xₖ), ponto médio sem o a, Jacobi no lugar de Seidel, termo
    independente esquecido no Gauss, erro absoluto no lugar do relativo, sinal trocado no Newton, ponto médio na
-   Falsa Posição e peso errado nos Trapézios. Usado pelo Relâmpago (site) e pelas casas vermelhas da Calculândia.
+   Falsa Posição e peso errado nos Trapézios. Usado pelas casas vermelhas da Calculândia.
    Script clássico, sem dependências: window.NumeraCacaBug = { TIPOS, gerar, sortear }. */
 (function (global) {
   'use strict';

@@ -26,7 +26,6 @@ Modelagem-Computacional/
 | a matemática do Terminal (Bisseção, Newton, Gauss, Seidel…) | `dist/js/motor/motor-numerico.js` |
 | como uma questão do banco é resolvida e conferida | `dist/js/motor/resolver-questoes.js` |
 | a página Listas | `dist/js/paginas/listas.js` e `dist/css/listas.css` |
-| o modo Relâmpago | `dist/js/paginas/relampago.js` |
 | os bonecos Raiz e Pivô (site) | `dist/js/personagens/raiz-e-pivo.js` e `dist/css/personagens.css` |
 | o herói, a Raizinha, as gatas e os bichos (Calculândia) | `dist/jogos/calculandia/codigo/personagens/` |
 | a tela de perguntas das casas e dos chefões (Calculândia) | `dist/jogos/calculandia/codigo/fases/pergunta.js` |
@@ -36,7 +35,7 @@ Modelagem-Computacional/
 | o simulador antigo (botão 🧪 Laboratório das casas) | `dist/jogos/calculandia/codigo/fases/tela-da-questao.js` |
 | o Bobo da Corte (jogo de sala) | `dist/jogos/bobo-da-corte/bobo-da-corte.js`; perguntas, prendas e eventos em `perguntas.js` |
 | o Laboratório (tátil, troca de linhas, fenômenos) | `dist/js/paginas/laboratorio.js` e `dist/css/terminal.css` |
-| a Caça ao Bug Numérico (Relâmpago e Calculândia) | `dist/js/motor/caca-ao-bug.js` |
+| a Caça ao Bug Numérico (casas vermelhas da Calculândia) | `dist/js/motor/caca-ao-bug.js` |
 | o Modo Lousa e o destaque do pivô | `dist/js/site/modo-lousa.js` |
 | o menu do topo, o rodapé e o menu do celular | `dist/js/site/moldura.js` |
 | cores, fontes e espaçamentos do site | `dist/css/site.css` |
@@ -57,7 +56,7 @@ Modelagem-Computacional/
 |---|---|
 | `index.html` | a página do site; carrega os arquivos abaixo nesta ordem |
 | `manifest.webmanifest`, `sw.js` | instalar como app e funcionar offline (`sw.js` é atualizado por `npm run atualizar`) |
-| `css/` | estilos: `site.css` (geral), `listas.css` (Listas e Relâmpago), `terminal.css`, `treino.css`, `grafico-de-convergencia.css`, `personagens.css`, `fontes.css` |
+| `css/` | estilos: `site.css` (geral), `listas.css` (Listas), `terminal.css`, `treino.css`, `grafico-de-convergencia.css`, `personagens.css`, `fontes.css` |
 | `dados/` | dados gerados: `banco-de-questoes.js` (do SQL) e `treino-exercicios.js` |
 | `fontes/`, `imagens/` | fontes e ícones do próprio site (nada vem de fora) |
 | `video/` | o vídeo-resumo da Calculândia (`index.html` e `calculandia-resumo.mp4`; fora do cache offline) |
@@ -83,7 +82,7 @@ Modelagem-Computacional/
 | | `ilustracoes.js`, `demonstracoes.js`, `visuais-das-secoes.js`, `graficos.js` | desenhos e animações em SVG |
 | | `eventos-e-inicializacao.js` | cliques, teclado, desenho da página e abertura |
 | | `modo-lousa.js` | Modo Lousa (tabela construída célula por célula) e destaque do pivô no Gauss |
-| `paginas/` | `inicio.js`, `trilhas.js`, `licao.js`, `missoes.js`, `jogos.js`, `listas.js`, `relampago.js`, `revisao-e-progresso.js`, `terminal.js`, `laboratorio.js`, `aulas-em-video.js` | uma página do site por arquivo |
+| `paginas/` | `inicio.js`, `trilhas.js`, `licao.js`, `missoes.js`, `jogos.js`, `listas.js`, `revisao-e-progresso.js`, `terminal.js`, `laboratorio.js`, `aulas-em-video.js` | uma página do site por arquivo |
 
 Os arquivos de `js/site/` e `js/paginas/` são scripts comuns que compartilham as mesmas variáveis; por isso a ordem do `index.html` importa.
 

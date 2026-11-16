@@ -17,8 +17,6 @@ const TELAS = [
   ['lição: acerto com os mascotes', async p => { const t = await p.evaluate(() => window.NumeraContent.TASKS.bisection[0]); if (t.type === 'choice') { const op = await p.$$eval('.choice', bs => bs.map(b => b.textContent)); await p.click(`.choice >> nth=${op.findIndex(x => x.includes(t.options[t.answer]))}`); } else await p.fill('#answer', String(t.value)); await p.click('#quiz-form button[type=submit]'); await p.waitForTimeout(400); }],
   ['listas', async p => go(p, 'listas')],
   ['listas: questão aberta', async p => { await p.click('[data-act=bq-abrir] >> nth=0'); }],
-  ['relâmpago', async p => go(p, 'relampago')],
-  ['relâmpago: pergunta', async p => { await p.click('[data-act=rl-comecar]'); await p.waitForTimeout(150); }],
   ['missões', async p => go(p, 'cases')],
   ['missão', async p => { await p.click('[data-act=case][data-id=loan]'); }],
   ['jogos', async p => go(p, 'jogos')],

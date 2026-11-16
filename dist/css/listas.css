@@ -1,4 +1,4 @@
-/* Numera Academy — páginas Listas (banco de questões) e Relâmpago. Usa as variáveis de cor do site.css. */
+/* Numera Academy — página Listas (banco de questões). Usa as variáveis de cor do site.css. */
 
 /* ---------- Listas ---------- */
 .bq-filtros{display:flex;flex-wrap:wrap;align-items:flex-end;gap:14px 18px;margin-top:22px;padding:18px 20px}
@@ -45,52 +45,3 @@
 .bq-obs p{margin:4px 0}
 .bq-rodape{margin-top:14px}
 .row-actions.center{justify-content:center;margin-top:18px}
-
-/* ---------- Relâmpago ---------- */
-.game-rl .rl-capa{display:grid;place-items:center;min-height:180px;aspect-ratio:16/9;background:linear-gradient(135deg,var(--band-dark),#23415a);border-radius:var(--r-card) var(--r-card) 0 0}
-.game-rl .rl-capa span{font-size:clamp(3rem,9vw,5.5rem);filter:drop-shadow(0 6px 18px rgba(255,214,0,.35))}
-.rl-inicio{margin-top:22px;padding:24px}
-.rl-inicio h2{margin:0 0 14px}
-.rl-grupos{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px;margin-bottom:18px}
-.rl-grupo{display:flex;flex-direction:column;gap:2px;text-align:left;border:0;border-radius:var(--r-sm);padding:14px 16px;background:var(--surface-2);color:var(--ink);box-shadow:inset 0 0 0 1px var(--line);font:inherit;cursor:pointer}
-.rl-grupo span{font-size:.82rem;color:var(--muted)}
-.rl-grupo.active{background:var(--ink);color:var(--surface)}
-.rl-grupo.active span{color:var(--surface);opacity:.75}
-.rl-grupo[disabled]{opacity:.45;cursor:not-allowed}
-.rl-jogo{max-width:860px}
-.rl-topo{display:flex;align-items:center;gap:12px;margin:8px 0 16px}
-.rl-contador{font-weight:800;font-variant-numeric:tabular-nums;color:var(--muted)}
-.rl-tempo{flex:1;height:10px;border-radius:var(--r-pill);background:var(--surface-2);box-shadow:inset 0 0 0 1px var(--line);overflow:hidden}
-.rl-tempo span{display:block;height:100%;background:var(--go);border-radius:inherit;transition:width .2s linear}
-.rl-tempo span.pouco{background:var(--bad)}
-.rl-seg{min-width:3.2em;text-align:right;font-family:var(--mono);font-weight:700;color:var(--muted)}
-.rl-pontos{font-variant-numeric:tabular-nums;white-space:nowrap}
-.rl-combo{display:inline-block;margin-left:4px;padding:2px 8px;border-radius:var(--r-pill);background:var(--sand);font-weight:800}
-.rl-pergunta{padding:24px 26px}
-.rl-enunciado{font-family:var(--sans);font-size:clamp(1.1rem,2.4vw,1.35rem);line-height:1.5;font-weight:600;margin:10px 0 4px}
-.rl-alts{grid-template-columns:repeat(2,minmax(0,1fr))}
-.rl-erros{margin-top:18px;padding:22px}
-.rl-erros ul{list-style:none;margin:10px 0 0;padding:0;display:flex;flex-direction:column;gap:12px}
-.rl-erros li{padding:12px 0;border-top:1px solid var(--line)}
-.rl-erros li p{margin:4px 0}
-@media (max-width:720px){
-  .bq-card,.rl-pergunta{padding:16px}
-  .rl-alts{grid-template-columns:minmax(0,1fr)}
-  .rl-topo{gap:8px}
-  .bq-filtros .seg button{padding:8px 10px}
-}
-@media (prefers-reduced-motion:reduce){.rl-tempo span{transition:none}}
-.bq-alt[disabled]{opacity:1;color:var(--ink)}
-.bq-alt[disabled]:not(.certa):not(.errada){opacity:.6}
-.bq-feedback+.row-actions{margin-top:14px}
-/* v14: Caça ao Bug Numérico */
-.rl-bug-card h2{margin:0 0 8px}
-.rl-bug-tab{border-collapse:separate;border-spacing:4px;width:100%;font-variant-numeric:tabular-nums}
-.rl-bug-tab th{font-size:.85rem;color:var(--muted);padding:4px 6px}
-.rl-cel{width:100%;min-height:44px;border:0;border-radius:var(--r-sm);background:var(--surface-2);box-shadow:inset 0 0 0 1px var(--line);font:inherit;font-family:var(--mono);font-size:.95rem;color:var(--ink);cursor:pointer;padding:6px 8px;display:flex;flex-direction:column;align-items:center;gap:2px}
-.rl-cel:hover:not([disabled]){box-shadow:inset 0 0 0 2px var(--blue)}
-.rl-cel:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
-.rl-cel[disabled]{cursor:default;opacity:1}
-.rl-cel.certa{background:var(--go-soft);box-shadow:inset 0 0 0 2px var(--go)}
-.rl-cel.errada{background:var(--bad-soft);box-shadow:inset 0 0 0 2px var(--bad)}
-.rl-cel small{font-family:var(--sans);font-size:.72rem;font-weight:700;color:var(--go-text)}

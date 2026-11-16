@@ -5,7 +5,6 @@ Jogo e laboratório de **métodos numéricos** para a disciplina de Modelagem Co
 - **Jornada:** seis métodos (Bisseção, Falsa Posição, Newton-Raphson, Secante, Eliminação de Gauss e Gauss-Seidel) em mundos do mais fácil ao mais difícil, com lições, simulações, missões, moedas e **Raiz e Pivô**, o casal de mascotes que torce durante os desafios. O conteúdo segue os slides da professora (Cap. 2 e Cap. 3): mesma notação, mesmas tabelas e mesmos exemplos.
 - **Listas:** os Testes 1 a 6 e as listas da disciplina num **banco de questões em SQL** ([`banco-de-questoes/`](banco-de-questoes/README.md)), com correção na hora, resolução no formato dos slides e explicação quando o gabarito impresso não confere com a conta. Questão errada vai para a **Revisão**.
 - **Jogos:**
-  - **Relâmpago:** 10 perguntas rápidas de múltipla escolha, com cronômetro e combo, e o modo **Caça ao Bug Numérico** (ache a célula errada da tabela).
   - **Calculândia — Caçadores de Raízes:** aventura 3D com 63 fases, 21 métodos, cinco chefões e a Usina. Todas as perguntas usam a mesma tela: casa verde com múltipla escolha básica, casa azul com os Testes e as listas da Profa. Danielle e casa vermelha com as listas de Cálculo Numérico, as duas com o **terminal** para digitar a conta. No fim, os três reatores da Usina (Bisseção com 10 iterações, Gauss 4×4 e Newton com 6 iterações) e a explosão. Na região 1, as 9 casas e o chefão do Silo têm perguntas fixas e seguem uma rota numerada (1ª a 9ª e o 10º), com o número em cima de cada lugar.
   - **Bobo da Corte** (antigo Quem Divergiu?): jogo de sala para o telão. Cada aluno faz um palpite em segredo, a turma vota em quem divergiu e o mais votado vira o **Bobo da Corte** da rodada, com cortina, dança e roleta de prendas.
 - **Laboratório** (aberto pelo Terminal): arraste o x₀ e veja para qual raiz o Newton vai (bacias de convergência), a **Corrida de Convergência**, troque linhas de um sistema até ele convergir (Sassenfeld), teste a sensibilidade (κ) e resolva dois fenômenos (comporta e treliça).
@@ -13,13 +12,13 @@ Jogo e laboratório de **métodos numéricos** para a disciplina de Modelagem Co
 
 É um site estático: HTML, CSS e JavaScript puros, sem build, sem servidor, sem conta e sem rastreadores. Funciona offline e pode ser instalado como app.
 
-**Versão 16.2** · [Mapa do projeto (onde fica cada arquivo)](MAPA-DO-PROJETO.md) · [O que mudou](CHANGELOG.md) · [Banco de questões](banco-de-questoes/README.md) · [Relatório técnico](docs/RELATORIO-TECNICO.md) · [Roteiro de apresentação](docs/APRESENTACAO.md) · [Qualidade](docs/QUALIDADE.md) · [Calculândia](docs/calculandia/README.md)
+**Versão 16.3** · [Mapa do projeto (onde fica cada arquivo)](MAPA-DO-PROJETO.md) · [O que mudou](CHANGELOG.md) · [Banco de questões](banco-de-questoes/README.md) · [Relatório técnico](docs/RELATORIO-TECNICO.md) · [Roteiro de apresentação](docs/APRESENTACAO.md) · [Qualidade](docs/QUALIDADE.md) · [Calculândia](docs/calculandia/README.md)
 
 | Listas: resolução no formato dos slides e o gabarito da lista que não confere | Calculândia: a casa verde com os dispositivos no topo |
 |---|---|
 | ![Questão da Lista 1 com a tabela da Bisseção e a observação sobre o gabarito](previews/v13-listas-questao.png) | ![Pergunta de múltipla escolha da casa verde de Bi-Polis](previews/v13-calculandia-casa-verde.png) |
-| **Relâmpago:** pergunta rápida com cronômetro | **Calculândia:** a tela mais limpa das casas azul e vermelha |
-| ![Pergunta do Relâmpago respondida](previews/v13-relampago-resposta.png) | ![Simulador do Newton com a tela nova](previews/v13-calculandia-tela-limpa.png) |
+| **Calculândia:** a tela mais limpa das casas azul e vermelha | |
+| ![Simulador do Newton com a tela nova](previews/v13-calculandia-tela-limpa.png) | |
 
 **Vídeo-resumo da Calculândia:** [`/video/`](https://modelagem-computacional.vercel.app/video/) (arquivo em `dist/video/calculandia-resumo.mp4`), da abertura à explosão da Usina, gravado do próprio jogo.
 
@@ -41,7 +40,6 @@ Abra http://localhost:8000. O site também abre direto do disco (`dist/index.htm
 |---|---|
 | `/` | Numera Academy (início, trilhas, missões, listas, jogos, Treino, Terminal) |
 | `/#listas` | as questões das listas (banco de questões) |
-| `/#relampago` | modo Relâmpago |
 | `/#jogos` | página Jogos, com o progresso salvo de cada jogo |
 | `/jogos/calculandia/` | Calculândia (3D) |
 | `/#laboratorio` | Laboratório (tátil, troca de linhas, sensibilidade e fenômenos) |
@@ -56,8 +54,7 @@ Abra http://localhost:8000. O site também abre direto do disco (`dist/index.htm
 | **Raiz e Pivô** | mascotes que dançam durante os desafios; a cada **3 acertos seguidos**, o Pivô soca a caixa Σ e caem moedas |
 | **Missões** | 6 problemas aplicados em três etapas: formular, calcular e interpretar |
 | **Listas** | 468 questões (Testes 1 a 6, 4ª e 5ª Listas da Profa. Danielle, Listas 1 a 10, perguntas dos slides, de conceito e básicas de cada método), com filtro por lista e por assunto, resposta digitada ou alternativas, resolução no formato dos slides e observação quando o gabarito da lista não confere |
-| **Relâmpago** | 10 perguntas rápidas por rodada, com cronômetro, combo de até ×3 e recorde; atalhos 1–4 e Enter. Modo **Caça ao Bug**: 8 tipos de tabela com um erro plantado (metade errada na Bisseção, valor velho no Seidel, b esquecido no Gauss, sinal do Newton…) |
-| **Jogos** | **Relâmpago**, **Calculândia** (aventura 3D, para jogar sozinho) e **Bobo da Corte** (jogo de sala, para a turma inteira) |
+| **Jogos** | **Calculândia** (aventura 3D, para jogar sozinho) e **Bobo da Corte** (jogo de sala, para a turma inteira) |
 | **Laboratório** | aba Tátil (arraste x₀, x₀ e x₁ ou [a, b] no gráfico e veja as 3 primeiras iterações; bacias de convergência do Newton), Corrida de Convergência entre os métodos, troca de linhas com o medidor de Sassenfeld, botão **Testar sensibilidade** (ruído de 1% no b e o número de condição κ) e o Simulador de Fenômenos (a comporta da barragem e a treliça da ponte, que balança e cai com as equações fora de ordem) |
 | **Treino** | 120 problemas misturados: diagnosticar o método, resolver e conferir, com **369 erros típicos** reconhecidos |
 | **Modo prova** | 5, 10 ou 15 questões, cronômetro, nota de 0 a 10 e relatório em PDF |
@@ -108,7 +105,7 @@ dist/                         o site (o que o navegador abre)
   css/                        estilos (site, listas, terminal, treino, personagens…)
   js/motor/                   métodos numéricos, formato dos slides, resolvedor das questões e Caça ao Bug
   js/conteudo/                textos das lições e exemplos dos slides
-  js/paginas/                 uma página por arquivo (início, trilhas, lição, listas, relâmpago, terminal, laboratório…)
+  js/paginas/                 uma página por arquivo (início, trilhas, lição, listas, terminal, laboratório…)
   js/site/                    moldura, estado, desenhos, eventos e Modo Lousa
   js/personagens/             Raiz e Pivô
   dados/                      dados gerados (banco-de-questoes.js, treino-exercicios.js)
@@ -137,9 +134,9 @@ npm run testar-calculandia   # Calculândia no navegador: as 69 montagens de fas
 | `tests/treino/conferir-com-motor.cjs` | os 140 gabaritos do Treino refeitos pelo motor |
 | `tests/calculandia/rules.test.mjs` | regras das 63 fases, chefões, Usina, bateria, estrelas e XP |
 | `tests/calculandia/browser-smoke.cjs` e `world-reach.cjs` | todas as fases abrem no navegador, as casas trazem a pergunta (múltipla escolha, terminal e Caça ao Bug), chefão com o Método Híbrido, os três reatores da Usina, vitória e derrota salvas, portas alcançáveis a pé |
-| `tests/e2e/testar-fluxos.mjs` | fluxos completos do site, inclusive Listas, Revisão e Relâmpago, a página Jogos e o Bobo da Corte |
+| `tests/e2e/testar-fluxos.mjs` | fluxos completos do site, inclusive Listas, Revisão, a página Jogos e o Bobo da Corte |
 | `tests/e2e/testar-offline.mjs` | o site e os jogos abrem sem internet |
-| `tests/e2e/auditar-a11y.mjs` | axe-core, WCAG 2.1 AA, no modo claro e no escuro, inclusive Listas e Relâmpago |
+| `tests/e2e/auditar-a11y.mjs` | axe-core, WCAG 2.1 AA, no modo claro e no escuro, inclusive Listas |
 | `tests/e2e/testar-webkit.py` | motor do Safari (WebKit) |
 | `tests/e2e/checar-compat.mjs` | ES2021 e recursos suportados (site e Bobo da Corte: Safari 15+; Calculândia: módulos ES) |
 
@@ -160,7 +157,7 @@ A professora pediu para tirar o Ponto Fixo por enquanto. Em `dist/js/conteudo/co
 
 | Parte | Mínimo | Testado de verdade |
 |---|---|---|
-| Site (com Listas, Relâmpago e Laboratório) e Bobo da Corte | Chrome/Edge 90+, Firefox 90+, Safari 15+ (iOS 15+) | Chromium e WebKit (motor do Safari) |
+| Site (com Listas e Laboratório) e Bobo da Corte | Chrome/Edge 90+, Firefox 90+, Safari 15+ (iOS 15+) | Chromium e WebKit (motor do Safari) |
 | Calculândia (3D) | WebGL 2 e Chrome/Edge 98+, Firefox 94+, Safari 15.4+ | Chromium (WebGL por software) |
 
 O Firefox foi verificado por análise estática. Detalhes em [docs/QUALIDADE.md](docs/QUALIDADE.md).
@@ -172,7 +169,6 @@ Tudo fica no `localStorage` do navegador; nada é enviado para servidor:
 | Chave | Parte |
 |---|---|
 | `numera-academy-v4` | trilhas, missões e questões das listas (acertos e Revisão) |
-| `numera-relampago-v1` | Relâmpago: recorde e número de rodadas |
 | `numera-treino-v9` | Treino |
 | `calculandia-save-v1` | Calculândia |
 | `calculandia-perguntas-vistas-v1` | Calculândia: últimas perguntas das casas, para não repetir |

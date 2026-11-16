@@ -3,7 +3,7 @@ const fs=require('fs'),vm=require('vm'),path=require('path');
 const dir=path.join(__dirname,'../dist'),read=f=>fs.readFileSync(path.join(dir,f),'utf8');
 // Arquivos do site na ordem do index.html: base (motor, conteúdo, dados) e as partes da interface (js/site e js/paginas).
 const BASE=['js/motor/motor-numerico.js','js/motor/passo-a-passo.js','js/motor/resolver-questoes.js','js/motor/caca-ao-bug.js','js/motor/experimentos.js','js/conteudo/conteudo.js','dados/banco-de-questoes.js','js/progresso/progresso.js','js/terminal/grafico-de-convergencia.js','dados/treino-exercicios.js','js/treino/treino.js','js/personagens/raiz-e-pivo.js'];
-const SITE=["js/site/estado-e-utilitarios.js", "js/site/jornada-e-backup.js", "js/site/ilustracoes.js", "js/site/moldura.js", "js/site/demonstracoes.js", "js/site/visuais-das-secoes.js", "js/paginas/inicio.js", "js/paginas/trilhas.js", "js/paginas/aulas-em-video.js", "js/paginas/licao.js", "js/paginas/missoes.js", "js/paginas/jogos.js", "js/paginas/revisao-e-progresso.js", "js/paginas/listas.js", "js/paginas/relampago.js", "js/site/graficos.js", "js/paginas/terminal.js", "js/paginas/laboratorio.js", "js/paginas/simulador-fenomenos.js", "js/site/eventos-e-inicializacao.js", "js/site/modo-lousa.js"];
+const SITE=["js/site/estado-e-utilitarios.js", "js/site/jornada-e-backup.js", "js/site/ilustracoes.js", "js/site/moldura.js", "js/site/demonstracoes.js", "js/site/visuais-das-secoes.js", "js/paginas/inicio.js", "js/paginas/trilhas.js", "js/paginas/aulas-em-video.js", "js/paginas/licao.js", "js/paginas/missoes.js", "js/paginas/jogos.js", "js/paginas/revisao-e-progresso.js", "js/paginas/listas.js", "js/site/graficos.js", "js/paginas/terminal.js", "js/paginas/laboratorio.js", "js/paginas/simulador-fenomenos.js", "js/site/eventos-e-inicializacao.js", "js/site/modo-lousa.js"];
 const loadSite=c=>{c.__NUMERA_TESTE__=true;for(const f of SITE)vm.runInContext(read(f),c,{filename:f});};
 let count=0;const groups={};let group='Parser';
 function ok(cond,msg){if(!cond)throw Error(`[${group}] ${msg}`);count++;groups[group]=(groups[group]||0)+1;}
@@ -514,13 +514,12 @@ group='Laboratório e Modo Lousa (v14)';
  const lou=read('js/site/modo-lousa.js');ok(lou.includes('prefers-reduced-motion')&&lou.includes('herdou')&&lou.includes("'pivo'")&&lou.includes("'alvo'")&&lou.includes("'zera'"),'Modo Lousa: herança da ponta e destaque de pivô, alvo e elemento zerado');
 }
 group='Caça ao Bug Numérico (v14)';
-// Toda tabela sabotada tem exatamente uma célula errada, com explicação e dica; o Relâmpago tem o modo.
+// Toda tabela sabotada tem exatamente uma célula errada, com explicação e dica; usada pelas casas vermelhas da Calculândia.
 {const CB=ctx.NumeraCacaBug;ok(CB&&CB.TIPOS.length>=8,'Caça ao Bug: 8 tipos de erro');
  for(const tp of CB.TIPOS)for(const sd of [1,2,3,5,8,13,21,34]){const g=CB.gerar(tp,sd);let dif=[];g.linhas.forEach((r,i)=>r.forEach((v,j)=>{if(v!==g.certa[i][j])dif.push([i,j]);}));
   ok(dif.length===1&&dif[0][0]===g.bug.linha&&dif[0][1]===g.bug.coluna,`Bug ${tp} (semente ${sd}): exatamente uma célula errada, a marcada`);
   ok(g.explicacao.length>30&&g.dica.length>20&&g.colunas.length===g.linhas[0].length&&!/\^/.test(g.titulo+g.explicacao),`Bug ${tp} (semente ${sd}): explicação, dica e colunas`);}
  const a=CB.gerar('seidel-velho',4),b=CB.gerar('seidel-velho',4);ok(JSON.stringify(a)===JSON.stringify(b),'Caça ao Bug repetível pela semente');
- t.navigate('relampago');let h=elements['#app'].innerHTML;ok(h.includes('Caça ao Bug Numérico')&&h.includes('data-act="rl-bug"'),'Relâmpago: cartão da Caça ao Bug');
 }
 group='PWA e organização';
 {const man=JSON.parse(read('manifest.webmanifest'));ok(man.name&&man.short_name&&man.start_url&&man.display==='standalone'&&man.lang==='pt-BR','Manifesto do app');

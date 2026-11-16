@@ -78,7 +78,7 @@ await page.click('[data-act=free-toggle]'); ok(await page.$$eval('.journey .worl
 // ---------- v12: Jogos (no lugar da Arena)
 await go('arena'); ok((await page.evaluate(() => location.hash)) === '#jogos' && await page.isVisible('.games'), 'Link antigo #arena abre a página Jogos');
 ok(!(await page.textContent('.topbar')).includes('Arena') && (await page.textContent('.topbar')).includes('Jogos'), 'Menu: Jogos no lugar da Arena');
-ok(await page.$$eval('.game-card', c => c.length) === 3 && await page.isVisible('.game-rl') && await page.isVisible('a.btn[href="jogos/calculandia/index.html"]') && await page.isVisible('a.btn[href="jogos/bobo-da-corte/index.html"]'), 'Jogos: Calculândia, Bobo da Corte e Relâmpago');
+ok(await page.$$eval('.game-card', c => c.length) === 2 && !(await page.$('.game-rl')) && await page.isVisible('a.btn[href="jogos/calculandia/index.html"]') && await page.isVisible('a.btn[href="jogos/bobo-da-corte/index.html"]'), 'Jogos: só Calculândia e Bobo da Corte (v16.3: sem o Relâmpago)');
 await page.$$eval('.game-cover img', imgs => Promise.all(imgs.map(i => i.decode().catch(() => {}))));
 ok(await page.$$eval('.game-cover img', imgs => imgs.every(i => i.complete && i.naturalWidth === 1200)), 'Capas dos jogos carregadas');
 await shot(page, 'v12-jogos');
@@ -332,7 +332,7 @@ const semCircunflexo = () => page.evaluate(() => { const w = document.createTree
 await go('lab'); await page.click('[data-act=help]'); ok(await semCircunflexo() === 0 && (await page.$$('.help-panel sup')).length > 0, 'Terminal e ajuda: expoentes elevados, sem ^');
 await go('cases'); await page.click('[data-act=case][data-id=loan]'); await page.click('details summary'); ok(await semCircunflexo() === 0 && await page.isVisible('sup'), 'Missão do carnê: (1+i) com −12 elevado');
 await go('treino'); await page.click('[data-act=tr-view][data-id=key]'); await page.waitForTimeout(300); ok(await semCircunflexo() === 0, 'Gabarito completo do Treino: nenhum ^ à vista');
-// ---------- v13: Listas (banco de questões), Revisão e Relâmpago
+// ---------- v13: Listas (banco de questões) e Revisão (v16.3: o Relâmpago saiu)
 await go('listas'); ok(await page.locator('.bq-card').count() === 12 && await page.isVisible('#bq-lista'), 'Listas: 12 questões por vez e filtros');
 await page.selectOption('#bq-lista', 'lista-01'); await page.selectOption('#bq-tema', 'newton'); await page.click('[data-act=bq-abrir][data-id=l01-zeros-03]');
 await page.fill('#bq-in-l01-zeros-03', '2,1'); await page.press('#bq-in-l01-zeros-03', 'Enter'); ok((await page.textContent('#bq-l01-zeros-03 .bq-feedback')).includes('Revisão'), 'Listas: erro manda a questão para a Revisão');
@@ -341,10 +341,7 @@ await page.selectOption('#bq-tema', 'bissecao'); await page.click('[data-act=bq-
 ok(await page.isVisible('#bq-l01-zeros-12 .bq-obs.diverge'), 'Listas: gabarito da lista divergente explicado');
 ok(await semCircunflexo() === 0, 'Listas: nenhum ^ à vista');
 await go('review'); ok(await page.locator('.review-row h3', { hasText: 'Lista 1' }).count() >= 1, 'Revisão: questão das listas no caderno');
-await go('relampago'); await page.click('[data-act=rl-grupo][data-id=raizes]'); await page.click('[data-act=rl-comecar]'); ok(await page.locator('[data-act=rl-alt]').count() === 4 && await page.isVisible('#rl-barra'), 'Relâmpago: pergunta com 4 alternativas e cronômetro');
-for (let i = 0; i < 10; i++) { await page.keyboard.press('1'); await page.click('[data-act=rl-proxima]'); }
-ok(await page.isVisible('[data-act=rl-comecar]') && (await page.textContent('.stat-row')).includes('Pontos'), 'Relâmpago: rodada de 10 perguntas pelo teclado até o resultado');
-await go('jogos'); ok(await page.isVisible('.game-rl'), 'Jogos: cartão do Relâmpago');
+await page.goto(BASE + '?antigo=1#relampago'); await page.waitForTimeout(400); ok((await page.$$('.game-card')).length === 2, 'O endereço antigo #relampago abre a página Jogos'); await go('jogos');
 await page.goto(BASE + 'jogos/bobo-da-corte/index.html'); await page.click('[data-a=comecar]').catch(() => {});
 ok(await page.evaluate(() => document.documentElement.scrollWidth - innerWidth) <= 0, 'Celular: Bobo da Corte sem rolagem lateral');
 await browser.close(); fim('Fluxos (v12)');
